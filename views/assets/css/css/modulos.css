@@ -1,0 +1,109 @@
+/* ---------------------------------------
+@@@@ modulos ---> login  
+--------------------------------------- */
+.login {
+    position: relative;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    height: 100vh;
+}
+.login .formulario {
+    display: block;
+    max-width: 550px;
+    margin: 0 auto;
+}
+.login .formulario .logo {
+    display: block;
+    width: 200px;
+    margin: 0 auto 35px;
+}
+.login .form-group {
+    margin: 18px 0;
+}
+.login .input-group-prepend {
+    margin-right: -2px;
+}
+.login .form-control {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    color: var(--color-gris);
+    height: calc(2.5rem + .75rem + 2px);
+    border-left: 0;
+    border-top: 2px solid var(--color-gris-claro);
+    border-bottom: 2px solid var(--color-gris-claro);
+    border-right: 2px solid var(--color-gris-claro);
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+.login .input-group-text {
+    background-color: var(--color-blanco);
+    border-right: 0;
+    border-top: 2px solid var(--color-gris-claro);
+    border-bottom: 2px solid var(--color-gris-claro);
+    border-left: 2px solid var(--color-gris-claro);
+    border-right: 2px solid var(--color-gris-claro);
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+.login .btn {
+    display: block;
+    font-weight: bold;
+    color: var(--color-blanco);
+    text-align: center;
+    background-color: var(--color-azul);
+    border-color: var(--color-azul);
+    padding: 1rem 2.75rem;
+}
+.login .input-group img {
+    width: 1rem;
+}
+.login .form-control::-webkit-input-placeholder {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    color: var(--color-gris);
+    opacity: 1!important;
+    text-transform: capitalize;
+}
+.login .form-control:-moz-placeholder {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    color: var(--color-gris);
+    opacity: 1!important;
+    text-transform: capitalize;
+}
+.login .form-control::-moz-placeholder {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    color: var(--color-gris);
+    opacity: 1!important;
+    text-transform: capitalize;
+}
+.login .form-control:-ms-input-placeholder {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    color: var(--color-gris);
+    opacity: 1!important;
+    text-transform: capitalize;
+}
+.login .form-control::-ms-input-placeholder {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    color: var(--color-gris);
+    opacity: 1!important;
+    text-transform: capitalize;
+}
+.login .form-control::placeholder {
+    font-size: 1.1rem;
+    font-weight: 600;
+    text-align: left;
+    color: var(--color-gris);
+    opacity: 1!important;
+    text-transform: capitalize;
+}
