@@ -774,3 +774,35 @@ function filtrarEstados(id_pais='') {
 		}
 	});
 }
+
+function CargarCiudades() {
+    
+    let pais = $(".select_ciudad").attr("id_pais");
+    let filtro = pais !== '' ? "&id_pais=" + pais : ''; // Verificación más segura de la variable 'filtro'
+    
+    $(".select_ciudad").select2({
+        ajax: { 
+            url: url + 'views/ajax/ajax_general.php?cargar_ciudades=si' + filtro,
+            type: "post",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    searchTerm: params.term // search term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            id: item.id, // Identificador único de cada ciudad
+                            text: item.nombre // Texto visible en el select2 (nombre de la ciudad)
+                        };
+                    })
+                };
+            },
+            cache: true
+        }
+    });
+    
+}

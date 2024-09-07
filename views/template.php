@@ -197,6 +197,8 @@ $v = "1.0.0";
         <!-- Cafeterías -->
         <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias.js?v='<?php echo $v; ?>'"></script>
         <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_mapa.js?v='<?php echo $v; ?>'"></script>
+        <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_lista.js?v='<?php echo $v; ?>'"></script>
+
 
 
     

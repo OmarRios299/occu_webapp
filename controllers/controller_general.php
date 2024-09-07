@@ -329,6 +329,17 @@ class GeneralController
 		return  GeneralModel::obtenerCiudadesModel();
 	}
 
+	static public function obtenerCiudadesPorPaisController($pais)
+	{
+		$data =[];
+		foreach (GeneralModel::obtenerCiudadesPorPaisModel($pais) as $item){
+			$data[]=array(
+				'id' => $item['id'],
+				'nombre' => $item['nombre']
+			);
+		}
+		echo json_encode($data);
+	}
 	/* OBTENER CIUDADES */
 
 

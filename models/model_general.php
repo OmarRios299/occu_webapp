@@ -180,6 +180,30 @@ class GeneralModel extends Conexion{
 	
 	/* OBTENER CIUDADES */
 
+	/* OBTENER CIUDADES */
+	
+	static public function obtenerCiudadesPorPaisModel($pais){
+	
+		$stmt = Conexion::conectar()->prepare("SELECT
+		ciudades.*
+		FROM
+			ciudades
+		INNER JOIN entidades_federativas ON ciudades.id_entidad_federativa = entidades_federativas.id
+		WHERE
+			ciudades.estado = 0 AND entidades_federativas.id_pais=:id");
+
+		$stmt -> bindParam(":id", $pais, PDO::PARAM_INT);
+	
+		$stmt -> execute();
+	
+		return $stmt -> fetchAll();
+	
+		$stmt = null;
+	
+	}
+	
+	/* OBTENER CIUDADES */
+
 	
 	/* OBTENER ESTADOS (ENTIDADES FEDERATIVAS) */
 	

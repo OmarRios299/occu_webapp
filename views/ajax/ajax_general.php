@@ -94,6 +94,12 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 		);
 		$funcion = "obtenerEstadosController";
 
+	}else if(isset($_GET['cargar_ciudades'])){
+	
+		/* CARGAR ENTIDADES FEDERATIVAS */
+		$datos =$_GET['id_pais'];
+		$funcion = "obtenerCiudadesPorPaisController";
+
 	}else{
 		$datos = false;
 	}

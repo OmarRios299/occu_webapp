@@ -12,11 +12,11 @@ require_once "controllers/controller_admin_paises.php";
 //Cafeterías
 require_once "controllers/controller_cafeterias.php";
 require_once "controllers/controller_cafeterias_mapa.php";
+require_once "controllers/controller_cafeterias_lista.php";
 
 //Models
 require_once "models/model_login.php";
 require_once "models/model_general.php";
-require_once "models/model_cafeterias_mapa.php";
 
 //Administración
 require_once "models/model_admin_usuarios.php";
@@ -24,6 +24,8 @@ require_once "models/model_admin_paises.php";
 
 //Cafeterías
 require_once "models/model_cafeterias.php";
+require_once "models/model_cafeterias_mapa.php";
+require_once "models/model_cafeterias_lista.php";
 
 $template = new TemplateController();
 $template -> template();
