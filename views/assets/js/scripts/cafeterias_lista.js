@@ -53,7 +53,9 @@ function CargarVerCafeteria(){
             if (respuesta=='error') {
                 swal("¡Error!", "Ha ocurrido un error", "error");
             }else{
-                $("#titulo_cafeteria_ver").html(respuesta.nombre);
+                $("#aux_validacion").val(respuesta.data.id);
+                $("#titulo_cafeteria_ver").html(respuesta.data.nombre);
+                $(".carousel_imagenes").html(respuesta.imagenes);
             }
         }
     });
@@ -64,4 +66,8 @@ function CargarVerCafeteria(){
 $(document).on("click", "#abrir_filtros", function() {
     $('#filtros_div').toggle(); 
     $(this).attr("open", $(this).attr("open") === 'si' ? 'no' : 'si');
+});
+
+$(document).on("click",".ver_img_modal",function(){
+    $("#carouselModal").modal("show")
 });

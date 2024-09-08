@@ -64,4 +64,24 @@ class CafeteriasListaModel extends Conexion {
     /* OBTENER CAFETERIAS */
     
 
+    
+    /* OBTENER LAS IMAGENES DEL CAROUSEL */
+    
+    static public function obtenerImagenesModel($id){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT cafeterias_imagenes.* FROM cafeterias_imagenes WHERE id_cafeteria = :id");
+    
+        $stmt->bindParam(':id', $id,PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* OBTENER LAS IMAGENES DEL CAROUSEL */
+    
+
 }

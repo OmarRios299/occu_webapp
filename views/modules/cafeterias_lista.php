@@ -1,3 +1,4 @@
+<input type="hidden" id="aux_validacion">
 <?php 
 if (!isset($action[1])) {
     include 'cafeterias_lista/lista_cafeterias.php';

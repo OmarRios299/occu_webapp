@@ -53,7 +53,9 @@ class CafeteriasListaController{
     /* OBTENER DATOS DE CAFETERIA */
     
     static public function obtenerDatosCafeteriaController($id){
+        $url = TemplateController::obtenerUrlController();
         $data=[];
+        $carousel ='';
         $cafeteria =CafeteriasListaModel::obtenerDatosCafeteriaModel($id);
         $data=array(
             'id' => $cafeteria['id'],
@@ -69,7 +71,18 @@ class CafeteriasListaController{
             'horario_cierre' => $cafeteria['horario_cierre'],
         );
 
-        echo json_encode($data);
+        $active='active';
+        $i=0;
+        foreach(CafeteriasListaModel::obtenerImagenesModel($id) as $imagen){
+            $active = ($i==1) ? $active='' : $active='active' ;
+            $carousel .='
+            <div class="carousel-item '.$active.' ver_img_modal" data-bs-interval="10000">
+                <img src="../'.$imagen['imagen'].'" class="d-block w-100 img-fluid" alt="...">
+            </div>';
+            ++$i;
+        }
+
+        return json_encode(['data' => $data, 'imagenes' => $carousel]);
     }
     
     /* OBTENER DATOS DE CAFETERIA */
