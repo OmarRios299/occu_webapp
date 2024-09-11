@@ -102,23 +102,22 @@ class CafeteriasModel extends Conexion {
     
     /* INSERTAR CAFETERIA */
     
-    static public function insertarCafeteriaModel($datos){
-    
+    static public function insertarCafeteriaModel($datos) {
         $conexion = Conexion::conectar();
         $stmt = $conexion->prepare("INSERT INTO cafeterias(
-        nombre,
-        imagen,
-        id_ciudad,
-        direccion,
-        telefono,
-        correo_electronico,
-        latitud,
-        longitud,
-        horario_apertura,
-        horario_cierre,
-        id_usuario,
-        id_alta,
-        fecha_alta
+            nombre,
+            imagen,
+            id_ciudad,
+            direccion,
+            telefono,
+            correo_electronico,
+            latitud,
+            longitud,
+            horario_apertura,
+            horario_cierre,
+            id_usuario,
+            id_alta,
+            fecha_alta
         )
         VALUES(
             :nombre,
@@ -149,13 +148,46 @@ class CafeteriasModel extends Conexion {
         $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
         $stmt->bindParam(':fecha_alta', $datos['fecha_alta'], PDO::PARAM_STR);
     
-        if($stmt->execute()){
-            return $conexion-> lastInsertId();
-        }else{
+        if ($stmt->execute()) {
+            return $conexion->lastInsertId();
+        } else {
             return "error";
         }
         $stmt = null;
     }
+    
+    static public function insertarHorarioCafeteriaModel($id_cafeteria, $dia, $horario) {
+        $conexion = Conexion::conectar();
+    
+        $stmt = $conexion->prepare("INSERT INTO cafeteria_horarios(
+            id_cafeteria,
+            dia,
+            hora_apertura,
+            hora_cierre,
+            cerrado
+        )
+        VALUES(
+            :id_cafeteria,
+            :dia,
+            :hora_apertura,
+            :hora_cierre,
+            :cerrado
+        )");
+    
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+        $stmt->bindParam(':dia', $dia, PDO::PARAM_STR);
+        $stmt->bindParam(':hora_apertura', $horario['apertura'], PDO::PARAM_STR);
+        $stmt->bindParam(':hora_cierre', $horario['cierre'], PDO::PARAM_STR);
+        $stmt->bindParam(':cerrado', $horario['cerrado'], PDO::PARAM_STR);
+    
+        if ($stmt->execute()) {
+            return true;
+        } else {
+            return false;
+        }
+        $stmt = null;
+    }
+    
     
     /* INSERTAR CAFETERIA */
     

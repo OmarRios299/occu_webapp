@@ -1,5 +1,6 @@
-<div class="titulo-boton mt-4">
+<div class="titulo-boton">
     <h1 class="titulo-modulo">Cafeterías</h1>
+    <a class="btn btn-agregar con-icono" href='<?= $url .'cafeterias/agregar/' . $action[1] . '/imagenes/.'?>'>Agregar imagenes</a>
 </div>
 
 <div class="container my-5">
@@ -28,8 +29,8 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Nombre:</label>
-                    <input type="text" class="form-control input_usuario" id="nombre_cafeteria" required value="<?=$cafeteria['nombre']?>">
-                    <input type="hidden" id="id_cafeteria" value="<?=$cafeteria['id']?>">
+                    <input type="text" class="form-control input_usuario" id="nombre_cafeteria" required value="<?= $cafeteria['nombre'] ?>">
+                    <input type="hidden" id="id_cafeteria" value="<?= $cafeteria['id'] ?>">
                 </div>
             </div>
             <div class="col-md-3 mt-4">
@@ -40,14 +41,14 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>Confirmar dirección:</label>
-                    <input type="text" class="form-control input_usuario" id="direccion_cafeteria" placeholder="Primero selecciona una ubicación" required value="<?=$cafeteria['direccion']?>">
-                    <input type="hidden" id="latitud_cafeteria" value="<?=$cafeteria['latitud']?>">
-                    <input type="hidden" id="longitud_cafeteria" value="<?=$cafeteria['longitud']?>">
+                    <input type="text" class="form-control input_usuario" id="direccion_cafeteria" placeholder="Primero selecciona una ubicación" required value="<?= $cafeteria['direccion'] ?>">
+                    <input type="hidden" id="latitud_cafeteria" value="<?= $cafeteria['latitud'] ?>">
+                    <input type="hidden" id="longitud_cafeteria" value="<?= $cafeteria['longitud'] ?>">
                 </div>
             </div>
             <div class="col-md-2 text-center">
                 <div class="form-group">
-                    <img src="<?=$url.$cafeteria['imagen']?>" style="width:100px;heigth:120px;" id="imagen_previsualizar">
+                    <img src="<?= $url . $cafeteria['imagen'] ?>" style="width:100px;heigth:120px;" id="imagen_previsualizar">
                 </div>
             </div>
         </div>
@@ -56,22 +57,23 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>País:</label>
-                    <input type="" class="form-control" id="pais_cafeteria" disabled id="" value="<?=$cafeteria['pais']?>">
+                    <input type="" class="form-control" id="pais_cafeteria" disabled id="" value="<?= $cafeteria['pais'] ?>">
                 </div>
             </div>
             <div class="col-md-4">
-             <label>Ciudad:</label>
+                <label>Ciudad:</label>
                 <select id="ciudad_select" class="form-select select2">
                     <option value="" disabled>Selecciona un ciudad</option>
                     <?php foreach (CafeteriasController::obtenerCiudadesPaisController($_SESSION['pais']) as $ciudad) {
                         if ($cafeteria['id_ciudad'] == $ciudad['id']) {
                     ?>
-                            <option value='<?=$ciudad['id']?>' selected coordenadas='<?=$ciudad['coordenadas']?>' pais='<?=$ciudad['pais']?>'><?= $ciudad['nombre'] ?></option>
+                            <option value='<?= $ciudad['id'] ?>' selected coordenadas='<?= $ciudad['coordenadas'] ?>' pais='<?= $ciudad['pais'] ?>'><?= $ciudad['nombre'] ?></option>
                         <?php
-                        }else{
+                        } else {
                         ?>
-                            <option value='<?=$ciudad['id']?>' coordenadas='<?=$ciudad['coordenadas']?>' pais='<?=$ciudad['pais']?>'><?= $ciudad['nombre'] ?></option>
-                    <?php }} ?>
+                            <option value='<?= $ciudad['id'] ?>' coordenadas='<?= $ciudad['coordenadas'] ?>' pais='<?= $ciudad['pais'] ?>'><?= $ciudad['nombre'] ?></option>
+                    <?php }
+                    } ?>
                 </select>
             </div>
             <div class="col-md-4">
@@ -88,25 +90,25 @@
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Horario de apertura:</label>
-                    <input type="time" class="form-control" id="horario_apertura_cafeteria" value="<?=$cafeteria['horario_apertura']?>">
+                    <input type="time" class="form-control" id="horario_apertura_cafeteria" value="<?= $cafeteria['horario_apertura'] ?>">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Horario de cierre:</label>
-                    <input type="time" class="form-control" id="horario_cierre_cafeteria" value="<?=$cafeteria['horario_cierre']?>">
+                    <input type="time" class="form-control" id="horario_cierre_cafeteria" value="<?= $cafeteria['horario_cierre'] ?>">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Teléfono:(opcional)</label>
-                    <input type="number" class="form-control input_usuario" id="telefono_cafeteria" value="<?=$cafeteria['telefono']?>">
+                    <input type="number" class="form-control input_usuario" id="telefono_cafeteria" value="<?= $cafeteria['telefono'] ?>">
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label>Correo electrónico:(opcional)</label>
-                    <input type="email" class="form-control input_usuario validarCampoEditar" id="correo_cafeteria" value="<?=$cafeteria['correo_electronico']?>" idRegistro='<?=$cafeteria['id']?>' columna='correo_electronico' tabla='cafeterias' mensaje='Este correo ya se encuetra registrado'>
+                    <input type="email" class="form-control input_usuario validarCampoEditar" id="correo_cafeteria" value="<?= $cafeteria['correo_electronico'] ?>" idRegistro='<?= $cafeteria['id'] ?>' columna='correo_electronico' tabla='cafeterias' mensaje='Este correo ya se encuetra registrado'>
                     <div class="invalid-feedback" style="display: none;"></div>
                 </div>
             </div>

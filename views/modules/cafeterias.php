@@ -3,7 +3,13 @@ if(!isset($action[1])){
 include "cafeterias/tabla_cafeterias.php";
 }else{
     if($action[1]=="agregar"){
-        include "cafeterias/agregar_cafeteria.php";
+        if (isset($action[3]) && $action[3]=='imagenes') {
+            include "cafeterias/imagenes_cafeteria.php";
+        } else {
+            include "cafeterias/agregar_cafeteria.php";
+        }
+        
+        
     }else if(is_numeric($action[1])){
         // var_dump($action[1]);
         $cafeteria=CafeteriasController::obtenerDatosCafeteriaController($action[1]);

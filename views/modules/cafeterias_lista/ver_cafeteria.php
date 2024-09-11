@@ -1,6 +1,6 @@
 <style>
     .header {
-        background-color: #FFD3B6  ;
+        background-color: #FFD3B6;
         /* Color oscuro para el encabezado */
         color: black;
         padding: 20px;
@@ -48,11 +48,13 @@
         /* Asegura que la imagen ocupe todo el contenedor */
         width: 100%;
     }
+
     /* Asegurar que las imágenes llenen el contenedor verticalmente */
     .carousel-item img {
         width: auto;
         height: 100%;
-        object-fit: cover; /* Asegura que la imagen cubra todo el contenedor sin perder proporción */
+        object-fit: cover;
+        /* Asegura que la imagen cubra todo el contenedor sin perder proporción */
         display: block;
         margin: auto;
     }
@@ -78,37 +80,35 @@
     }
 
     /* CSS para el modal del carousel de imagenes */
-/* Ajustar el modal para que tenga un tamaño consistente */
-#carouselModal .modal-dialog {
-    max-width: 80vw; /* Ajusta el ancho máximo del modal según tu preferencia */
-    max-height: 80vh; /* Ajusta la altura máxima del modal */
-    width: 100%;
-    height: 100%;
-    margin: auto;
-}
+    /* Ajustar el modal para que tenga un tamaño consistente */
+    #carouselModal .modal-dialog {
+        max-width: 80vw;
+        /* Ajusta el ancho máximo del modal según tu preferencia */
+        max-height: 80vh;
+        /* Ajusta la altura máxima del modal */
+        width: 100%;
+        height: 100%;
+        margin: auto;
+    }
 
-#carouselModal .modal-content {
-    width: 100%;
-    height: 100%;
-}
+    #carouselModal .modal-content {
+        width: 100%;
+        height: 100%;
+    }
 
-#carouselModal .modal-body {
-    padding: 0;
-    height: 100%; /* Mantén el contenido del modal lleno */
-}
+    #carouselModal .modal-body {
+        padding: 0;
+        height: 100%;
+        /* Mantén el contenido del modal lleno */
+    }
 
-/* Asegurar que las imágenes llenen el contenedor sin cambios de tamaño */
-.carousel-item-modal img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain; /* Ajusta la imagen para que se mantenga contenida y no se recorte */
-}
-
-
-
-
-
-
+    /* Asegurar que las imágenes llenen el contenedor sin cambios de tamaño */
+    .carousel-item-modal img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        /* Ajusta la imagen para que se mantenga contenida y no se recorte */
+    }
 </style>
 <!-- Encabezado -->
 <div class="header">
@@ -162,17 +162,17 @@
             <div class="caja flex-fill d-flex justify-content-center ">
                 <div class="mt-3">
                     <h2>Información General</h2>
-                    <p><strong>Dirección:</strong> Calle Principal 123, Ciudad</p>
-                    <p><strong>Teléfono:</strong> (123) 456-7890</p>
-                    <p><strong>Horario:</strong> Lunes - Viernes: 7:00 AM - 8:00 PM</p>
-                    <p><strong>Servicios:</strong> WiFi, Pet-Friendly, Asientos al Aire Libre</p>
+                    <p id="info1"><strong>Dirección:</strong> Calle Principal 123, Ciudad</p>
+                    <p id="info2"><strong>Teléfono:</strong> (123) 456-7890</p>
+                    <p id="info3"><strong>Horario:</strong> Lunes - Viernes: 7:00 AM - 8:00 PM</p>
+                    <p id="info4"><strong>Servicios:</strong> WiFi, Pet-Friendly, Asientos al Aire Libre</p>
                     <button class="btn btn-custom con-icono btn-ubicacion mt-3">Ver ubicación</button>
                     <button class="btn btn-outline-secondary mt-3">Ver menú</button>
                 </div>
             </div>
         </div>
         <div class="col-md-12 mt-3">
-        <h3 class="">Servicios</h3>
+            <h3 class="">Servicios</h3>
 
             <div class="caja">
                 <div class="col-md-12 mt-3">
@@ -185,7 +185,7 @@
                                     <div class="flex-wrap d-flex justify-content-center align-items-center" style="height: 150px;">
 
                                         <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/img/cafeteria_default.png" alt="Coffee To-Go" class="iconos">
+                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_wifi.png" alt="Coffee To-Go" class="iconos">
                                             <p class="">Wi-Fi</p>
                                         </div>
 
@@ -202,11 +202,11 @@
                                             <p class="">Drive Thru</p>
                                         </div>
                                         <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/img/cafeteria_default.png" alt="Coffee Beans for Sale" class="iconos">
+                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_celular.png" alt="Coffee Beans for Sale" class="iconos">
                                             <p class="">Pedido por teléfono</p>
                                         </div>
                                         <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/img/cafeteria_default.png" alt="Coffee Beans for Sale" class="iconos">
+                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_pastel.png" alt="Coffee Beans for Sale" class="iconos">
                                             <p class="">Postres</p>
                                         </div>
                                         <div class="icon-item d-flex flex-column align-items-center me-5">
@@ -214,15 +214,15 @@
                                             <p class="">Desayunos</p>
                                         </div>
                                         <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/img/cafeteria_default.png" alt="Coffee Beans for Sale" class="iconos">
+                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_sandwich.png" alt="Coffee Beans for Sale" class="iconos">
                                             <p class="">Comidas</p>
                                         </div>
                                         <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_cafe2.png" alt="Coffee Beans for Sale" class="iconos">
+                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_cafe1.png" alt="Coffee Beans for Sale" class="iconos">
                                             <p class="">Café en grano</p>
                                         </div>
                                         <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_cafe.png" alt="Coffee Beans for Sale" class="iconos">
+                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_cafe2.png" alt="Coffee Beans for Sale" class="iconos">
                                             <p class="">Café molido</p>
                                         </div>
                                     </div>

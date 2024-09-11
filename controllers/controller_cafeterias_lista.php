@@ -66,7 +66,7 @@ class CafeteriasListaController{
             'pais' => $cafeteria['pais'],
             'direccion' => $cafeteria['direccion'],
             'telefono' => $cafeteria['telefono'],
-            'ciudad' => $cafeteria['correo_electronico'],
+            'correo' => $cafeteria['correo_electronico'],
             'horario_apertura' => $cafeteria['horario_apertura'],
             'horario_cierre' => $cafeteria['horario_cierre'],
         );

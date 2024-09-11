@@ -12,18 +12,26 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 
         $datos = array(
             "id"             => isset($_POST['id_cafeteria']) ? $_POST['id_cafeteria'] : false,
-            "nombre"                => $_POST['nombre'],
-            "correo"                => $_POST['correo'],
-            "telefono"              => $_POST['telefono'],
-            "direccion"                => $_POST['direccion'],
-            "horario_apertura"                => $_POST['horario_apertura'],
-            "horario_cierre"                => $_POST['horario_cierre'],
-            "ciudad"                => $_POST['ciudad'],
-            "latitud"                => $_POST['latitud'],
-            "longitud"                => $_POST['longitud'],
-            "imagen_subir"          => isset($_FILES["imagen_cafeteria"]) ? $_FILES['imagen_cafeteria'] : false
+            "nombre"         => $_POST['nombre'],
+            "correo"         => $_POST['correo'],
+            "telefono"       => $_POST['telefono'],
+            "direccion"      => $_POST['direccion'],
+            "ciudad"         => $_POST['ciudad'],
+            "latitud"        => $_POST['latitud'],
+            "longitud"       => $_POST['longitud'],
+            "imagen_subir"   => isset($_FILES["imagen_cafeteria"]) ? $_FILES['imagen_cafeteria'] : false
         );
-        $controller = "registrarCafeteriaController";
+        
+        if (isset($_POST['horario_apertura']) && isset($_POST['horario_cierre'])) {
+            $datos["horario_apertura"] = $_POST['horario_apertura'];
+            $datos["horario_cierre"] = $_POST['horario_cierre'];
+        }
+        
+        if (isset($_POST['horarios'])) {
+            $datos["horarios"] = json_decode($_POST['horarios'], true);
+        }
+        
+        $controller = "registrarCafeteriaController";        
 
     }else{
 

@@ -52,8 +52,18 @@ class CafeteriasController{
         }else{
 
             $datos['id_alta'] = $_SESSION['id'];
-            $datos['fecha_alta']= date("Y-m-d H:i:s");
+            $datos['fecha_alta'] = date("Y-m-d H:i:s");
+            
             $datos['id'] = CafeteriasModel::insertarCafeteriaModel($datos);
+            
+            // Si los horarios están en formato JSON, insertar en la tabla de horarios
+            if (isset($datos['horarios']) && is_array($datos['horarios'])) {
+                // Insertar horarios detallados en la tabla `horarios_cafeteria`
+                foreach ($datos['horarios'] as $dia => $horario) {
+                    CafeteriasModel::insertarHorarioCafeteriaModel($datos['id'], $dia, $horario);
+                }
+            }
+            
 
         }
 

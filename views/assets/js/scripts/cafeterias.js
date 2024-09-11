@@ -158,15 +158,14 @@ function placeMarkerAndSaveData(latlng) {
 //   guardar el registro funcion
 
 
-$(document).on("submit", "#form_agregar_cafeteria", function () {
-    let id_cafeteria = $("#id_cafeteria").val();
+$(document).on("submit", "#form_agregar_cafeteria", function (e) {
+    e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
 
+    let id_cafeteria = $("#id_cafeteria").val();
     let nombre = $("#nombre_cafeteria").val();
     let email = $("#correo_cafeteria").val();
     let celular = $("#telefono_cafeteria").val();
     let direccion = $("#direccion_cafeteria").val();
-    let horario_apertura = $("#horario_apertura_cafeteria").val();
-    let horario_cierre = $("#horario_cierre_cafeteria").val();
     let ciudad = $("#ciudad_select option:selected").val();
     let latitud = $("#latitud_cafeteria").val();
     let longitud = $("#longitud_cafeteria").val();
@@ -174,18 +173,49 @@ $(document).on("submit", "#form_agregar_cafeteria", function () {
 
     var datos = new FormData();
 
-    datos.append("registrar_cafeteria", true)
+    datos.append("registrar_cafeteria", true);
     if (id_cafeteria) datos.append("id_cafeteria", id_cafeteria);
     datos.append("nombre", nombre);
     datos.append("correo", email);
     datos.append("telefono", celular);
     datos.append("direccion", direccion);
-    datos.append("horario_apertura", horario_apertura);
-    datos.append("horario_cierre", horario_cierre);
     datos.append("ciudad", ciudad);
     datos.append("latitud", latitud);
     datos.append("longitud", longitud);
     if (imagen_subir) datos.append("imagen_cafeteria", imagen_subir);
+
+    // Verificar el estado del switch para determinar qué horarios enviar
+    if ($("#switch_horario").is(':checked')) {
+        // Enviar horarios en formato simple (apertura y cierre)
+        let horario_apertura = $("#horario_apertura_cafeteria").val();
+        let horario_cierre = $("#horario_cierre_cafeteria").val();
+        datos.append("horario_apertura", horario_apertura);
+        datos.append("horario_cierre", horario_cierre);
+    } else {
+        // Enviar horarios en formato JSON (detallado por día)
+        const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+        let horarios = {};
+        diasSemana.forEach(function(dia) {
+            let switchDia = $(`#switch_${dia}`);
+            if (switchDia.is(':checked')) {
+                let horaApertura = $(`#hora_apertura_${dia}`).val();
+                let horaCierre = $(`#hora_cierre_${dia}`).val();
+                horarios[dia] = {
+                    apertura: horaApertura,
+                    cierre: horaCierre,
+                    cerrado: 'NO'
+                };
+            } else {
+                // Si el switch no está activado, se considera que el día está cerrado
+                horarios[dia] = {
+                    cerrado: 'SI'
+                };
+            }
+        });
+
+        let horariosJSON = JSON.stringify(horarios);
+        datos.append("horarios", horariosJSON); 
+    }
 
     $.ajax({
         url: url + 'views/ajax/ajax_cafeterias.php',
@@ -206,19 +236,52 @@ $(document).on("submit", "#form_agregar_cafeteria", function () {
                 $("#correo_usuario_registrar").addClass('is-invalid').next().show();
                 swal("¡Error!", "Por favor verifica el nombre de cafetería.", "error");
             } else if (respuesta == "success") {
-                (id_cafeteria != "") ? alertaUpdate() : alertaInsert();
+                if (id_cafeteria != "") {
+                    alertaUpdate();
+                } else {
+                    window.location.href = url + 'cafeterias/agregar/' + id_cafeteria + 'imagenes/';
+                }
             } else {
                 swal("¡Error!", "Ha ocurrido un error.", "error");
             }
             cargaSistema(false);
         }
     });
-
-
-
 });
+
 
 // Mostrar el modal cuando se hace clic en el botón
 $("#btn_seleccionar_ubicacion").on("click", function () {
     $("#modal_ubicacion").modal('show');
+});
+
+function toggleFields(checkbox, dia) {
+    const apertura = document.getElementById(`hora_apertura_${dia}`);
+    const cierre = document.getElementById(`hora_cierre_${dia}`);
+    
+    if (checkbox.checked) {
+        apertura.disabled = false;
+        cierre.disabled = false;
+        apertura.setAttribute('required', 'required'); 
+        cierre.setAttribute('required', 'required'); 
+    } else {
+        apertura.disabled = true;
+        cierre.disabled = true;
+        apertura.value = '';
+        cierre.value = '';
+        apertura.removeAttribute('required'); 
+        cierre.removeAttribute('required'); 
+    }
+}
+
+
+
+$(document).on("change", "#switch_horario", function() {
+    if ($(this).is(':checked')) {
+        $(".inp_horario").show();  
+        $(".tbl_horario").hide();  
+    } else {
+        $(".inp_horario").hide(); 
+        $(".tbl_horario").show(); 
+    }
 });

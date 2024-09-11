@@ -56,6 +56,10 @@ function CargarVerCafeteria(){
                 $("#aux_validacion").val(respuesta.data.id);
                 $("#titulo_cafeteria_ver").html(respuesta.data.nombre);
                 $(".carousel_imagenes").html(respuesta.imagenes);
+                $("#info1").html('<b>Dirección: </b>'+respuesta.data.direccion);
+                $("#info2").html('<b>Teléfono: </b>'+respuesta.data.telefono);
+                $("#info3").html('<b>Correo: </b>'+respuesta.data.correo);
+                $("#info4").html('<b>Horario: </b>'+respuesta.data.horario_apertura +' - '+ respuesta.data.horario_cierre);
             }
         }
     });
