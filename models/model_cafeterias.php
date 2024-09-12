@@ -230,6 +230,26 @@ class CafeteriasModel extends Conexion {
     }
     
     /* EDITAR CAFETERIA */
+
+    
+    /* ELIMINAR ANTIGUO HORARIO */
+    
+    static public function eliminarHorariosCafeteriaModel($id_cafeteria) {
+        $conexion = Conexion::conectar();
+        $stmt = $conexion->prepare("DELETE FROM cafeteria_horarios WHERE id_cafeteria = :id_cafeteria");
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+    
+        if ($stmt->execute()) {
+            return 'success';
+        } else {
+            return 'error';
+        }
+        $stmt = null;
+    }
+    
+    
+    /* ELIMINAR ANTIGUO HORARIO */
+    
     
 
     /* BUSCAR CAFETERIA */

@@ -147,7 +147,7 @@
                     <td>Lunes</td>
                     <td>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_lunes" name="desbloquear_lunes" onclick="toggleFields(this, 'lunes')" checked>
+                            <input class="form-check-input" type="checkbox" id="switch_lunes" name="desbloquear_lunes" onclick="toggleFields(this, 'Lunes')" checked required>
                         </div>
                     </td>
                     <td><input type="time" class="form-control" name="hora_apertura_lunes" id="hora_apertura_lunes"></td>
@@ -158,7 +158,7 @@
                     <td>Martes</td>
                     <td>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_martes" name="desbloquear_martes" onclick="toggleFields(this, 'martes')">
+                            <input class="form-check-input" type="checkbox" id="switch_martes" name="desbloquear_martes" onclick="toggleFields(this, 'Martes')">
                         </div>
                     </td>
                     <td><input type="time" class="form-control" name="hora_apertura_martes" id="hora_apertura_martes" disabled></td>
@@ -169,7 +169,7 @@
                     <td>Miércoles</td>
                     <td>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_miercoles" name="desbloquear_miercoles" onclick="toggleFields(this, 'miercoles')">
+                            <input class="form-check-input" type="checkbox" id="switch_miercoles" name="desbloquear_miercoles" onclick="toggleFields(this, 'Miércoles')">
                         </div>
                     </td>
                     <td><input type="time" class="form-control" name="hora_apertura_miercoles" id="hora_apertura_miercoles" disabled></td>
@@ -180,7 +180,7 @@
                     <td>Jueves</td>
                     <td>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_jueves" name="desbloquear_jueves" onclick="toggleFields(this, 'jueves')">
+                            <input class="form-check-input" type="checkbox" id="switch_jueves" name="desbloquear_jueves" onclick="toggleFields(this, 'Jueves')">
                         </div>
                     </td>
                     <td><input type="time" class="form-control" name="hora_apertura_jueves" id="hora_apertura_jueves" disabled></td>
@@ -191,7 +191,7 @@
                     <td>Viernes</td>
                     <td>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_viernes" name="desbloquear_viernes" onclick="toggleFields(this, 'viernes')">
+                            <input class="form-check-input" type="checkbox" id="switch_viernes" name="desbloquear_viernes" onclick="toggleFields(this, 'Viernes')">
                         </div>
                     </td>
                     <td><input type="time" class="form-control" name="hora_apertura_viernes" id="hora_apertura_viernes" disabled></td>
@@ -202,7 +202,7 @@
                     <td>Sábado</td>
                     <td>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_sabado" name="desbloquear_sabado" onclick="toggleFields(this, 'sabado')">
+                            <input class="form-check-input" type="checkbox" id="switch_sabado" name="desbloquear_sabado" onclick="toggleFields(this, 'Sábado')">
                         </div>
                     </td>
                     <td><input type="time" class="form-control" name="hora_apertura_sabado" id="hora_apertura_sabado" disabled></td>
@@ -213,7 +213,7 @@
                     <td>Domingo</td>
                     <td>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_domingo" name="desbloquear_domingo" onclick="toggleFields(this, 'domingo')">
+                            <input class="form-check-input" type="checkbox" id="switch_domingo" name="desbloquear_domingo" onclick="toggleFields(this, 'Domingo')">
                         </div>
                     </td>
                     <td><input type="time" class="form-control" name="hora_apertura_domingo" id="hora_apertura_domingo" disabled></td>

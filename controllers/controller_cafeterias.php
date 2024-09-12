@@ -49,6 +49,18 @@ class CafeteriasController{
             
             CafeteriasModel::editarCafeteriaModel($datos);
 
+            // Primero, eliminar todos los horarios existentes para esta cafetería
+            CafeteriasModel::eliminarHorariosCafeteriaModel($datos['id']);
+
+                // Manejar la actualización de los horarios en formato JSON
+            if (isset($datos['horarios']) && is_array($datos['horarios'])) {
+
+                // Insertar nuevamente los horarios detallados en la tabla `horarios_cafeteria`
+                foreach ($datos['horarios'] as $dia => $horario) {
+                    CafeteriasModel::insertarHorarioCafeteriaModel($datos['id'], $dia, $horario);
+                }
+            }
+
         }else{
 
             $datos['id_alta'] = $_SESSION['id'];

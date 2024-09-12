@@ -1,7 +1,7 @@
 <div class="titulo-boton">
     <h1 class="titulo-modulo">Países</h1>
 </div>
-<div class="container my-5">
+<div class="my-5">
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
             <li class="breadcrumb-item">

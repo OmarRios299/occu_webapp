@@ -193,13 +193,15 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
         datos.append("horario_cierre", horario_cierre);
     } else {
         // Enviar horarios en formato JSON (detallado por día)
-        const diasSemana = ['lunes', 'martes', 'miercoles', 'jueves', 'viernes', 'sabado', 'domingo'];
+        const diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo']; // Días con acentos y mayúscula inicial
         let horarios = {};
+        let i = 0;
         diasSemana.forEach(function(dia) {
-            let switchDia = $(`#switch_${dia}`);
+            let diaMinuscula = dia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Convertir a minúsculas y remover acentos para coincidir con los IDs
+            let switchDia = $(`#switch_${diaMinuscula}`); // Usar nombres en minúsculas y sin acentos
             if (switchDia.is(':checked')) {
-                let horaApertura = $(`#hora_apertura_${dia}`).val();
-                let horaCierre = $(`#hora_cierre_${dia}`).val();
+                let horaApertura = $(`#hora_apertura_${diaMinuscula}`).val();
+                let horaCierre = $(`#hora_cierre_${diaMinuscula}`).val();
                 horarios[dia] = {
                     apertura: horaApertura,
                     cierre: horaCierre,
@@ -210,8 +212,14 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
                 horarios[dia] = {
                     cerrado: 'SI'
                 };
+                i++;
             }
         });
+
+        if (i === 7) {
+            swal("¡Error!", "Debes elegir al menos un horario", "error");
+            return;
+        }
 
         let horariosJSON = JSON.stringify(horarios);
         datos.append("horarios", horariosJSON); 
@@ -250,14 +258,20 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
 });
 
 
+
+
 // Mostrar el modal cuando se hace clic en el botón
 $("#btn_seleccionar_ubicacion").on("click", function () {
     $("#modal_ubicacion").modal('show');
 });
 
 function toggleFields(checkbox, dia) {
-    const apertura = document.getElementById(`hora_apertura_${dia}`);
-    const cierre = document.getElementById(`hora_cierre_${dia}`);
+    // Normalizar el nombre del día para coincidir con los IDs en el HTML
+    const diaNormalizado = dia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
+    // Buscar los elementos de apertura y cierre usando el nombre normalizado
+    const apertura = document.getElementById(`hora_apertura_${diaNormalizado}`);
+    const cierre = document.getElementById(`hora_cierre_${diaNormalizado}`);
     
     if (checkbox.checked) {
         apertura.disabled = false;
@@ -276,12 +290,19 @@ function toggleFields(checkbox, dia) {
 
 
 
+
 $(document).on("change", "#switch_horario", function() {
     if ($(this).is(':checked')) {
-        $(".inp_horario").show();  
+        $(".inp_horario").show();
+        $(".inp_horario").attr("required",true);  
         $(".tbl_horario").hide();  
+        $(".tbl_horario").removeAttr("required");  
     } else {
         $(".inp_horario").hide(); 
         $(".tbl_horario").show(); 
+        $(".inp_horario").val('');
+        $(".inp_horario").removeAttr("required"); 
+        $(".tbl_horario").attr("required",true);  
+ 
     }
 });
