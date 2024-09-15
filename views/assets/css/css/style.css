@@ -1468,14 +1468,17 @@ dl, ol, ul {
 .btn-eliminar.con-icono::before, 
 .btn-eliminar.btn-icono {
     background-image: url(../img/iconos/botones/icono-eliminar.svg);
+    background-color: var(--color-rojo-oscuro);
 }
 .btn-editar.con-icono::before, 
 .btn-editar.btn-icono {
     background-image: url(../img/iconos/botones/icono-editar.svg);
+    background-color: var(--color-azul);
 }
 .btn-ver.con-icono::before, 
 .btn-ver.btn-icono {
     background-image: url(../img/iconos/botones/icono-ver.svg);
+    background-color: var(--color-azul-cielo);
 }
 .btn-descargar.con-icono::before, 
 .btn-descargar.btn-icono {

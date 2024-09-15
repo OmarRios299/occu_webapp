@@ -1,6 +1,7 @@
 <?php 
 require_once '../../controllers/controller_cafeterias.php';
 require_once '../../controllers/controller_general.php';
+require_once '../../controllers/controller_template.php';
 require_once '../../models/model_cafeterias.php';
 require_once '../../models/model_general.php';
 
@@ -33,6 +34,19 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         
         $controller = "registrarCafeteriaController";        
 
+    }else if(isset($_GET['imagenes_cafeteria'])){
+
+        $datos = $_GET['imagenes_cafeteria'];
+
+        $controller = 'cargarTablaImagenesController';
+
+    }else if(isset($_POST['subir_imagen'])){
+        $datos = array(
+            'id' => $_POST['id'],
+            'contador' => $_POST['contador'],
+            'imagen_subir' => $_FILES["imagen"],
+        );
+        $controller = 'subirImagenCafeteriaController';
     }else{
 
         $datos = false;

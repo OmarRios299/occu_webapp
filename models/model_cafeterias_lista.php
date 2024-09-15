@@ -69,7 +69,10 @@ class CafeteriasListaModel extends Conexion {
     
     static public function obtenerImagenesModel($id){
     
-        $stmt = Conexion::conectar()->prepare("SELECT cafeterias_imagenes.* FROM cafeterias_imagenes WHERE id_cafeteria = :id");
+        $stmt = Conexion::conectar()->prepare("SELECT cafeterias_imagenes.* FROM cafeterias_imagenes 
+        WHERE id_cafeteria = :id
+        AND estado =0
+        ");
     
         $stmt->bindParam(':id', $id,PDO::PARAM_INT);
     

@@ -97,4 +97,52 @@ class CafeteriasController{
     /* REGISTRAR CAFETERIA */
     
     
+    /* CARGAR TABLA DE IAMGENS */
+    
+    static public function cargarTablaImagenesController($id){
+        $url = TemplateController::obtenerUrlController();
+        $i=0;
+        $data=[];
+        foreach (CafeteriasModel::obtenerImagenesCafeteriaModel($id) as $imagen){
+            $checked = ($imagen['estado']==0) ? "checked" : "";
+            $botones = '<button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="cafeterias_imagenes" idRegistro="'.$imagen['id'].'"></button>';
+            $estado = '<div class="form-check form-switch">
+                            <input type="checkbox"
+                            class="form-check-input cambioEstado"
+                            id="switch'.$imagen['id'].'"
+                            tabla="cafeterias_imagenes"
+                            idRegistro="'.$imagen['id'].'"
+                            '.$checked.'>
+                            <label class="custom-control-label" for="switch'.$imagen['id'].'"></label>
+                        </div>';
+            $img = '<img src="'.$url.''.$imagen['imagen'].'" alt="" style="width: 100px; heigth: auto;">';
+            $data[]=[
+                ++$i,
+                $botones,
+                $estado,
+                $img,
+                $imagen['descripcion']
+            ];
+        }
+        
+     return json_encode(['data' => $data, 'i'=>$i]);
+
+    }
+    
+    /* CARGAR TABLA DE IAMGENS */
+    
+    
+    /* SUBIR IMAGEN DE CAFETERIA */
+    
+    static public function subirImagenCafeteriaController($datos){
+        $i = is_numeric($datos['contador']) +1;
+        $nombre_imagen = "cafeteria_".$datos['id']."_".$i;
+        $datos['imagen'] = GeneralController::subirImagen($datos['imagen_subir'],"cafeterias_imagenes",$nombre_imagen);
+        CafeteriasModel::agregarImagenesModel($datos);
+
+        return 'success';
+    }
+    
+    /* SUBIR IMAGEN DE CAFETERIA */
+    
 } ?>

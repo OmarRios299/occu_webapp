@@ -6,7 +6,7 @@ let currentMarker_registrar = null;
 let allowedPolygon_registrar;
 
 $(document).ready(function () {
-    if (moduloActual == 'cafeterias') {
+    if (moduloActual == 'cafeterias' && $('#ciudad_select').length) {
         initializePolygonAndMap(); // Inicializa el mapa y el polígono
 
         // Escuchar el cambio del select para actualizar el polígono y centrar el mapa
@@ -22,6 +22,9 @@ $(document).ready(function () {
                 setTimeout(() => google.maps.event.trigger(map_registrar, 'resize'), 10);
             }
         });
+    }
+    if ($('#tabla_imagenes').length) {
+        cargarTablaImagenes();
     }
 });
 
@@ -305,4 +308,64 @@ $(document).on("change", "#switch_horario", function() {
         $(".tbl_horario").attr("required",true);  
  
     }
+});
+
+function cargarTablaImagenes(){
+    let id = $("#id_cafeteria").val();
+
+    let filtro = `?imagenes_cafeteria=${id}`;
+    if ($.fn.DataTable.isDataTable($("#tabla_imagenes"))) {
+        $("#tabla_imagenes").DataTable().destroy();
+    }
+   $('#tabla_imagenes').DataTable( {
+    "ajax": {
+            "url": url + 'views/ajax/ajax_cafeterias.php' + filtro,
+            "dataSrc": function (json) {
+                $('#contador_items').val(json.i);
+                return json.data;
+            },
+        },
+    "deferRender": true,
+    "retrieve": true,
+    "processing": true,
+    dom: 'Bfrtip',
+    responsive: true,
+    ordering: true,
+    "language":{"url": url+"views/assets/plugins/DataTables/Spanish.json"}
+   });
+}
+
+$(document).on("submit","#form_subir_imagenes",function(){
+    let imagen_subir = $("#imagen_cafeteria")[0].files[0];
+    var datos = new FormData();
+    
+    datos.append("subir_imagen", true);
+    datos.append("id", $("#id_cafeteria").val());
+    datos.append("contador", $("#contador_items").val());
+    datos.append("imagen", imagen_subir);
+    
+    $.ajax({
+        url:url+'views/ajax/ajax_cafeterias.php',
+        method:'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success:function(respuesta){
+            console.log(respuesta);
+            if (respuesta=='success') {
+                swal({
+                   title: "¡OK!",
+                   text: "La imagen se agrego correctamente.",
+                   icon: "success",
+                   button: "Aceptar",
+                }).then(function() {
+                   window.location = "";
+                });
+            } else {
+                
+            }
+        }
+    });
+
 });

@@ -28,6 +28,7 @@
         <div class="row mt-3">
             <div class="col-md-3">
                 <div class="form-group">
+                <input type="hidden" id="id_cafeteria" value="">
                     <label>Nombre:</label>
                     <input type="text" class="form-control input_usuario" id="nombre_cafeteria" required>
                 </div>

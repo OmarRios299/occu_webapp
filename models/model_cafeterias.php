@@ -291,4 +291,47 @@ class CafeteriasModel extends Conexion {
     
     /* EDITAR IMAGEN */
 
+    
+    /* BUSCAR IMAGENS DE CAFETERIAS */
+    
+    static public function obtenerImagenesCafeteriaModel($cafeteria){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM cafeterias_imagenes 
+        WHERE id_cafeteria=:id
+        AND estado !=2
+        ");
+    
+        $stmt->bindParam(':id', $cafeteria,PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* BUSCAR IMAGENS DE CAFETERIAS */
+    
+    
+    /* AGREGAR NUEVAS IMAENES */
+    
+    static public function agregarImagenesModel($datos){
+    
+        $stmt = Conexion::conectar()->prepare("INSERT INTO cafeterias_imagenes (id_cafeteria, imagen) VALUES (:id_cafeteria, :imagen)");
+    
+        $stmt->bindParam(':id_cafeteria', $datos['id'], PDO::PARAM_INT);
+        $stmt->bindParam(':imagen', $datos['imagen'], PDO::PARAM_STR);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+        $stmt = null;
+    }
+    
+    /* AGREGAR NUEVAS IMAENES */
+
+
 } ?>
