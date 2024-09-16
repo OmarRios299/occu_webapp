@@ -1,6 +1,7 @@
 <?php 
 require_once '../../controllers/controller_cafeterias_lista.php';
 require_once '../../controllers/controller_template.php';
+require_once '../../controllers/controller_general.php';
 require_once '../../models/model_cafeterias_lista.php';
 require_once '../../models/model_general.php';
 

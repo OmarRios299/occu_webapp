@@ -361,4 +361,54 @@ class GeneralController
 	// }
 
 	// /* OBTENER ESTADOS */
+
+	// Función para traducir el nombre del día de inglés a español
+    static public function traducirDia($diaIngles) {
+        $dias = [
+            'Monday' => 'Lunes',
+            'Tuesday' => 'Martes',
+            'Wednesday' => 'Miércoles',
+            'Thursday' => 'Jueves',
+            'Friday' => 'Viernes',
+            'Saturday' => 'Sábado',
+            'Sunday' => 'Domingo'
+        ];
+        return $dias[$diaIngles] ?? $diaIngles; // Devolver la traducción o el mismo día si no se encuentra
+    }
+
+    // Función para determinar si la cafetería está abierta y el horario del día actual
+    static public function isOpen($horariosSimples, $horariosDetallados) {
+        date_default_timezone_set('America/Tijuana'); // Reemplaza con tu zona horaria correcta
+        $currentTime = date('H:i'); // Obtener la hora actual en formato de 24 horas (HH:MM)
+        $currentDayEnglish = date('l'); // Obtener el día actual en inglés
+        $currentDay = self::traducirDia($currentDayEnglish); // Traducir el día al español
+
+        // Si la cafetería tiene horarios en formato simple
+        if (!empty($horariosSimples['horario_apertura']) && !empty($horariosSimples['horario_cierre'])) {
+            $isOpen = ($currentTime >= $horariosSimples['horario_apertura'] && $currentTime <= $horariosSimples['horario_cierre']);
+            $horarioDiaActual = $horariosSimples['horario_apertura'] . ' - ' . $horariosSimples['horario_cierre'];
+            return [$isOpen, $horarioDiaActual];
+        }
+
+        // Si la cafetería tiene horarios en formato detallado
+        if (!empty($horariosDetallados) && isset($horariosDetallados[$currentDay])) {
+            $horarioDia = $horariosDetallados[$currentDay];
+
+            // Verificar si el día está marcado como cerrado
+            if ($horarioDia['cerrado'] === 'SI') {
+                return [false, 'Cerrado los ' .$currentDay]; // Si el día está marcado como cerrado
+            }
+
+            // Verificar si hay horarios de apertura y cierre válidos
+            if (empty($horarioDia['apertura']) || empty($horarioDia['cierre'])) {
+                return [false, 'Horario no disponible']; // Si no hay horarios definidos
+            }
+
+            $isOpen = ($currentTime >= $horarioDia['apertura'] && $currentTime <= $horarioDia['cierre']);
+            $horarioDiaActual = $horarioDia['apertura'] . ' - ' . $horarioDia['cierre'];
+            return [$isOpen, $horarioDiaActual];
+        }
+
+        return [false, 'Horario no disponible']; // Si no hay horarios definidos, se asume que está cerrado
+    }
 }

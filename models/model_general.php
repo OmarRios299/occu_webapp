@@ -226,5 +226,35 @@ class GeneralModel extends Conexion{
 	
 	/* OBTENER ESTADOS (ENTIDADES FEDERATIVAS) */
 	
+
+	// Obtener los horarios simples de una cafetería
+
+    static public function obtenerHorariosSimplesCafeteriaModel($id_cafeteria) {
+        $conexion = Conexion::conectar();
+        $stmt = $conexion->prepare("SELECT horario_apertura, horario_cierre FROM cafeterias WHERE id = :id_cafeteria");
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    // Obtener los horarios detallados (JSON) de una cafetería
+	
+    static public function obtenerHorariosDetalladosCafeteriaModel($id_cafeteria) {
+        $conexion = Conexion::conectar();
+        $stmt = $conexion->prepare("SELECT dia, hora_apertura, hora_cierre, cerrado FROM cafeteria_horarios WHERE id_cafeteria = :id_cafeteria");
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $horarios = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $horarios[$row['dia']] = [
+                'apertura' => $row['hora_apertura'],
+                'cierre' => $row['hora_cierre'],
+                'cerrado' => $row['cerrado']
+            ];
+        }
+
+        return $horarios;
+    }
 	
 }

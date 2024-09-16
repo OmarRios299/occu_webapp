@@ -110,12 +110,18 @@
         /* Ajusta la imagen para que se mantenga contenida y no se recorte */
     }
 </style>
+<?php 
+$hidden = 'style="display:none"';
+if (isset($action[1])) {
+    $hidden = '';
+}
+?>
 <!-- Encabezado -->
 <div class="header">
     <h1 id="titulo_cafeteria_ver">Nombre de la Cafetería</h1>
     <p id="descripcion">Una breve descripción de la cafetería y su ambiente acogedor.</p>
 </div>
-<div class="container my-4">
+<div class="container my-4" <?=$hidden?>>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
             <li class="breadcrumb-item">
@@ -129,6 +135,7 @@
     </nav>
 </div>
 <input type="hidden" id="id_cafeteria" idCafeteria="<?= $action[1] ?>">
+
 
 <!-- Contenido principal -->
 <div class="container">
@@ -166,7 +173,7 @@
                     <p id="info2"><strong>Teléfono:</strong> (123) 456-7890</p>
                     <p id="info3"><strong>Horario:</strong> Lunes - Viernes: 7:00 AM - 8:00 PM</p>
                     <p id="info4"><strong>Servicios:</strong> WiFi, Pet-Friendly, Asientos al Aire Libre</p>
-                    <button class="btn btn-custom con-icono btn-ubicacion mt-3">Ver ubicación</button>
+                    <button class="btn btn-custom con-icono btn-ubicacion mt-3" <?=$hidden?>>Ver ubicación</button>
                     <button class="btn btn-outline-secondary mt-3">Ver menú</button>
                 </div>
             </div>

@@ -1,6 +1,7 @@
 <?php
 
 require_once '../../controllers/controller_cafeterias_mapa.php';
+require_once '../../controllers/controller_general.php';
 require_once '../../models/model_cafeterias_mapa.php';
 require_once '../../models/model_general.php';
 
