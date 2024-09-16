@@ -10,7 +10,11 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 
     if(isset($_POST['cargar_lista'])){
 
-        $datos = true;
+        $datos = array(
+            'pagina' => isset($_POST['pagina']) ? intval($_POST['pagina']) : 1,
+            'busqueda' => isset($_POST['busqueda']) ? $_POST['busqueda'] : '',
+        );
+
         $controller = "obtenerCafeteriasController";
 
     }else if(isset($_POST['cargar_datos'])){

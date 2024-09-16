@@ -147,7 +147,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Ciudad</label>
-                            <select class="form-control select_ciudad" id_pais=<?=$_SESSION['ciudad']?> id="select_ciudades_filtro">
+                            <select class="form-control select_ciudad" id_pais=<?= $_SESSION['ciudad'] ?> id="select_ciudades_filtro">
                                 <option value="" disabled>Selecciona una opción</option>
 
                             </select>
@@ -157,32 +157,29 @@
             </div>
         </div>
         <div class="col-md-1 d-flex justify-content-center align-items-center h-100 mt-1">
-        <div class="caja">
-        <button type="button" class="btn btn-icono btn-buscar"></button>
-        </div>
+            <div class="caja">
+                <button type="button" class="btn btn-icono btn-buscar"></button>
+            </div>
         </div>
     </div>
 
-    <!-- Listado de cafeterías -->
-    <div class="row mt-3" id="div_lista_cafeterias">
-        <!-- Tarjeta de ejemplo -->
-        <!-- <div class="col-12 col-md-6 col-lg-4 mb-4">
-            <div class="card">
-                <img src="cafe1.jpg" class="card-img-top" alt="Cafetería 1">
-                <div class="card-body">
-                    <div class="card-header">
-                        <h5 class="card-title">Fraternos Coffee Bar</h5>
-                        <i class="bi bi-heart favorite-icon"></i>
-                    </div>
-                    <p class="card-text">Dirección</p>
-                    <div class="d-flex justify-content-between">
-                        <span class="status-open">abierto</span>
-                        <span>1.2km</span>
-                    </div>
-                </div>
-            </div>
-        </div> -->
+    <!-- Contenedor de búsqueda y paginación -->
+    <div class="d-flex justify-content-between mt-3">
+        <!-- Input de Filtrado -->
+        <input type="text" id="filtro-input" class="form-control w-50" placeholder="Buscar cafeterías...">
+
+        <!-- Botones de Paginación -->
+        <div>
+            <button id="boton-anterior" class="btn btn-primary" data-pagina="1">Anterior</button>
+            <button id="boton-siguiente" class="btn btn-primary" data-pagina="1">Siguiente</button>
+        </div>
     </div>
+
+    <!-- Contenedor para Listado de Cafeterías -->
+    <div class="row mt-3" id="div_lista_cafeterias">
+        <!-- Aquí se cargarán las cafeterías dinámicamente -->
+    </div>
+
 </div>
 
 

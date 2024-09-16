@@ -3,24 +3,19 @@ class CafeteriasListaController{
     
 
     /* OBTENER CAFETERIAS */
-    static public function obtenerCafeteriasController() {
+    static public function obtenerCafeteriasController($datos) {
         $url = TemplateController::obtenerUrlController();
         $html = ''; 
 
-        foreach (CafeteriasListaModel::obtenerCafeteriasModel() as $cafeteria) {
-            // Obtener horarios simples
+        $cafeterias = CafeteriasListaModel::obtenerCafeteriasModel($datos);
+
+        foreach ($cafeterias as $cafeteria) {
+
             $horariosSimples = CafeteriasListaModel::obtenerHorariosSimplesCafeteriaModel($cafeteria['id']);
-            
-            // Obtener horarios detallados desde la tabla de horarios
             $horariosDetallados = CafeteriasListaModel::obtenerHorariosDetalladosCafeteriaModel($cafeteria['id']);
-            
-            // Determinar si la cafetería está abierta y obtener el horario del día actual
             list($isOpen, $horarioDiaActual) = self::isOpen($horariosSimples, $horariosDetallados); 
+            $statusClass = $isOpen ? 'text-success' : 'text-danger';
 
-            // Clase de color basada en el estado
-            $statusClass = $isOpen ? 'text-success' : 'text-danger'; // Verde si está abierto, rojo si está cerrado
-
-            // Construcción del HTML para cada tarjeta
             $html .= '
             <div class="col-12 col-md-6 col-lg-4 mb-4 modal_cafeteria">
                 <div class="card">
@@ -42,8 +37,12 @@ class CafeteriasListaController{
             </div>';
         }
 
-        // Devolver solo el HTML generado
-        return $html;
+        $totalCafeterias = CafeteriasListaModel::contarTotalCafeterias($datos['busqueda']);
+
+        return json_encode([
+            'html' => $html,
+            'totalCafeterias' => $totalCafeterias
+        ]);
     }
 
     // Función para traducir el nombre del día de inglés a español

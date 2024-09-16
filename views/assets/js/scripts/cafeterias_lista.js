@@ -1,36 +1,80 @@
-$(document).ready(function(){
+$(document).ready(function() {
+    let paginaActual = 1; // Inicializar la página actual
 
-    if (moduloActual=='cafeterias_lista') {
-        CargarCiudades();
+    if (moduloActual == 'cafeterias_lista') {
+        
         if ($('#titulo_cafeteria_ver').length) {
             CargarVerCafeteria();
         }
-    }
-    if ($('#div_lista_cafeterias').length) {
-        cargarListaCafeterias();
+
+        if ($('#div_lista_cafeterias').length) {
+            cargarListaCafeterias(paginaActual);
+        }
+
+        $('#boton-siguiente').on('click', function() {
+            paginaActual++;
+            cargarListaCafeterias(paginaActual);
+        });
+
+        $('#boton-anterior').on('click', function() {
+            if (paginaActual > 1) {
+                paginaActual--;
+                cargarListaCafeterias(paginaActual);
+            }
+        });
+
+        $('#filtro-input').on('keyup', function() {
+            const filtro = $(this).val();
+            paginaActual = 1;
+            cargarListaCafeterias(paginaActual, filtro);
+        });
     }
 });
 
-function cargarListaCafeterias(){
-
+function cargarListaCafeterias(pagina, filtro = '') {
+    const limite = 10;
     var datos = new FormData();
     datos.append("cargar_lista", true);
-    
+    datos.append("pagina", pagina);
+    datos.append("busqueda", filtro);
+
     $.ajax({
-        url:url+'views/ajax/ajax_cafeterias_lista.php',
-        method:'POST',
+        url: url + 'views/ajax/ajax_cafeterias_lista.php', 
+        method: 'POST',
         data: datos,
         cache: false,
         contentType: false,
         processData: false,
-        success:function(respuesta){
-           // respuesta = JSON.parse(respuesta);
-            //console.log(respuesta);
-            $('#div_lista_cafeterias').html(respuesta);
-    
+        success: function(respuesta) {
+            console.log("Respuesta del servidor:", respuesta); 
+            try {
+                respuesta = JSON.parse(respuesta);
+                
+                $('#div_lista_cafeterias').html(respuesta.html);
+
+                if (pagina > 1) {
+                    $('#boton-anterior').prop('disabled', false);
+                } else {
+                    $('#boton-anterior').prop('disabled', true);
+                }
+
+                if (respuesta.totalCafeterias > (pagina * limite)) {
+                    $('#boton-siguiente').prop('disabled', false);
+                } else {
+                    $('#boton-siguiente').prop('disabled', true);
+                }
+            } catch (error) {
+                console.error("Error al procesar la respuesta JSON:", error);
+                swal("¡Error!", "Ha ocurrido un error al cargar las cafeterías", "error");
+            }
+        },
+        error: function() {
+            swal("¡Error!", "No se pudo comunicar con el servidor", "error");
         }
     });
 }
+
+
 function CargarVerCafeteria(){
 
     let id_cafeteria = $("#id_cafeteria").attr("idCafeteria"); 
