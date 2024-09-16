@@ -120,10 +120,10 @@ class CafeteriasListaController{
         $active='active';
         $i=0;
         foreach(CafeteriasListaModel::obtenerImagenesModel($id) as $imagen){
-            $active = ($i==1) ? $active='' : $active='active' ;
+            $active = ($i==0) ? $active='active' : $active='' ;
             $carousel .='
             <div class="carousel-item '.$active.' ver_img_modal" data-bs-interval="10000">
-                <img src="../'.$imagen['imagen'].'" class="d-block w-100 img-fluid" alt="...">
+                <img src="'.$url.''.$imagen['imagen'].'" class="d-block w-100 img-fluid" alt="...">
             </div>';
             ++$i;
         }

@@ -9,6 +9,7 @@ class CafeteriasMapaController{
         $data = [];
         foreach (CafeteriasMapaModel::obtenerCafeteriasModel() as $cafeteria){
             $data[]=[
+                'id' => $cafeteria['id'],
                 'nombre' => $cafeteria['nombre'],
                 'imagen' => $cafeteria['imagen'],
                 'direccion' => $cafeteria['direccion'],

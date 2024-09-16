@@ -166,7 +166,7 @@
     <!-- Listado de cafeterías -->
     <div class="row mt-3" id="div_lista_cafeterias">
         <!-- Tarjeta de ejemplo -->
-        <div class="col-12 col-md-6 col-lg-4 mb-4">
+        <!-- <div class="col-12 col-md-6 col-lg-4 mb-4">
             <div class="card">
                 <img src="cafe1.jpg" class="card-img-top" alt="Cafetería 1">
                 <div class="card-body">
@@ -181,7 +181,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 </div>
 

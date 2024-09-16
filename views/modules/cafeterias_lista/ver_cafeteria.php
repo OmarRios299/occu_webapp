@@ -138,12 +138,12 @@
             <div class="caja flex-fill">
                 <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner carousel_imagenes" id="">
-                        <div class="carousel-item active" data-bs-interval="100000">
+                        <!-- <div class="carousel-item active" data-bs-interval="100000">
                             <img src="<?= $url ?>/views/assets/img/cafeterias_imagenes/.jpg" class="d-block w-100 img-fluid" alt="...">
                         </div>
                         <div class="carousel-item" data-bs-interval="2000">
                             <img src="<?= $url ?>/views/assets/img/cafeterias_imagenes/.jpg" class="d-block w-100 img-fluid" alt="...">
-                        </div>
+                        </div> -->
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>

@@ -42,6 +42,7 @@ function cargarMapaCafeterias(){
                 // Iterar sobre los datos recibidos para crear marcadores
                 respuesta.data.forEach(function(cafeteria) {
                     var nombre = cafeteria.nombre;
+                    var id = cafeteria.id;
                     var imagen = cafeteria.imagen;
                     var latitud = parseFloat(cafeteria.latitud);
                     var longitud = parseFloat(cafeteria.longitud);
@@ -65,7 +66,7 @@ function cargarMapaCafeterias(){
                         content: `
                             <div style="text-align: center;">
                                 <h6>${nombre}</h6>
-                                <img src="${url}${imagen}" alt="Imagen del Marcador" class='imagen' style="width: 50px; height: 50px;"/>
+                                <img src="${url}${imagen}" alt="Imagen del Marcador" class='imagen' idCafeteria='${id}' style="width: 50px; height: 50px;"/>
                                 <p>Horario de 7:00 a 22:00.</p>
                             </div>
                         `
@@ -87,7 +88,9 @@ function cargarMapaCafeterias(){
 
 
 $(document).on("click",".imagen",function(){
+    $("#id_cafeteria").attr('idCafeteria',($(this).attr('idCafeteria')));
     $("#modal_cafeteria").modal('show');
+    CargarVerCafeteria();
 });
 
     
