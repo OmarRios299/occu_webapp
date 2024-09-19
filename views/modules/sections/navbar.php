@@ -34,7 +34,10 @@
                             <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'cafeterias'; ?>"><span>Cafeterías</span></a>
                         </li>
                         <li>
-                            <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'cafeterias_productos_categorias'; ?>"><span>Cetegorías de productos</span></a>
+                            <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'cafeterias_servicios'; ?>"><span>Servicios de cafetería</span></a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'menu_categorias'; ?>"><span>Cetegorías de productos</span></a>
                         </li>
                         <li>
                             <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . ''; ?>"><span>Ingredientes</span></a>
