@@ -27,46 +27,32 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle item-color nav-item" id='nav2' data-bs-toggle="dropdown" aria-expanded="false">Administración</a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'admin_usuarios'; ?>"><span>Usuarios</span></a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'cafeterias'; ?>"><span>Cafeterías</span></a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'cafeterias_servicios'; ?>"><span>Servicios de cafetería</span></a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'menu_categorias'; ?>"><span>Cetegorías de productos</span></a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . ''; ?>"><span>Ingredientes</span></a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'admin_paises'; ?>"><span>Países</span></a>
-                        </li>
+                        <li><a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'admin_usuarios'; ?>"><span>Usuarios</span></a></li>
+                        <li><a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'cafeterias'; ?>"><span>Cafeterías</span></a></li>
+                        <li><a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'cafeterias_servicios'; ?>"><span>Servicios de cafetería</span></a></li>
+                        <li><a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'admin_paises'; ?>"><span>Países</span></a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle item-color nav-item" id='nav5' data-bs-toggle="dropdown" aria-expanded="false">Menú</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . 'menu_categorias'; ?>"><span>Cetegorías de productos</span></a></li>
+                        <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . 'menu_productos'; ?>"><span>Productos</span></a></li>
+                        <li><a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . ''; ?>"><span>Ingredientes</span></a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id='nav3' data-bs-toggle="dropdown" aria-expanded="false">Cafeterías</a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" item='nav3' href="<?= $url . 'cafeterias_mapa'; ?>"><span>Ubicaciones</span></a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" item='nav3' href="<?= $url . 'cafeterias_lista'; ?>"><span>Lista de cafeterías</span></a>
-                        </li>
+                        <li><a class="dropdown-item" item='nav3' href="<?= $url . 'cafeterias_mapa'; ?>"><span>Ubicaciones</span></a></li>
+                        <li><a class="dropdown-item" item='nav3' href="<?= $url . 'cafeterias_lista'; ?>"><span>Lista de cafeterías</span></a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id='na4' data-bs-toggle="dropdown" aria-expanded="false">Catálogo</a>
                     <ul class="dropdown-menu">
-                        <li>
-                            <a class="dropdown-item" item='nav4' href="<?= $url . ''; ?>"><span>Para baristas</span></a>
-                        </li>
-                        <li>
-                            <a class="dropdown-item" item='nav4' href="<?= $url . ''; ?>"><span>Para cafeterías</span></a>
-                        </li>
+                        <li><a class="dropdown-item" item='nav4' href="<?= $url . ''; ?>"><span>Para baristas</span></a></li>
+                        <li><a class="dropdown-item" item='nav4' href="<?= $url . ''; ?>"><span>Para cafeterías</span></a></li>
                     </ul>
                 </li>
             </ul>

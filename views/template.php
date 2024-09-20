@@ -104,6 +104,7 @@ $v = "1.0.0";
                         $action[0] == "cafeterias_lista"                ||
                         $action[0] == "cafeterias_servicios"            ||
                         $action[0] == "menu_categorias"                 ||  
+                        $action[0] == "menu_productos"                  ||  
                         $action[0] == "404"                             ||
                         $action[0] == "salir"){
 
@@ -203,6 +204,7 @@ $v = "1.0.0";
         <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_servicios.js?v='<?php echo $v; ?>'"></script>
         <!-- Menu -->
         <script src="<?php echo $url; ?>views/assets/js/scripts/menu_categorias.js?v='<?php echo $v; ?>'"></script>
+        <script src="<?php echo $url; ?>views/assets/js/scripts/menu_productos.js?v='<?php echo $v; ?>'"></script>
 
 
     
