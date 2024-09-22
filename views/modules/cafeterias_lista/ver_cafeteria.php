@@ -1,127 +1,15 @@
-<style>
-    .header {
-        background-color: #FFD3B6;
-        /* Color oscuro para el encabezado */
-        color: black;
-        padding: 20px;
-        text-align: center;
-    }
-
-    .profile-image {
-        border-radius: 8px;
-        width: 100%;
-        height: auto;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-bottom: 20px;
-    }
-
-    .info-section {
-        margin-top: 20px;
-    }
-
-    .btn-custom {
-        background-color: #5a9;
-        /* Color personalizado para los botones */
-        color: white;
-        border-radius: 5px;
-    }
-
-    .btn-custom:hover {
-        background-color: #468;
-        /* Color de hover */
-    }
-
-    .star-rating {
-        color: #ffc107;
-    }
-
-    /* Mantén una relación de aspecto fija para las imágenes del carrusel */
-    .carousel-item {
-        height: 400px;
-        /* Ajusta la altura según tus necesidades */
-    }
-
-    .carousel-item img {
-        object-fit: cover;
-        /* Cubre el contenedor sin distorsionar la imagen */
-        height: 100%;
-        /* Asegura que la imagen ocupe todo el contenedor */
-        width: 100%;
-    }
-
-    /* Asegurar que las imágenes llenen el contenedor verticalmente */
-    .carousel-item img {
-        width: auto;
-        height: 100%;
-        object-fit: cover;
-        /* Asegura que la imagen cubra todo el contenedor sin perder proporción */
-        display: block;
-        margin: auto;
-    }
-
-    /* css para los servicios contenedor */
-
-    #iconCarousel .carousel-item {
-        max-height: 150px;
-        /* Limita la altura del carrusel */
-        overflow-x: hidden;
-        /* Oculta el contenido que desborda horizontalmente */
-    }
-
-    .icon-item {
-        padding-top: 10px;
-        flex: 0 0 auto;
-        /* Asegura que los íconos no se reduzcan más allá de su tamaño mínimo */
-    }
-
-    #iconCarousel img {
-        width: auto;
-        height: 80px;
-    }
-
-    /* CSS para el modal del carousel de imagenes */
-    /* Ajustar el modal para que tenga un tamaño consistente */
-    #carouselModal .modal-dialog {
-        max-width: 80vw;
-        /* Ajusta el ancho máximo del modal según tu preferencia */
-        max-height: 80vh;
-        /* Ajusta la altura máxima del modal */
-        width: 100%;
-        height: 100%;
-        margin: auto;
-    }
-
-    #carouselModal .modal-content {
-        width: 100%;
-        height: 100%;
-    }
-
-    #carouselModal .modal-body {
-        padding: 0;
-        height: 100%;
-        /* Mantén el contenido del modal lleno */
-    }
-
-    /* Asegurar que las imágenes llenen el contenedor sin cambios de tamaño */
-    .carousel-item-modal img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        /* Ajusta la imagen para que se mantenga contenida y no se recorte */
-    }
-</style>
-<?php 
+<?php
 $hidden = 'style="display:none"';
 if (isset($action[1])) {
     $hidden = '';
 }
 ?>
 <!-- Encabezado -->
-<div class="header">
+<div class="titulo-cafeteria">
     <h1 id="titulo_cafeteria_ver">Nombre de la Cafetería</h1>
     <p id="descripcion">Una breve descripción de la cafetería y su ambiente acogedor.</p>
 </div>
-<div class="container my-4" <?=$hidden?>>
+<div class="container my-4" <?= $hidden ?>>
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb breadcrumb-chevron p-3 bg-body-tertiary rounded-3">
             <li class="breadcrumb-item">
@@ -141,7 +29,7 @@ if (isset($action[1])) {
 <div class="container">
     <div class="row d-flex align-items-stretch">
         <!-- Imagen destacada de la cafetería -->
-        <div class="col-md-6 d-flex mt-3">
+        <div class="carousel-imgs col-md-6 d-flex mt-3">
             <div class="caja flex-fill">
                 <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner carousel_imagenes" id="">
@@ -173,78 +61,27 @@ if (isset($action[1])) {
                     <p id="info2"><strong>Teléfono:</strong> (123) 456-7890</p>
                     <p id="info3"><strong>Horario:</strong> Lunes - Viernes: 7:00 AM - 8:00 PM</p>
                     <p id="info4"><strong>Servicios:</strong> WiFi, Pet-Friendly, Asientos al Aire Libre</p>
-                    <button class="btn btn-custom con-icono btn-ubicacion mt-3" <?=$hidden?>>Ver ubicación</button>
+                    <button class="btn btn-custom con-icono btn-ubicacion mt-3" <?= $hidden ?>>Ver ubicación</button>
                     <button class="btn btn-outline-secondary mt-3">Ver menú</button>
                 </div>
             </div>
         </div>
         <div class="col-md-12 mt-3">
-            <h3 class="">Servicios</h3>
-
-            <div class="caja">
-                <div class="col-md-12 mt-3">
-                    <div class="caja">
-                        <!-- Carrusel de Íconos y Descripciones (delgado y ajustable) -->
-                        <div id="iconCarousel" class="carousel slide" data-bs-ride="carousel" style="height: 150px;">
-                            <div class="carousel-inner">
-                                <!-- Elemento Activo del Carrusel -->
-                                <div class="carousel-item active">
-                                    <div class="flex-wrap d-flex justify-content-center align-items-center" style="height: 150px;">
-
-                                        <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_wifi.png" alt="Coffee To-Go" class="iconos">
-                                            <p class="">Wi-Fi</p>
-                                        </div>
-
-                                        <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_perro.png" alt="Breakfast" class="iconos">
-                                            <p class="">Pet-Friendly</p>
-                                        </div>
-                                        <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_tarjeta.png" alt="Co-Working Space" class="iconos">
-                                            <p class="">Pago con tarjeta</p>
-                                        </div>
-                                        <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_carro.png" alt="Private Events" class="iconos">
-                                            <p class="">Drive Thru</p>
-                                        </div>
-                                        <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_celular.png" alt="Coffee Beans for Sale" class="iconos">
-                                            <p class="">Pedido por teléfono</p>
-                                        </div>
-                                        <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_pastel.png" alt="Coffee Beans for Sale" class="iconos">
-                                            <p class="">Postres</p>
-                                        </div>
-                                        <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_desayuno.png" alt="Coffee Beans for Sale" class="iconos">
-                                            <p class="">Desayunos</p>
-                                        </div>
-                                        <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_sandwich.png" alt="Coffee Beans for Sale" class="iconos">
-                                            <p class="">Comidas</p>
-                                        </div>
-                                        <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_cafe1.png" alt="Coffee Beans for Sale" class="iconos">
-                                            <p class="">Café en grano</p>
-                                        </div>
-                                        <div class="icon-item d-flex flex-column align-items-center me-5">
-                                            <img src="<?= $url ?>/views/assets/css/img/iconos/icono_cafe2.png" alt="Coffee Beans for Sale" class="iconos">
-                                            <p class="">Café molido</p>
-                                        </div>
-                                    </div>
+            <h3 class="">Sevicios</h3>
+            <div class="servicios">
+                <div class="position-relative">
+                    <button class="prev" onclick="scrollCarousel(-1)">&#10094;</button>
+                    <div class="custom-carousel" id="carousel_servicios">
+                        <!-- <div class="custom-carousel-item">
+                            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('<?= $url ?>/views/assets/img/unsplash-photo-1.jpg');">
+                                <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                                    <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Título 1</h3>
                                 </div>
-                                <!-- Más elementos del carrusel si es necesario -->
                             </div>
-                        </div>
+                        </div> -->
                     </div>
+                    <button class="next" onclick="scrollCarousel(1)">&#10095;</button>
                 </div>
-
-                <!-- CSS adicional para el carrusel -->
-                <style>
-
-                </style>
-
             </div>
         </div>
     </div>

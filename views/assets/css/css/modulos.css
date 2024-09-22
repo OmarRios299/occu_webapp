@@ -8,22 +8,27 @@
     background-size: cover;
     height: 100vh;
 }
+
 .login .formulario {
     display: block;
     max-width: 550px;
     margin: 0 auto;
 }
+
 .login .formulario .logo {
     display: block;
     width: 200px;
     margin: 0 auto 35px;
 }
+
 .login .form-group {
     margin: 18px 0;
 }
+
 .login .input-group-prepend {
     margin-right: -2px;
 }
+
 .login .form-control {
     font-size: 1.1rem;
     font-weight: 600;
@@ -37,6 +42,7 @@
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
 }
+
 .login .input-group-text {
     background-color: var(--color-blanco);
     border-right: 0;
@@ -47,6 +53,7 @@
     border-top-left-radius: 12px;
     border-bottom-left-radius: 12px;
 }
+
 .login .btn {
     display: block;
     font-weight: bold;
@@ -56,54 +63,171 @@
     border-color: var(--color-azul);
     padding: 1rem 2.75rem;
 }
+
 .login .input-group img {
     width: 1rem;
 }
+
 .login .form-control::-webkit-input-placeholder {
     font-size: 1.1rem;
     font-weight: 600;
     text-align: left;
     color: var(--color-gris);
-    opacity: 1!important;
+    opacity: 1 !important;
     text-transform: capitalize;
 }
+
 .login .form-control:-moz-placeholder {
     font-size: 1.1rem;
     font-weight: 600;
     text-align: left;
     color: var(--color-gris);
-    opacity: 1!important;
+    opacity: 1 !important;
     text-transform: capitalize;
 }
+
 .login .form-control::-moz-placeholder {
     font-size: 1.1rem;
     font-weight: 600;
     text-align: left;
     color: var(--color-gris);
-    opacity: 1!important;
+    opacity: 1 !important;
     text-transform: capitalize;
 }
+
 .login .form-control:-ms-input-placeholder {
     font-size: 1.1rem;
     font-weight: 600;
     text-align: left;
     color: var(--color-gris);
-    opacity: 1!important;
+    opacity: 1 !important;
     text-transform: capitalize;
 }
+
 .login .form-control::-ms-input-placeholder {
     font-size: 1.1rem;
     font-weight: 600;
     text-align: left;
     color: var(--color-gris);
-    opacity: 1!important;
+    opacity: 1 !important;
     text-transform: capitalize;
 }
+
 .login .form-control::placeholder {
     font-size: 1.1rem;
     font-weight: 600;
     text-align: left;
     color: var(--color-gris);
-    opacity: 1!important;
+    opacity: 1 !important;
     text-transform: capitalize;
+}
+
+/* ---------------------------------------
+@@@@ modulos ---> cafeterias_lista 
+--------------------------------------- */
+
+.titulo-cafeteria {
+    background-color: #FFD3B6;
+    /* Color oscuro para el encabezado */
+    color: black;
+    padding: 20px;
+    text-align: center;
+}
+
+.btn-custom {
+    background-color: #5a9;
+    /* Color personalizado para los botones */
+    color: white;
+    border-radius: 5px;
+}
+
+.btn-custom:hover {
+    background-color: #468;
+    /* Color de hover */
+}
+
+.star-rating {
+    color: #ffc107;
+}
+
+
+/* - - - - - - -  - - - caja de servicios */
+
+
+.servicios .custom-carousel {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    will-change: transform;
+}
+
+.servicios .custom-carousel-item {
+    min-width: 200px;
+    max-width: 280px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.servicios .custom-carousel-item img {
+    width: 100%;
+    border-radius: 10px;
+}
+
+.card-cover {
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+}
+
+.servicios .prev,
+.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 10px;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.servicios .prev {
+    left: 10px;
+}
+
+.servicios .next {
+    right: 10px;
+}
+
+.titulo-oscuro {
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semi-transparente */
+    z-index: 1;
+}
+
+
+/* - - - - - - -  - - - casousel de imagenes */
+
+/* Mantén una relación de aspecto fija para las imágenes del carrusel */
+.carousel-imgs .carousel-item {
+    height: 400px;
+    /* Ajusta la altura según tus necesidades */
+}
+
+.carousel-imgs .carousel-item img {
+    object-fit: cover;
+    /* Cubre el contenedor sin distorsionar la imagen */
+    height: 100%;
+    /* Asegura que la imagen ocupe todo el contenedor */
+    width: 100%;
+}
+
+/* Asegurar que las imágenes llenen el contenedor verticalmente */
+.carousel-imgs .carousel-item img {
+    width: auto;
+    height: 100%;
+    object-fit: cover;
+    /* Asegura que la imagen cubra todo el contenedor sin perder proporción */
+    display: block;
+    margin: auto;
 }

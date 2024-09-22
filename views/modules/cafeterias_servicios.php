@@ -38,7 +38,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Nombre:</label>
-                                <input type="text" class="form-control input_servicios validarCampo" tabla='cafeterias_servicios' columna='nombre' mensaje='Esta categoría ya se encuentra registrada' id="nombre_servicio">
+                                <input type="text" class="form-control input_servicios validarCampo" tabla='servicios' columna='nombre' mensaje='Esta categoría ya se encuentra registrada' id="nombre_servicio">
                                 <div class="invalid-feedback" style="display: none;"></div>
                             </div>
                         </div>

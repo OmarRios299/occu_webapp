@@ -86,7 +86,27 @@ class CafeteriasListaController{
             ++$i;
         }
 
-        return json_encode(['data' => $data, 'imagenes' => $carousel]);
+        $servicios = '';
+        foreach(CafeteriasListaModel::buscarServiciosCafeteriasModel($id) as $servicio){
+            $titulo = $servicio['nombre'];
+            $imagen = $url . $servicio['imagen']; 
+            $servicios .= '
+            <div class="custom-carousel-item">
+                <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url(' . $imagen . ');">
+                    <div class="d-flex flex-column h-100 p-5 pb-3 text-white titulo-oscuro">
+                        <h3 class="pt-5 mt-5 mb-4 display-7 lh-1 fw-bold">' . $titulo . '</h3>
+                    </div>
+                </div>
+            </div>
+            ';
+        }
+        
+
+        return json_encode([
+            'data' => $data, 
+            'imagenes' => $carousel,
+            'servicios' => $servicios
+        ]);
     }
     
     /* OBTENER DATOS DE CAFETERIA */

@@ -9,20 +9,20 @@ class CafeteriasServiciosModel extends Conexion {
     {
 
         $stmt = Conexion::conectar()->prepare("SELECT
-        cafeterias_servicios.*,
+        servicios.*,
         CONCAT(
             admin_usuarios.nombre,
             ' ',
             admin_usuarios.apellido
         ) AS usuario_alta
         FROM
-            cafeterias_servicios
-        INNER JOIN admin_usuarios ON cafeterias_servicios.id_alta = admin_usuarios.id
-        WHERE cafeterias_servicios.estado !=2
+            servicios
+        INNER JOIN admin_usuarios ON servicios.id_alta = admin_usuarios.id
+        WHERE servicios.estado !=2
         GROUP BY
-            cafeterias_servicios.id
+            servicios.id
         ORDER BY
-            cafeterias_servicios.id;
+            servicios.id;
         ");
 
         //$stmt->bindParam(':', ,PDO::PARAM_STR);
@@ -44,7 +44,7 @@ class CafeteriasServiciosModel extends Conexion {
     {
 
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("INSERT INTO cafeterias_servicios(nombre, imagen, id_alta, fecha_alta) 
+        $stmt = $conexion->prepare("INSERT INTO servicios(nombre, imagen, id_alta, fecha_alta) 
         VALUES (:nombre, 'views/assets/img/cafeteria_default.png', :id_alta, :fecha_alta)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
@@ -67,7 +67,7 @@ class CafeteriasServiciosModel extends Conexion {
     
     static public function editarImagenModel($datos){
     
-        $stmt = Conexion::conectar()->prepare("UPDATE cafeterias_servicios SET imagen=:imagen WHERE id = :id");
+        $stmt = Conexion::conectar()->prepare("UPDATE servicios SET imagen=:imagen WHERE id = :id");
     
         $stmt->bindParam(":id", $datos['id'], PDO::PARAM_INT);
         $stmt->bindParam(":imagen", $datos['imagen'], PDO::PARAM_STR);
@@ -89,7 +89,7 @@ class CafeteriasServiciosModel extends Conexion {
     
     static public function buscarServicioModel($id){
     
-        $stmt = Conexion::conectar()->prepare("SELECT cafeterias_servicios.* FROM cafeterias_servicios WHERE cafeterias_servicios.id=:id");
+        $stmt = Conexion::conectar()->prepare("SELECT servicios.* FROM servicios WHERE servicios.id=:id");
     
         $stmt->bindParam(':id', $id,PDO::PARAM_INT);
     
@@ -108,7 +108,7 @@ class CafeteriasServiciosModel extends Conexion {
     
     static public function editarServicioModel($datos){
     
-        $stmt = Conexion::conectar()->prepare("UPDATE cafeterias_servicios SET nombre=:nombre WHERE id = :id");
+        $stmt = Conexion::conectar()->prepare("UPDATE servicios SET nombre=:nombre WHERE id = :id");
     
         $stmt->bindParam(":id", $datos['id'], PDO::PARAM_INT);
         $stmt->bindParam(":nombre", $datos['nombre'], PDO::PARAM_STR);

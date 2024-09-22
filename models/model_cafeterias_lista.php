@@ -105,6 +105,31 @@ class CafeteriasListaModel extends Conexion {
     }
     
     /* OBTENER LAS IMAGENES DEL CAROUSEL */
+
+
+    /* BUSCAR SERVICIOS DE CAFETERIAS */
+    
+    static public function buscarServiciosCafeteriasModel($id){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT
+            servicios.*
+        FROM
+            servicios
+        INNER JOIN cafeterias_servicios ON cafeterias_servicios.id_servicio = servicios.id  
+        WHERE cafeterias_servicios.estado =0 AND cafeterias_servicios.id_cafeteria=:id");
+    
+        $stmt->bindParam(':id', $id,PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* BUSCAR SERVICIOS DE CAFETERIAS */
+    
     
 
 }
