@@ -47,6 +47,20 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
             'imagen_subir' => $_FILES["imagen"],
         );
         $controller = 'subirImagenCafeteriaController';
+
+    }else if(isset($_POST['cargar_servicios'])){
+
+        $datos = $_POST['id_cafeteria'];
+        $controller = 'obtenerServicioController';
+
+    }else if(isset($_POST['registrar_servicios'])){
+
+        $datos = array(
+            'id_cafeteria' => $_POST['id_cafeteria'],
+            'servicios' =>  json_decode($_POST['servicios'], true),
+        );
+        $controller = 'registrarServiciosController';
+
     }else{
 
         $datos = false;

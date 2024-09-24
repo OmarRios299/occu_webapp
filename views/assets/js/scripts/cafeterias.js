@@ -352,7 +352,7 @@ $(document).on("submit","#form_subir_imagenes",function(){
         contentType: false,
         processData: false,
         success:function(respuesta){
-            console.log(respuesta);
+            //console.log(respuesta);
             if (respuesta=='success') {
                 swal({
                    title: "¡OK!",
@@ -368,4 +368,66 @@ $(document).on("submit","#form_subir_imagenes",function(){
         }
     });
 
+});
+
+$(document).on("click",".agregar_servicios",function(){
+    $("#id_cafeteria").val($(this).attr("idRegistro"));
+    $("#modal_agregar_servicios").modal('show');
+    cargarServicios();
+});
+
+function cargarServicios() {
+    var datos = new FormData();
+    
+    datos.append("cargar_servicios", true);
+    datos.append('id_cafeteria', $("#id_cafeteria").val())
+    
+    $.ajax({
+        url:url+'views/ajax/ajax_cafeterias.php',
+        method:'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success:function(respuesta){
+            //console.log(respuesta);
+            respuesta = JSON.parse(respuesta);
+            if (respuesta=='error') {
+                swal("¡Error!", "Ha ocurrido un error", "error");
+            } else {
+                $("#servicios").html(respuesta);
+            }
+        }
+    });
+}
+
+$(document).on("submit","#form_servicios",function(){
+    const servicios = [];
+    $(".chbx_servicios").each(function(){
+        if ($(this).prop("checked")) {  
+            const id_servicio = $(this).attr("idServicio"); 
+            servicios.push({ id: id_servicio }); 
+        }
+    });
+    var datos = new FormData();
+    
+    datos.append("registrar_servicios", true);
+    datos.append('id_cafeteria', $("#id_cafeteria").val())
+    datos.append('servicios', JSON.stringify(servicios));
+    $.ajax({
+        url:url+'views/ajax/ajax_cafeterias.php',
+        method:'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success:function(respuesta){
+            console.log(respuesta);
+            if (respuesta=='error') {
+                swal("¡Erro!", "Ha ocurrido un error", "error");
+            } else {
+                alertaUpdate();
+            }
+        }
+    });
 });

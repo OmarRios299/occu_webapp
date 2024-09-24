@@ -79,7 +79,7 @@ Tipografias del proyecto
     --secundario: #fedd64;
     --tercero: #3E51A0;
     --cuarto: #10343f;
-    --principal-claro: rgba(58, 137, 160, 0.15);
+    --principal-claro: ;
     --bg-body: #ebeef6;
     --bg-principal-claro: #d8e7ec;
     --bg-secundario-claro: #fff7da;
@@ -1296,6 +1296,11 @@ dl, ol, ul {
     border-color: var(--color-sidebar)!important;
     background-color: var(--color-sidebar)!important;
 }
+.btn-servicios {
+    color: var(--color-blanco)!important;
+    border-color: var(--color-amarillo)!important;
+    background-color: var(--color-amarillo)!important;
+}
 /* @@@@ - [Botones] Con borde - @@@@ */
 .btn-aceptar.con-borde {
     color: var(--color-azul)!important;
@@ -1530,7 +1535,10 @@ dl, ol, ul {
 .btn-lista.btn-icono {
     background-image: url(../img/iconos/botones/icono-detalles.svg);
 }
-
+.btn-servicios.con-icono::before, 
+.btn-servicios.btn-icono {
+    background-image: url(../img/iconos/botones/icono-servicios.svg);
+}
 
 /* ---------------------------------------
 @@@@ estilos personalizados ---> botones en tablas
@@ -1614,7 +1622,7 @@ dl, ol, ul {
 }
 .table .btn-eliminar.btn-icono::before {
     content: 'Eliminar';
-    margin-right: -4.75rem;
+    margin-right: -4.70rem;
     background-color: var(--color-rojo-oscuro);
 }
 .table .btn-editar.btn-icono::before {
@@ -1659,6 +1667,11 @@ dl, ol, ul {
     margin-right: -5.65rem;
     content: 'Cafeterías';
     background-color: var(--color-sidebar);
+}
+.table .btn-servicios.btn-icono::before {
+    margin-right: -5rem;
+    content: 'Servicios';
+    background-color: var(--color-amarillo);
 }
 /* ---------------------------------------
 @@@@ estilos personalizados ---> titulos con botones

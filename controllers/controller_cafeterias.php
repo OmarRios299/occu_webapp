@@ -144,5 +144,47 @@ class CafeteriasController{
     }
     
     /* SUBIR IMAGEN DE CAFETERIA */
+
+    
+    /* OBTENER SERVICIOS */
+    
+    static public function obtenerServicioController($cafeteria){
+        $url = TemplateController::obtenerUrlController();
+        $data='';
+        foreach (CafeteriasModel::obtenerServiciosControllerModel($cafeteria) as $servicio){
+            $checked = ($servicio['servicio_registrado'] == 1) ? 'checked' : '';
+            $data .='
+                <label class="image-checkbox">
+                    <input type="checkbox" class="chbx_servicios" idServicio="'.$servicio['id'].'" '.$checked.'/>
+                    <div class="custom-carousel-item">
+                        <div class="card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('.$url.$servicio['imagen'].');">
+                            <div class="d-flex flex-column p-3 pb-1 text-white titulo-oscuro text-center tanamo">
+                                <h5 class="mt-4 display-8 lh-1 fw-bold">'.$servicio['nombre'].'</h5>
+                            </div>
+                        </div>
+                    </div>
+                </label>';
+        }
+        return json_encode($data);
+    }
+    
+    /* OBTENER SERVICIOS */
+
+    
+    /* REGISTRAR SERVICIOS */
+    
+    static public function registrarServiciosController($datos){
+
+        CafeteriasModel::eliminarServiciosAntiguosModel($datos['id_cafeteria']);
+
+        foreach ($datos['servicios'] as $servicio){
+            CafeteriasModel::registrarServiciosModel($datos['id_cafeteria'], $servicio['id']);
+        }
+        return 'success';
+    }
+    
+    /* REGISTRAR SERVICIOS */
+    
+    
     
 } ?>

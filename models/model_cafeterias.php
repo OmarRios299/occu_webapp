@@ -333,5 +333,85 @@ class CafeteriasModel extends Conexion {
     
     /* AGREGAR NUEVAS IMAENES */
 
+    
+    /* OBTENER SERVICIOS */
+    
+    static public function obtenerServiciosControllerModel($cafeteria){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT 
+        s.id AS id,
+        s.nombre,
+        s.imagen,
+        CASE 
+            WHEN cs.id_servicio IS NOT NULL THEN 1  -- Si el servicio está registrado, devuelve 1
+            ELSE 0  -- Si no está registrado, devuelve 0
+        END AS servicio_registrado
+        FROM 
+            servicios s
+        LEFT JOIN 
+            (SELECT DISTINCT id_servicio 
+            FROM cafeterias_servicios 
+            WHERE id_cafeteria = :id AND estado = 0) cs  -- Aseguramos que solo tomamos los servicios registrados y activos
+        ON 
+            s.id = cs.id_servicio 
+        WHERE 
+            s.estado = 0  -- Mostramos solo los servicios activos
+        ");
+
+        $stmt->bindParam(':id', $cafeteria, PDO::PARAM_INT);
+
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* OBTENER SERVICIOS */
+    
+
+    
+    /* INSERTAR REGISTRO DE SERVICIOS */
+    
+    static public function registrarServiciosModel($cafeteria, $servicio){
+    
+        $stmt = Conexion::conectar()->prepare("INSERT INTO cafeterias_servicios (id_servicio, id_cafeteria) VALUES (:servicio, :cafeteria)");
+    
+        $stmt->bindParam(':cafeteria', $cafeteria, PDO::PARAM_INT);
+        $stmt->bindParam(':servicio', $servicio, PDO::PARAM_INT);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+        $stmt = null;
+    }
+    
+    /* INSERTAR REGISTRO DE SERVICIOS */
+
+    
+    /* ELIMINAR REGISTROS ANTIGUOS */
+    
+    static public function eliminarServiciosAntiguosModel($cafeteria){
+    
+        $stmt = Conexion::conectar()->prepare("UPDATE cafeterias_servicios SET estado=2 WHERE id_cafeteria = :id");
+    
+        $stmt->bindParam(":id", $cafeteria, PDO::PARAM_INT);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+    
+        $stmt = null;
+    
+    }
+    
+    /* ELIMINAR REGISTROS ANTIGUOS */
+    
+    
 
 } ?>
