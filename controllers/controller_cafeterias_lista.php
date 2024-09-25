@@ -111,5 +111,44 @@ class CafeteriasListaController{
     
     /* OBTENER DATOS DE CAFETERIA */
     
+
+    
+    /* OBTENER COMENTARIOS */
+    
+    static public function buscarComentariosController($datos = 1) {
+        $comentariosPorPagina = 5; // Número de comentarios que deseas mostrar por página
+    
+        // Obtener el total de comentarios
+        $totalComentarios = CafeteriasListaModel::contarTotalComentariosModel();
+    
+        // Calcular el número total de páginas
+        $totalPaginas = ceil($totalComentarios / $comentariosPorPagina);
+    
+        // Calcular el offset para la consulta de comentarios
+        $offset = ((int)($datos['pagina']) - 1) * $comentariosPorPagina;
+    
+        // Obtener los comentarios para la página actual
+        $comentarios = CafeteriasListaModel::buscarComentariosModel($offset, $comentariosPorPagina, $datos['cafeteria']);
+    
+        // Devolver los comentarios y el total de páginas como respuesta JSON
+        return json_encode([
+            'comentarios' => $comentarios,
+            'totalPaginas' => $totalPaginas
+        ]);
+    }
+    
+    
+    /* OBTENER COMENTARIOS */
+    
+    
+    /* REGISTRAR COMENTARIO */
+    
+    static public function registrarComentarioController($datos){
+        $datos['id_usuario'] = $_SESSION['id'];
+        return CafeteriasListaModel::registrarComentarioModel($datos);
+    }
+    
+    /* REGISTRAR COMENTARIO */
+    
     
 }

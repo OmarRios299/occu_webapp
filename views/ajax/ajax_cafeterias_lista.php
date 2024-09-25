@@ -23,6 +23,23 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         $datos = $_POST['id'];
         $controller = "obtenerDatosCafeteriaController";
 
+    }else if(isset($_GET['comentarios'])){
+
+        $datos = array(
+            'pagina'=>$_GET['pagina'],
+            'cafeteria'=>$_GET['cafeteria'],
+        );
+        $controller = "buscarComentariosController";
+
+    }else if(isset($_POST['registrar_comentario'])){
+
+        $datos = array(
+            'id_cafeteria' => $_POST['id_cafeteria'],
+            'comentario' => $_POST['comentario'],
+        );
+
+        $controller = "registrarComentarioController";
+
     }else{
 
         $datos = false;

@@ -1,29 +1,30 @@
-$(document).ready(function() {
+$(document).ready(function () {
     let paginaActual = 1; // Inicializar la página actual
 
     if (moduloActual == 'cafeterias_lista') {
-        
+
         if ($('#titulo_cafeteria_ver').length) {
             CargarVerCafeteria();
+            cargarComentarios(1);
         }
 
         if ($('#div_lista_cafeterias').length) {
             cargarListaCafeterias(paginaActual);
         }
 
-        $('#boton-siguiente').on('click', function() {
+        $('#boton-siguiente').on('click', function () {
             paginaActual++;
             cargarListaCafeterias(paginaActual);
         });
 
-        $('#boton-anterior').on('click', function() {
+        $('#boton-anterior').on('click', function () {
             if (paginaActual > 1) {
                 paginaActual--;
                 cargarListaCafeterias(paginaActual);
             }
         });
 
-        $('#filtro-input').on('keyup', function() {
+        $('#filtro-input').on('keyup', function () {
             const filtro = $(this).val();
             paginaActual = 1;
             cargarListaCafeterias(paginaActual, filtro);
@@ -39,17 +40,17 @@ function cargarListaCafeterias(pagina, filtro = '') {
     datos.append("busqueda", filtro);
 
     $.ajax({
-        url: url + 'views/ajax/ajax_cafeterias_lista.php', 
+        url: url + 'views/ajax/ajax_cafeterias_lista.php',
         method: 'POST',
         data: datos,
         cache: false,
         contentType: false,
         processData: false,
-        success: function(respuesta) {
-            console.log("Respuesta del servidor:", respuesta); 
+        success: function (respuesta) {
+            console.log("Respuesta del servidor:", respuesta);
             try {
                 respuesta = JSON.parse(respuesta);
-                
+
                 $('#div_lista_cafeterias').html(respuesta.html);
 
                 if (pagina > 1) {
@@ -68,56 +69,56 @@ function cargarListaCafeterias(pagina, filtro = '') {
                 swal("¡Error!", "Ha ocurrido un error al cargar las cafeterías", "error");
             }
         },
-        error: function() {
+        error: function () {
             swal("¡Error!", "No se pudo comunicar con el servidor", "error");
         }
     });
 }
 
 
-function CargarVerCafeteria(){
+function CargarVerCafeteria() {
 
-    let id_cafeteria = $("#id_cafeteria").attr("idCafeteria"); 
+    let id_cafeteria = $("#id_cafeteria").attr("idCafeteria");
 
     var datos = new FormData();
-    
+
     datos.append("cargar_datos", true);
     datos.append("id", id_cafeteria);
 
     $.ajax({
-        url:url+'views/ajax/ajax_cafeterias_lista.php',
-        method:'POST',
+        url: url + 'views/ajax/ajax_cafeterias_lista.php',
+        method: 'POST',
         data: datos,
         cache: false,
         contentType: false,
         processData: false,
-        success:function(respuesta){
+        success: function (respuesta) {
             respuesta = JSON.parse(respuesta);
             console.log(respuesta);
-            if (respuesta=='error') {
+            if (respuesta == 'error') {
                 swal("¡Error!", "Ha ocurrido un error", "error");
-            }else{
+            } else {
                 $("#aux_validacion").val(respuesta.data.id);
                 $("#titulo_cafeteria_ver").html(respuesta.data.nombre);
                 $(".carousel_imagenes").html(respuesta.imagenes);
                 $("#carousel_servicios").html(respuesta.servicios);
-                $("#info1").html('<b>Dirección: </b>'+respuesta.data.direccion);
-                $("#info2").html('<b>Teléfono: </b>'+respuesta.data.telefono);
-                $("#info3").html('<b>Correo: </b>'+respuesta.data.correo);
-                $("#info4").html('<b>Horario: </b>'+respuesta.data.horario +' <br/> '+ respuesta.data.status);
+                $("#info1").html('<b>Dirección: </b>' + respuesta.data.direccion);
+                $("#info2").html('<b>Teléfono: </b>' + respuesta.data.telefono);
+                $("#info3").html('<b>Correo: </b>' + respuesta.data.correo);
+                $("#info4").html('<b>Horario: </b>' + respuesta.data.horario + ' <br/> ' + respuesta.data.status);
             }
         }
     });
 
-    
+
 };
 
-$(document).on("click", "#abrir_filtros", function() {
-    $('#filtros_div').toggle(); 
+$(document).on("click", "#abrir_filtros", function () {
+    $('#filtros_div').toggle();
     $(this).attr("open", $(this).attr("open") === 'si' ? 'no' : 'si');
 });
 
-$(document).on("click",".ver_img_modal",function(){
+$(document).on("click", ".ver_img_modal", function () {
     $("#carouselModal").modal("show")
 });
 
@@ -150,3 +151,78 @@ function scrollCarousel(direction) {
         isTransitioning = false;
     }, 500); // Duración de la transición
 }
+
+function cargarComentarios(pagina) {
+    let cafeteria = $("#id_cafeteria").attr('idCafeteria');
+    let filtro = `?comentarios=${true}&pagina=${pagina}&cafeteria=${cafeteria}`;
+
+    $.ajax({
+        url: url + 'views/ajax/ajax_cafeterias_lista.php' + filtro, // Reemplaza con tu ruta de API o backend
+        method: "GET",
+        success: function (response) {
+            response = JSON.parse(response);
+            // Llenar la lista de comentarios con los datos recibidos
+            var comentariosHtml = '';
+            response.comentarios.forEach(function (comentario) {
+                comentariosHtml += '<li><h3>' + comentario.nombre_usuario + '</h3>';
+                comentariosHtml += '<p>' + comentario.comentario + '</p></li>';
+            });
+            $('#comentariosLista').html(comentariosHtml);
+
+            // Actualizar controles de paginación
+            actualizarPaginacion(response.totalPaginas, pagina);
+        }
+    });
+}
+
+function actualizarPaginacion(totalPaginas, paginaActual) {
+    var paginacionHtml = '';
+    for (var i = 1; i <= totalPaginas; i++) {
+        paginacionHtml += '<button class="btn-paginacion ' + (i === paginaActual ? 'active' : '') + '" data-pagina="' + i + '">' + i + '</button>';
+    }
+    $('#paginacionComentarios').html(paginacionHtml);
+
+    // Asignar evento a los botones de paginación
+    $('.btn-paginacion').on('click', function () {
+        var pagina = $(this).data('pagina');
+        cargarComentarios(pagina);
+    });
+}
+$(document).on("click", "#btn_agregar_comentario", function () {
+    $(".comentario-area").toggle();
+});
+
+$(document).on("click","#btn_aceptar_comentario",function(){
+    if ($("#agregar_comentario").val()=='') {
+        swal("¡Alerta!", "Agrega un comentario.", "warning");
+        return '';
+    }
+    var datos = new FormData();
+    datos.append("registrar_comentario", true);
+    datos.append('comentario',$("#agregar_comentario").val());
+    datos.append('id_cafeteria', $("#id_cafeteria").attr('idCafeteria'));
+    
+    $.ajax({
+        url:url+'views/ajax/ajax_cafeterias_lista.php',
+        method:'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success:function(respuesta){
+            console.log(respuesta);
+            if (respuesta=='success') {
+                swal({
+                   title: "¡Ok!",
+                   text: "Tu comentario se registro correctamente.",
+                   icon: "success",
+                   button: "Aceptar",
+                }).then(function() {
+                   window.location = "";
+                });
+            } else {
+                swal("¡Error!", "Ha ocurrido un error.", "error");
+            }
+        }
+    });
+});

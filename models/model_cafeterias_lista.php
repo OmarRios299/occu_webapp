@@ -116,7 +116,8 @@ class CafeteriasListaModel extends Conexion {
         FROM
             servicios
         INNER JOIN cafeterias_servicios ON cafeterias_servicios.id_servicio = servicios.id  
-        WHERE cafeterias_servicios.estado =0 AND cafeterias_servicios.id_cafeteria=:id");
+        WHERE cafeterias_servicios.estado =0 AND cafeterias_servicios.id_cafeteria=:id
+        AND servicios.estado =0");
     
         $stmt->bindParam(':id', $id,PDO::PARAM_INT);
     
@@ -130,6 +131,82 @@ class CafeteriasListaModel extends Conexion {
     
     /* BUSCAR SERVICIOS DE CAFETERIAS */
     
+    
+    
+    /* BUSCAR COMENTARIOS */
+
+    static public function buscarComentariosModel($offset, $comentariosPorPagina, $id) {
+        $stmt = Conexion::conectar()->prepare("SELECT cafeterias_comentarios.*, 
+        CONCAT(
+            admin_usuarios.nombre,
+            ' ',
+            admin_usuarios.apellido
+        ) AS nombre_usuario
+        FROM cafeterias_comentarios
+        INNER JOIN admin_usuarios ON cafeterias_comentarios.id_usuario = admin_usuarios.id 
+        WHERE cafeterias_comentarios.estado = 0
+        AND cafeterias_comentarios.id_cafeteria = :id
+        LIMIT :offset, :limite");
+
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
+        $stmt->bindParam(":offset", $offset, PDO::PARAM_INT);
+        $stmt->bindParam(":limite", $comentariosPorPagina, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
+    static public function contarTotalComentariosModel() {
+        $stmt = Conexion::conectar()->prepare("SELECT COUNT(*) AS total FROM cafeterias_comentarios WHERE estado = 0"); // Asegúrate de agregar las condiciones necesarias
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
+    }
+    
+    
+    // static public function buscarComentariosModel(){
+    
+    //     $stmt = Conexion::conectar()->prepare("SELECT cafeterias_comentarios.*, 
+    //     CONCAT(
+    //         admin_usuarios.nombre,
+    //         ' ',
+    //         admin_usuarios.apellido
+    //     ) AS nombre_usuario
+    //     FROM cafeterias_comentarios
+    //     INNER JOIN admin_usuarios ON cafeterias_comentarios.id_usuario = admin_usuarios.id
+    //     ");
+    
+    //     // $stmt->bindParam(':', ,PDO::PARAM_STR);
+    
+    //     $stmt -> execute();
+    
+    //     return $stmt -> fetchAll();
+    
+    //     $stmt = null;
+    
+    // }
+    
+    /* BUSCAR COMENTARIOS */
+    
+    
+    /* REGISTRAR COMENTARIOS */
+    
+    static public function registrarComentarioModel($datos){
+    
+        $stmt = Conexion::conectar()->prepare("INSERT INTO cafeterias_comentarios (comentario, id_usuario, id_cafeteria) VALUES (:comentario, :id_usuario, :id_cafeteria)");
+    
+        $stmt->bindParam(':id_cafeteria', $datos['id_cafeteria'], PDO::PARAM_INT);
+        $stmt->bindParam(':id_usuario', $datos['id_usuario'], PDO::PARAM_INT);
+        $stmt->bindParam(':comentario', $datos['comentario'], PDO::PARAM_STR);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+        $stmt = null;
+    }
+    
+    /* REGISTRAR COMENTARIOS */
     
 
 }

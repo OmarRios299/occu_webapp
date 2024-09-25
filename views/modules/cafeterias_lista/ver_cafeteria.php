@@ -86,32 +86,113 @@ if (isset($action[1])) {
         </div>
     </div>
 
+    <style>
+        /* Contenedor de comentarios */
+        .comentarios-container {
+            width: 100%;
+            margin: 0 auto;
+        }
 
+        /* Estilo para los comentarios en formato de lista */
+        .lista-comentarios {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .lista-comentarios li {
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .lista-comentarios h3 {
+            margin-top: 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .lista-comentarios p {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 0;
+        }
+
+        /* Estilo para los controles de paginación */
+        .paginacion {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .paginacion button {
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            padding: 10px 15px;
+            margin: 0 5px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .paginacion button:hover {
+            background-color: #ddd;
+        }
+
+        .paginacion button.active {
+            background-color: #007bff;
+            color: white;
+            border: none;
+        }
+    </style>
     <!-- Sección de Reseñas -->
     <div class="row mt-5">
-        <div class="col-12">
+        <div class="col-md-10">
             <h3>Reseñas de Clientes</h3>
             <div class="d-flex align-items-center">
                 <div class="star-rating">
                     ★★★★☆
                 </div>
-                <p class="ml-2">4.5 de 5 estrellas (300 reseñas)</p>
+                <p class="ml-3 mt-3">4.5 de 5 estrellas (300 reseñas)</p>
             </div>
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title">Juan Pérez</h5>
-                    <p class="card-text">Un lugar increíble con un ambiente acogedor y un excelente café. ¡Muy recomendado!</p>
-                </div>
+        </div>
+        <div class="col-md-2 mt-3">
+            <div class='text-end'>
+                <button type="button" class="btn btn-icono btn-imprimir" id="btn_agregar_comentario"></button>
             </div>
-            <div class="card mt-3">
-                <div class="card-body">
-                    <h5 class="card-title">Maria García</h5>
-                    <p class="card-text">Me encanta venir aquí para trabajar y disfrutar de su delicioso pastel de zanahoria.</p>
+        </div>
+        <div class="col-md-11 mb-3 comentario-area" style="display: none;">
+            <div class="form-group">
+                <label>Comentario:</label>
+                <textarea class="form-control" cols="30" rows="5" id="agregar_comentario" placeholder="Escribe tu comentario"></textarea>
+            </div>
+        </div>
+        <div class="col-md-1 mt-5 comentario-area" style="display: none;">
+            <button type="button" class="btn btn-icono btn-mas" id="btn_aceptar_comentario"></button>
+        </div>
+        <div class="col-md-12">
+            <div class="comentarios-container mt-1">
+                <ul id="comentariosLista" class="lista-comentarios">
+                    <!-- Los comentarios se cargarán aquí dinámicamente -->
+                </ul>
+
+                <div id="paginacionComentarios" class="paginacion">
+                    <!-- Los controles de paginación se generarán aquí dinámicamente -->
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>
+
+
+
+
+
+
 
 <div class="modal fade" id="carouselModal" tabindex="-1" aria-labelledby="carouselModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
