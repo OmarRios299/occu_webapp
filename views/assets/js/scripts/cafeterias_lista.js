@@ -10,6 +10,7 @@ $(document).ready(function () {
 
         if ($('#div_lista_cafeterias').length) {
             cargarListaCafeterias(paginaActual);
+            cargarServicios();
         }
 
         $('#boton-siguiente').on('click', function () {
@@ -47,7 +48,7 @@ function cargarListaCafeterias(pagina, filtro = '') {
         contentType: false,
         processData: false,
         success: function (respuesta) {
-            console.log("Respuesta del servidor:", respuesta);
+            //console.log("Respuesta del servidor:", respuesta);
             try {
                 respuesta = JSON.parse(respuesta);
 
@@ -94,7 +95,7 @@ function CargarVerCafeteria() {
         processData: false,
         success: function (respuesta) {
             respuesta = JSON.parse(respuesta);
-            console.log(respuesta);
+            //console.log(respuesta);
             if (respuesta == 'error') {
                 swal("¡Error!", "Ha ocurrido un error", "error");
             } else {
@@ -103,9 +104,10 @@ function CargarVerCafeteria() {
                 $(".carousel_imagenes").html(respuesta.imagenes);
                 $("#carousel_servicios").html(respuesta.servicios);
                 $("#info1").html('<b>Dirección: </b>' + respuesta.data.direccion);
-                $("#info2").html('<b>Teléfono: </b>' + respuesta.data.telefono);
-                $("#info3").html('<b>Correo: </b>' + respuesta.data.correo);
+                $("#info2").html('<b>Teléfono: </b><a id="copiar_num" href="#">' + respuesta.data.telefono + '</a>');
+                $("#info3").html('<b>Correo: </b><a id="copiar_correo" href="#">' + respuesta.data.correo + '</a>');
                 $("#info4").html('<b>Horario: </b>' + respuesta.data.horario + ' <br/> ' + respuesta.data.status);
+                $(".ir_googlemaps").attr("latitud",respuesta.data.latitud).attr('longitud',respuesta.data.longitud);
             }
         }
     });
@@ -161,16 +163,21 @@ function cargarComentarios(pagina) {
         method: "GET",
         success: function (response) {
             response = JSON.parse(response);
-            // Llenar la lista de comentarios con los datos recibidos
-            var comentariosHtml = '';
-            response.comentarios.forEach(function (comentario) {
-                comentariosHtml += '<li><h3>' + comentario.nombre_usuario + '</h3>';
-                comentariosHtml += '<p>' + comentario.comentario + '</p></li>';
-            });
-            $('#comentariosLista').html(comentariosHtml);
+            if (response.comentarios == '') {
+                $(".comentarios").hide();
+            } else {
+                // Llenar la lista de comentarios con los datos recibidos
+                var comentariosHtml = '';
+                response.comentarios.forEach(function (comentario) {
+                    comentariosHtml += '<li><h3>' + comentario.nombre_usuario + '</h3>';
+                    comentariosHtml += '<p>' + comentario.comentario + '</p></li>';
+                });
+                $('#comentariosLista').html(comentariosHtml);
 
-            // Actualizar controles de paginación
-            actualizarPaginacion(response.totalPaginas, pagina);
+                // Actualizar controles de paginación
+                actualizarPaginacion(response.totalPaginas, pagina);
+            }
+
         }
     });
 }
@@ -192,15 +199,105 @@ $(document).on("click", "#btn_agregar_comentario", function () {
     $(".comentario-area").toggle();
 });
 
-$(document).on("click","#btn_aceptar_comentario",function(){
-    if ($("#agregar_comentario").val()=='') {
+$(document).on("click", "#btn_aceptar_comentario", function () {
+    if ($("#agregar_comentario").val() == '') {
         swal("¡Alerta!", "Agrega un comentario.", "warning");
         return '';
     }
     var datos = new FormData();
     datos.append("registrar_comentario", true);
-    datos.append('comentario',$("#agregar_comentario").val());
+    datos.append('comentario', $("#agregar_comentario").val());
     datos.append('id_cafeteria', $("#id_cafeteria").attr('idCafeteria'));
+
+    $.ajax({
+        url: url + 'views/ajax/ajax_cafeterias_lista.php',
+        method: 'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (respuesta) {
+           // console.log(respuesta);
+            if (respuesta == 'success') {
+                swal({
+                    title: "¡Ok!",
+                    text: "Tu comentario se registro correctamente.",
+                    icon: "success",
+                    button: "Aceptar",
+                }).then(function () {
+                    window.location = "";
+                });
+            } else {
+                swal("¡Error!", "Ha ocurrido un error.", "error");
+            }
+        }
+    });
+});
+
+$(document).on("click",".ir_googlemaps",function(){
+    const latitude = $(this).attr("latitud");
+    const longitude = $(this).attr("longitud");
+    console.log(latitude);
+    
+    // URL para abrir Google Maps con la ubicación específica y permitir obtener indicaciones
+    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+
+    // Abrir la URL en una nueva pestaña
+    window.open(googleMapsUrl, '_blank');
+});
+
+// Función para copiar el texto
+function copyToClipboard(text, feedbackId) {
+navigator.clipboard.writeText(text).then(function() {
+    // Mostrar mensaje de éxito correspondiente
+    const feedbackElement = document.getElementById(feedbackId);
+    feedbackElement.style.display = 'block';
+    
+    // Ocultar mensaje después de 5 segundos
+    setTimeout(() => {
+        feedbackElement.style.display = 'none';
+    }, 5000);
+}, function(err) {
+    console.error('Error al copiar el texto: ', err);
+});
+}
+
+// Asignar eventos de click a los elementos dinámicos para copiar teléfono y correo
+$(document).on('click', '#copiar_num', function(event) {
+    event.preventDefault(); // Evitar comportamiento predeterminado de enlace
+    const telefono = $(this).text(); // Obtener el texto del número de teléfono
+    copyToClipboard(telefono, 'copy-feedback-tel'); // Llamar a la función de copiar con el feedback del teléfono
+});
+
+$(document).on('click', '#copiar_correo', function(event) {
+    event.preventDefault(); // Evitar comportamiento predeterminado de enlace
+    const correo = $(this).text(); // Obtener el texto del correo
+    copyToClipboard(correo, 'copy-feedback-email'); // Llamar a la función de copiar con el feedback del correo
+});
+
+$(document).on("click", "#buscar_filtro", function() {
+    $("#filtro-input").toggle();
+    $("#div_servicios").hide();
+    $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
+    $("#check_servicios").prop('checked', false);
+    $('#filtros_div').hide();
+});
+
+$(document).on("change", "#check_servicios", function() {
+    if ($(this).prop('checked')) {
+        $("#div_servicios").show();
+        $("#filtro-input").hide();
+        $(".cambiar-clase").removeClass('col-md-5').addClass('col-md-6');
+    } else {
+        $("#div_servicios").hide();
+        $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
+    }
+});
+
+function cargarServicios() {
+    var datos = new FormData();
+    
+    datos.append("cargar_servicios", true);
     
     $.ajax({
         url:url+'views/ajax/ajax_cafeterias_lista.php',
@@ -210,19 +307,9 @@ $(document).on("click","#btn_aceptar_comentario",function(){
         contentType: false,
         processData: false,
         success:function(respuesta){
-            console.log(respuesta);
-            if (respuesta=='success') {
-                swal({
-                   title: "¡Ok!",
-                   text: "Tu comentario se registro correctamente.",
-                   icon: "success",
-                   button: "Aceptar",
-                }).then(function() {
-                   window.location = "";
-                });
-            } else {
-                swal("¡Error!", "Ha ocurrido un error.", "error");
-            }
+            respuesta = JSON.parse(respuesta);
+           // console.log(respuesta);
+            $("#caja_servicios").html(respuesta);
         }
     });
-});
+}

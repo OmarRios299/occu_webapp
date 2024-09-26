@@ -201,7 +201,8 @@
 }
 
 .titulo-oscuro {
-    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semi-transparente */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Fondo oscuro semi-transparente */
     z-index: 1;
 }
 
@@ -230,4 +231,66 @@
     /* Asegura que la imagen cubra todo el contenedor sin perder proporción */
     display: block;
     margin: auto;
+}
+
+/* - - - - - - -  - - - caja de comentarios */
+
+/* Contenedor de comentarios */
+.comentarios .comentarios-container {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Estilo para los comentarios en formato de lista */
+.comentarios .lista-comentarios {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.comentarios .lista-comentarios li {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.comentarios .lista-comentarios h3 {
+    margin-top: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.comentarios .lista-comentarios p {
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 0;
+}
+
+/* Estilo para los controles de paginación */
+.comentarios .paginacion {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.comentarios .paginacion button {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 10px 15px;
+    margin: 0 5px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.comentarios .paginacion button:hover {
+    background-color: #ddd;
+}
+
+.comentarios .paginacion button.active {
+    background-color: #007bff;
+    color: white;
+    border: none;
 }

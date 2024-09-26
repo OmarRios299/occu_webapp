@@ -76,7 +76,7 @@
 
     <!-- Barra de botones -->
     <div class="d-flex justify-content-center mb-4">
-        <button class="btn btn-custom me-2">
+        <button class="btn btn-custom me-2" id="buscar_filtro">
             <i class="bi bi-search"></i> buscar
         </button>
         <button class="btn btn-custom me-2" id="abrir_filtros">
@@ -89,10 +89,10 @@
 
 
     <div class="row" id="filtros_div" style="display: none;">
-        <div class="col-md-5">
+        <div class="col-md-5 cambiar-clase mb-2">
             <div class="caja">
                 <div class="row ">
-                    <div class="col-md-5 d-flex justify-content-center align-items-center">
+                    <div class="col-md-6 d-flex justify-content-center align-items-center">
                         <div class="row">
                             <div class="col-md-12 text-center">
                                 <label for="">Calificación</label>
@@ -111,7 +111,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-7 d-flex justify-content-center align-items-center">
+                    <div class="col-md-6 d-flex justify-content-center align-items-center">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-check">
@@ -132,16 +132,15 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="caja">
+        <div class="col-md-5 cambiar-clase mb-2">
+            <div class="caja h-100">
                 <div class="row">
                     <div class="col-md-6 mt-0 d-flex justify-content-center align-items-center">
                         <div class="form-check">
                             <label class="form-check-label" for="flexCheckDefault">
-                                Drive Thru
+                                Buscar por servicios
                             </label>
-                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-
+                            <input class="form-check-input" type="checkbox" value="" id="check_servicios">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -156,22 +155,31 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-1 d-flex justify-content-center align-items-center h-100 mt-1">
+        <div class="col-md-12" style="display: none;" id="div_servicios">
+            <div class="caja mb-2">
+                <div class="row" id="caja_servicios">
+                    
+                </div>
+            </div>
+        </div>
+        <div class="col-md d-flex justify-content-center align-items-center h-100 mt-2">
             <div class="caja">
                 <button type="button" class="btn btn-icono btn-buscar"></button>
             </div>
         </div>
     </div>
 
-    <!-- Contenedor de búsqueda y paginación -->
-    <div class="d-flex justify-content-between mt-3">
-        <!-- Input de Filtrado -->
-        <input type="text" id="filtro-input" class="form-control w-50" placeholder="Buscar cafeterías...">
 
+    <!-- Contenedor de búsqueda y paginación -->
+    <div class="d-flex justify-content-between">
+        <!-- Input de Filtrado -->
+        <div class="col-md-6">
+            <input type="text" id="filtro-input" class="form-control w-80" placeholder="Buscar cafeterías..." style="display: none;">
+        </div>
         <!-- Botones de Paginación -->
-        <div>
-            <button id="boton-anterior" class="btn btn-primary" data-pagina="1">Anterior</button>
-            <button id="boton-siguiente" class="btn btn-primary" data-pagina="1">Siguiente</button>
+        <div class="col-md-3 text-end">
+            <button id="boton-anterior" class="btn btn-primary" data-pagina="1"> << </button>
+                    <button id="boton-siguiente" class="btn btn-primary" data-pagina="1">>></button>
         </div>
     </div>
 

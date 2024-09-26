@@ -92,6 +92,7 @@ $(document).on("click",".imagen",function(){
     $("#id_cafeteria").attr('idCafeteria',($(this).attr('idCafeteria')));
     $("#modal_cafeteria").modal('show');
     CargarVerCafeteria();
+    cargarComentarios(1);
 });
 
     

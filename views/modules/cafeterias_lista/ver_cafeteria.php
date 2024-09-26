@@ -57,11 +57,13 @@ if (isset($action[1])) {
             <div class="caja flex-fill d-flex justify-content-center ">
                 <div class="mt-3">
                     <h2>Información General</h2>
-                    <p id="info1"><strong>Dirección:</strong> Calle Principal 123, Ciudad</p>
-                    <p id="info2"><strong>Teléfono:</strong> (123) 456-7890</p>
-                    <p id="info3"><strong>Horario:</strong> Lunes - Viernes: 7:00 AM - 8:00 PM</p>
-                    <p id="info4"><strong>Servicios:</strong> WiFi, Pet-Friendly, Asientos al Aire Libre</p>
-                    <button class="btn btn-custom con-icono btn-ubicacion mt-3" <?= $hidden ?>>Ver ubicación</button>
+                    <p id="info1"><strong>Dirección:</strong></p>
+                    <p id="info2"><strong>Teléfono:</strong></p>
+                    <p id="copy-feedback-tel" style="display:none; color:green;">¡Teléfono copiado!</p>
+                    <p id="info3"><strong>Horario:</strong></p>
+                    <p id="copy-feedback-email" style="display:none; color:green;">¡Correo copiado!</p>
+                    <p id="info4"><strong>Servicios:</strong></p>
+                    <button class="btn btn-custom con-icono btn-ubicacion mt-3 ir_googlemaps">Ir a ubicación</button>
                     <button class="btn btn-outline-secondary mt-3">Ver menú</button>
                 </div>
             </div>
@@ -85,70 +87,8 @@ if (isset($action[1])) {
             </div>
         </div>
     </div>
-
-    <style>
-        /* Contenedor de comentarios */
-        .comentarios-container {
-            width: 100%;
-            margin: 0 auto;
-        }
-
-        /* Estilo para los comentarios en formato de lista */
-        .lista-comentarios {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .lista-comentarios li {
-            background-color: #fff;
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .lista-comentarios h3 {
-            margin-top: 0;
-            font-size: 20px;
-            color: #333;
-        }
-
-        .lista-comentarios p {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 0;
-        }
-
-        /* Estilo para los controles de paginación */
-        .paginacion {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .paginacion button {
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            padding: 10px 15px;
-            margin: 0 5px;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .paginacion button:hover {
-            background-color: #ddd;
-        }
-
-        .paginacion button.active {
-            background-color: #007bff;
-            color: white;
-            border: none;
-        }
-    </style>
     <!-- Sección de Reseñas -->
-    <div class="row mt-5">
+    <div class="row mt-5 comentarios">
         <div class="col-md-10">
             <h3>Reseñas de Clientes</h3>
             <div class="d-flex align-items-center">

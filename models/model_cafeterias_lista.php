@@ -207,6 +207,24 @@ class CafeteriasListaModel extends Conexion {
     }
     
     /* REGISTRAR COMENTARIOS */
+
+    
+    /* OBTENER SERVICIOS */
+    
+    static public function obtenerServiciosModel(){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM servicios WHERE estado=0 ");
+        
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* OBTENER SERVICIOS */
+    
     
 
 }

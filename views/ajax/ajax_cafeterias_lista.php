@@ -40,6 +40,12 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 
         $controller = "registrarComentarioController";
 
+    }else if(isset($_POST['cargar_servicios'])){
+
+        $datos = true;
+
+        $controller = "obtenerServiciosController";
+
     }else{
 
         $datos = false;

@@ -73,6 +73,8 @@ class CafeteriasListaController{
             'correo' => $cafeteria['correo_electronico'],
             'status' => $status,
             'horario' => $horario,
+            'longitud' => $cafeteria['longitud'],
+            'latitud' => $cafeteria['latitud'],
         );
 
         $active='active';
@@ -150,5 +152,28 @@ class CafeteriasListaController{
     
     /* REGISTRAR COMENTARIO */
     
+    
+    /* OBTENER SERVICIOS */
+    
+    static public function obtenerServiciosController(){
+
+        $data ='';
+        foreach (CafeteriasListaModel::obtenerServiciosModel() as $servicio){
+            $data .='
+                    <div class="col-md">
+                        <div class="form-check">
+                            <label class="form-check-label" for="flexCheckDefault">
+                                '.$servicio['nombre'].'
+                            </label>
+                            <input class="form-check-input seleccionar_servicio" type="checkbox" value="'.$servicio['id'].'">
+                        </div>
+                    </div>
+            ';
+        }
+
+        return json_encode($data);
+    }
+    
+    /* OBTENER SERVICIOS */
     
 }
