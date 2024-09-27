@@ -10,7 +10,7 @@ $(document).ready(function () {
 
         if ($('#div_lista_cafeterias').length) {
             cargarListaCafeterias(paginaActual);
-            cargarServicios();
+            cargarServiciosFiltro();
         }
 
         $('#boton-siguiente').on('click', function () {
@@ -34,11 +34,27 @@ $(document).ready(function () {
 });
 
 function cargarListaCafeterias(pagina, filtro = '') {
-    const limite = 10;
+    const limite = 9;
+
+    const servicios = [];
+    $(".seleccionar_servicio").each(function(){
+        if ($(this).is(":checked")) {
+            servicios.push({
+                id:$(this).val()
+            });
+        }
+    });
+    
+    let horario = $('input[name="horario_filtro"]:checked').val();
+    let ciudad = $("#select_ciudades_filtro option:selected").val();
+    
     var datos = new FormData();
     datos.append("cargar_lista", true);
-    datos.append("pagina", pagina);
-    datos.append("busqueda", filtro);
+    datos.append("pagina", pagina); 
+    datos.append("busqueda", filtro); 
+    datos.append("horario", horario);
+    datos.append("ciudad", ciudad);
+    datos.append("servicios", JSON.stringify(servicios)); 
 
     $.ajax({
         url: url + 'views/ajax/ajax_cafeterias_lista.php',
@@ -107,7 +123,7 @@ function CargarVerCafeteria() {
                 $("#info2").html('<b>Teléfono: </b><a id="copiar_num" href="#">' + respuesta.data.telefono + '</a>');
                 $("#info3").html('<b>Correo: </b><a id="copiar_correo" href="#">' + respuesta.data.correo + '</a>');
                 $("#info4").html('<b>Horario: </b>' + respuesta.data.horario + ' <br/> ' + respuesta.data.status);
-                $(".ir_googlemaps").attr("latitud",respuesta.data.latitud).attr('longitud',respuesta.data.longitud);
+                $(".ir_googlemaps").attr("latitud", respuesta.data.latitud).attr('longitud', respuesta.data.longitud);
             }
         }
     });
@@ -217,7 +233,7 @@ $(document).on("click", "#btn_aceptar_comentario", function () {
         contentType: false,
         processData: false,
         success: function (respuesta) {
-           // console.log(respuesta);
+            // console.log(respuesta);
             if (respuesta == 'success') {
                 swal({
                     title: "¡Ok!",
@@ -234,11 +250,11 @@ $(document).on("click", "#btn_aceptar_comentario", function () {
     });
 });
 
-$(document).on("click",".ir_googlemaps",function(){
+$(document).on("click", ".ir_googlemaps", function () {
     const latitude = $(this).attr("latitud");
     const longitude = $(this).attr("longitud");
     console.log(latitude);
-    
+
     // URL para abrir Google Maps con la ubicación específica y permitir obtener indicaciones
     const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
 
@@ -248,34 +264,34 @@ $(document).on("click",".ir_googlemaps",function(){
 
 // Función para copiar el texto
 function copyToClipboard(text, feedbackId) {
-navigator.clipboard.writeText(text).then(function() {
-    // Mostrar mensaje de éxito correspondiente
-    const feedbackElement = document.getElementById(feedbackId);
-    feedbackElement.style.display = 'block';
-    
-    // Ocultar mensaje después de 5 segundos
-    setTimeout(() => {
-        feedbackElement.style.display = 'none';
-    }, 5000);
-}, function(err) {
-    console.error('Error al copiar el texto: ', err);
-});
+    navigator.clipboard.writeText(text).then(function () {
+        // Mostrar mensaje de éxito correspondiente
+        const feedbackElement = document.getElementById(feedbackId);
+        feedbackElement.style.display = 'block';
+
+        // Ocultar mensaje después de 5 segundos
+        setTimeout(() => {
+            feedbackElement.style.display = 'none';
+        }, 5000);
+    }, function (err) {
+        console.error('Error al copiar el texto: ', err);
+    });
 }
 
 // Asignar eventos de click a los elementos dinámicos para copiar teléfono y correo
-$(document).on('click', '#copiar_num', function(event) {
+$(document).on('click', '#copiar_num', function (event) {
     event.preventDefault(); // Evitar comportamiento predeterminado de enlace
     const telefono = $(this).text(); // Obtener el texto del número de teléfono
     copyToClipboard(telefono, 'copy-feedback-tel'); // Llamar a la función de copiar con el feedback del teléfono
 });
 
-$(document).on('click', '#copiar_correo', function(event) {
+$(document).on('click', '#copiar_correo', function (event) {
     event.preventDefault(); // Evitar comportamiento predeterminado de enlace
     const correo = $(this).text(); // Obtener el texto del correo
     copyToClipboard(correo, 'copy-feedback-email'); // Llamar a la función de copiar con el feedback del correo
 });
 
-$(document).on("click", "#buscar_filtro", function() {
+$(document).on("click", "#buscar_filtro", function () {
     $("#filtro-input").toggle();
     $("#div_servicios").hide();
     $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
@@ -283,7 +299,7 @@ $(document).on("click", "#buscar_filtro", function() {
     $('#filtros_div').hide();
 });
 
-$(document).on("change", "#check_servicios", function() {
+$(document).on("change", "#check_servicios", function () {
     if ($(this).prop('checked')) {
         $("#div_servicios").show();
         $("#filtro-input").hide();
@@ -294,22 +310,26 @@ $(document).on("change", "#check_servicios", function() {
     }
 });
 
-function cargarServicios() {
+function cargarServiciosFiltro() {
     var datos = new FormData();
-    
+
     datos.append("cargar_servicios", true);
-    
+
     $.ajax({
-        url:url+'views/ajax/ajax_cafeterias_lista.php',
-        method:'POST',
+        url: url + 'views/ajax/ajax_cafeterias_lista.php',
+        method: 'POST',
         data: datos,
         cache: false,
         contentType: false,
         processData: false,
-        success:function(respuesta){
+        success: function (respuesta) {
             respuesta = JSON.parse(respuesta);
-           // console.log(respuesta);
+            // console.log(respuesta);
             $("#caja_servicios").html(respuesta);
         }
     });
 }
+
+$(document).on("submit", "#aplicar_filtros", function () {
+    cargarListaCafeterias(1, filtro = '');
+});

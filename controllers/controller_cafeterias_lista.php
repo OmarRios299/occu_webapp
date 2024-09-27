@@ -16,6 +16,14 @@ class CafeteriasListaController{
             list($isOpen, $horarioDiaActual) = GeneralController::isOpen($horariosSimples, $horariosDetallados); 
             $statusClass = $isOpen ? 'text-success' : 'text-danger';
 
+            // Filtrar por estado si es necesario
+            if ($datos['horario'] === 'abierto' && !$isOpen) {
+                continue; // Saltar cafeterías cerradas si se filtra por abiertas
+            }
+            if ($datos['horario'] === 'cerrado' && $isOpen) {
+                continue; // Saltar cafeterías abiertas si se filtra por cerradas
+            }
+
             $html .= '
             <div class="col-12 col-md-6 col-lg-4 mb-4 modal_cafeteria">
                 <div class="card">

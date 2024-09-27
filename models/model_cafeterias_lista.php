@@ -11,6 +11,24 @@ class CafeteriasListaModel extends Conexion {
         $offset = ($pagina - 1) * $limite;
 
         $busqueda = '%' . $datos['busqueda'] . '%';
+        $ciudad='';
+        if($datos['ciudad']!=''){
+            $ciudad ='AND cafeterias.id_ciudad = :ciudad';
+        }
+        
+        $servicios = ''; 
+        if (isset($datos['servicios']) && !empty($datos['servicios'])) {
+            $servicios_ids = array_map(function($servicio) {
+                return $servicio['id'];
+            }, $datos['servicios']);
+            
+            $servicios_ids_str = implode(',', $servicios_ids);
+            
+            $servicios = " AND cafeterias.id IN (
+                            SELECT id_cafeteria 
+                            FROM cafeterias_servicios 
+                            WHERE estado = 0 AND id_servicio IN ($servicios_ids_str))";
+        }
 
         $stmt = Conexion::conectar()->prepare("SELECT
             cafeterias.*,
@@ -25,11 +43,17 @@ class CafeteriasListaModel extends Conexion {
             AND paises.estado = 0 
             AND ciudades.estado = 0
             AND (cafeterias.nombre LIKE :busqueda OR ciudades.nombre LIKE :busqueda)
+            $ciudad
+            $servicios
             LIMIT :offset, :limite");
 
         $stmt->bindParam(':busqueda', $busqueda, PDO::PARAM_STR);
         $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
         $stmt->bindParam(':limite', $limite, PDO::PARAM_INT);
+
+        if($datos['ciudad']!=''){
+            $stmt->bindParam(':ciudad', $datos['ciudad'], PDO::PARAM_INT);
+        }
 
         $stmt->execute();
 

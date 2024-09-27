@@ -87,87 +87,92 @@
         </a>
     </div>
 
-
-    <div class="row" id="filtros_div" style="display: none;">
-        <div class="col-md-5 cambiar-clase mb-2">
-            <div class="caja">
-                <div class="row ">
-                    <div class="col-md-6 d-flex justify-content-center align-items-center">
-                        <div class="row">
-                            <div class="col-md-12 text-center">
-                                <label for="">Calificación</label>
-                                <div class="star-rating">
-                                    <input type="radio" id="star5" name="rating" value="5" />
-                                    <label for="star5" title="5 estrellas">★</label>
-                                    <input type="radio" id="star4" name="rating" value="4" />
-                                    <label for="star4" title="4 estrellas">★</label>
-                                    <input type="radio" id="star3" name="rating" value="3" checked />
-                                    <label for="star3" title="3 estrellas">★</label>
-                                    <input type="radio" id="star2" name="rating" value="2" />
-                                    <label for="star2" title="2 estrellas">★</label>
-                                    <input type="radio" id="star1" name="rating" value="1" />
-                                    <label for="star1" title="1 estrella">★</label>
+    <form onsubmit="return false;" id="aplicar_filtros">
+        <div class="row" id="filtros_div" style="display: none;">
+            <div class="col-md-5 cambiar-clase mb-2">
+                <div class="caja">
+                    <div class="row ">
+                        <div class="col-md-6 d-flex justify-content-center align-items-center">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <label for="">Calificación</label>
+                                    <div class="star-rating">
+                                        <input type="radio" id="star5" name="rating" value="5" />
+                                        <label for="star5" title="5 estrellas">★</label>
+                                        <input type="radio" id="star4" name="rating" value="4" />
+                                        <label for="star4" title="4 estrellas">★</label>
+                                        <input type="radio" id="star3" name="rating" value="3" checked />
+                                        <label for="star3" title="3 estrellas">★</label>
+                                        <input type="radio" id="star2" name="rating" value="2" />
+                                        <label for="star2" title="2 estrellas">★</label>
+                                        <input type="radio" id="star1" name="rating" value="1" />
+                                        <label for="star1" title="1 estrella">★</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 d-flex justify-content-center align-items-center">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="horario_filtro" value="todos" checked>
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Todos los horarios
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="horario_filtro" value="abierto" >
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Abiertas ahora
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 d-flex justify-content-center align-items-center">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
-                                    <label class="form-check-label" for="flexRadioDefault1">
-                                        Todos los horarios
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
-                                    <label class="form-check-label" for="flexRadioDefault2">
-                                        Abiertas ahora
-                                    </label>
-                                </div>
+                </div>
+            </div>
+            <div class="col-md-5 cambiar-clase mb-2">
+                <div class="caja h-100">
+                    <div class="row">
+                        <div class="col-md-6 mt-0 d-flex justify-content-center align-items-center">
+                            <div class="form-check">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    Buscar por servicios
+                                </label>
+                                <input class="form-check-input" type="checkbox" value="" id="check_servicios">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Ciudad</label>
+                                <select class="form-control select2" id_pais='<?= $_SESSION['ciudad'] ?>' id="select_ciudades_filtro">
+                                    <option value="" selected disabled>Selecciona una ciudad</option>
+                                    <?php foreach (GeneralController::obtenerCiudadesController() as $ciudad) { ?>
+                                        <option value="<?= $ciudad['id'] ?>"><?= $ciudad['nombre'] ?></option>
+                                    <?php }  ?>
+
+                                </select>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-5 cambiar-clase mb-2">
-            <div class="caja h-100">
-                <div class="row">
-                    <div class="col-md-6 mt-0 d-flex justify-content-center align-items-center">
-                        <div class="form-check">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                Buscar por servicios
-                            </label>
-                            <input class="form-check-input" type="checkbox" value="" id="check_servicios">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Ciudad</label>
-                            <select class="form-control select_ciudad" id_pais=<?= $_SESSION['ciudad'] ?> id="select_ciudades_filtro">
-                                <option value="" disabled>Selecciona una opción</option>
+            <div class="col-md-12" style="display: none;" id="div_servicios">
+                <div class="caja mb-2">
+                    <div class="row" id="caja_servicios">
 
-                            </select>
-                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-12" style="display: none;" id="div_servicios">
-            <div class="caja mb-2">
-                <div class="row" id="caja_servicios">
-                    
+            <div class="col-md d-flex justify-content-center align-items-center h-100 mt-2">
+                <div class="caja">
+                    <button type="submit" class="btn btn-icono btn-buscar" id=""></button>
                 </div>
             </div>
         </div>
-        <div class="col-md d-flex justify-content-center align-items-center h-100 mt-2">
-            <div class="caja">
-                <button type="button" class="btn btn-icono btn-buscar"></button>
-            </div>
-        </div>
-    </div>
+    </form>
+
 
 
     <!-- Contenedor de búsqueda y paginación -->
@@ -178,7 +183,8 @@
         </div>
         <!-- Botones de Paginación -->
         <div class="col-md-3 text-end">
-            <button id="boton-anterior" class="btn btn-primary" data-pagina="1"> << </button>
+            <button id="boton-anterior" class="btn btn-primary" data-pagina="1">
+                << </button>
                     <button id="boton-siguiente" class="btn btn-primary" data-pagina="1">>></button>
         </div>
     </div>

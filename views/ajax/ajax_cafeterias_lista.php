@@ -14,6 +14,9 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         $datos = array(
             'pagina' => isset($_POST['pagina']) ? intval($_POST['pagina']) : 1,
             'busqueda' => isset($_POST['busqueda']) ? $_POST['busqueda'] : '',
+            'horario'=> isset($_POST['horario']) ? $_POST['horario']:'',
+            'ciudad' => isset($_POST['ciudad']) ? $_POST['ciudad'] : '',
+            'servicios' => isset($_POST['servicios']) ? json_decode($_POST['servicios'], true) : '', 
         );
 
         $controller = "obtenerCafeteriasController";
