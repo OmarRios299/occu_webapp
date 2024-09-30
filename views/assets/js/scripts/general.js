@@ -806,3 +806,7 @@ function CargarCiudades() {
     });
     
 }
+
+$(document).on("click","#filtro_busqueda",function(){
+    $(".filtro_busqueda").toggle();
+});

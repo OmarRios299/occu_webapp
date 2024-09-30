@@ -1,8 +1,61 @@
 <div class="titulo-boton">
     <h1 class="titulo-modulo">Productos</h1>
-    <button type="button" class="btn con-icono btn-agregar" id="btn_agregar_producto">Agregar productos</button>
+    <div class="row tetxt-end">
+        <div class="col-md">
+            <button type="button" class="btn con-icono btn-buscar" id="filtro_busqueda">Filtrar</button>
+        </div>
+        <div class="col-md">
+            <button type="button" class="btn con-icono btn-agregar" id="btn_agregar_producto">Agregar</button>
+        </div>
+    </div>
 </div>
+<h6 class="subtitulo filtro_busqueda" style="display: none;">Filtro de búsqueda</h6>
+<div class="caja  filtro_busqueda" style="display: none;">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label>Categoría:</label>
+                <select class="form-control select2" id="entidad_filtro" required>
+                    <option value="" selected>Todos</option>
+                        <?php foreach (MenuProductosModel::obtenerCategoriasModel() as $categoria) { ?>
+                            <option value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
+                        <?php } ?>
+                    </select>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group text-center">
+                <label>Estatus:</label>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="estatus" value="Todos">
+                            <label class="form-check-label">Todos</label>
+                        </div>
 
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="estatus" value="Activas">
+                            <label class="form-check-label">Activos</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="estatus" value="Inactivas">
+                            <label class="form-check-label">Inactivos</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mt-2 text-center">
+            <button type="button" class="btn btn-icono btn-buscar"></button>
+        </div>
+    </div>
+</div>
 <h6 class="subtitulo mt-3">Tabla de productos</h6>
 <div class="caja">
     <div class="table-responsive">
@@ -29,12 +82,12 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form onsubmit="return false;" class="form_agregar_producto">
-            <div class="modal-header">
-                <input type="hidden" id="id_productos">
-                <h5 class="modal-title" id="modalLabel"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
+                <div class="modal-header">
+                    <input type="hidden" id="id_productos">
+                    <h5 class="modal-title" id="modalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
                     <input type="hidden" class="input_productos" id="id_producto">
                     <div class="row">
                         <div class="col-md-3">
@@ -49,8 +102,8 @@
                                 <label>Categoría:</label>
                                 <select class="form-control input_productos" id="select_categoria">
                                     <option value="" disabled selected>Selecciona una opción</option>
-                                    <?php foreach(MenuProductosModel::obtenerCategoriasModel() as $categoria){ ?>
-                                        <option value="<?=$categoria['id']?>"><?=$categoria['nombre']?></option>
+                                    <?php foreach (MenuProductosModel::obtenerCategoriasModel() as $categoria) { ?>
+                                        <option value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
@@ -69,12 +122,12 @@
                             </div>
                         </div>
                     </div>
-                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Aceptar</button>
-            </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                </div>
             </form>
         </div>
     </div>

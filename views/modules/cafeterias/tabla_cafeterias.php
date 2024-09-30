@@ -1,6 +1,70 @@
 <div class="titulo-boton">
     <h1 class="titulo-modulo">Cafeterías</h1>
-    <a class="btn btn-agregar con-icono" href="<?= $url . 'cafeterias/agregar' ?>">Agregar cafetería</a>
+    <div class="row tetxt-end">
+        <div class="col-md">
+            <button type="button" class="btn con-icono btn-buscar" id="filtro_busqueda">Filtrar</button>
+        </div>
+        <div class="col-md">
+            <a class="btn btn-agregar con-icono" href="<?= $url . 'cafeterias/agregar' ?>">Agregar</a>
+        </div>
+    </div>
+</div>
+<h6 class="subtitulo filtro_busqueda" style="display: none;">Filtro de búsqueda</h6>
+<div class="caja  filtro_busqueda" style="display: none;">
+    <div class="row">
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Entidad federativa:</label>
+                <select class="form-control select2" id="entidad_filtro" required>
+                    <option value="" selected>Todos</option>
+                    <?php foreach (GeneralController::obtenerEstadosController() as $estado) { ?>
+                        <option value="<?= $estado['id'] ?>"><?= $estado['nombre'] ?></option>
+                    <?php }  ?>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group">
+                <label>Ciudad:</label>
+                <select class="form-control" id="ciudad_filtro" required>
+                    <option value="" selected>Todos</option>
+                    <?php foreach (GeneralController::obtenerCiudadesController() as $ciudad) { ?>
+                        <option value="<?= $ciudad['id'] ?>"><?= $ciudad['nombre'] ?></option>
+                    <?php }  ?>
+                </select>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="form-group text-center">
+                <label>Estatus:</label>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="estatus" value="Todos">
+                            <label class="form-check-label">Todos</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="estatus" value="Activas">
+                            <label class="form-check-label">Activos</label>
+                        </div>
+
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="estatus" value="Inactivas">
+                            <label class="form-check-label">Inactivos</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mt-2 text-center">
+            <button type="button" class="btn btn-icono btn-buscar"></button>
+        </div>
+    </div>
 </div>
 <style>
     /* Ocultar el checkbox estándar */
@@ -107,7 +171,7 @@
             </div>
             <div class="modal-body">
                 <form onsubmit="return false;" id="form_servicios">
-                <input type="hidden" id="id_cafeteria">
+                    <input type="hidden" id="id_cafeteria">
                     <div class="caja">
                         <div class="row">
                             <div class="col-md" id="servicios">

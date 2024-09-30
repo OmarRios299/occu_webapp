@@ -148,6 +148,7 @@
                                 <label>Ciudad</label>
                                 <select class="form-control select2" id_pais='<?= $_SESSION['ciudad'] ?>' id="select_ciudades_filtro">
                                     <option value="" selected disabled>Selecciona una ciudad</option>
+                                    <option value="">Todas</option>
                                     <?php foreach (GeneralController::obtenerCiudadesController() as $ciudad) { ?>
                                         <option value="<?= $ciudad['id'] ?>"><?= $ciudad['nombre'] ?></option>
                                     <?php }  ?>

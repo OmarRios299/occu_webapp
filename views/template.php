@@ -205,9 +205,8 @@ $v = "1.0.0";
         <!-- Menu -->
         <script src="<?php echo $url; ?>views/assets/js/scripts/menu_categorias.js?v='<?php echo $v; ?>'"></script>
         <script src="<?php echo $url; ?>views/assets/js/scripts/menu_productos.js?v='<?php echo $v; ?>'"></script>
-
-
-    
+        <!-- Dashboard -->
+        <script src="<?php echo $url; ?>views/assets/js/scripts/dashboard.js?v='<?php echo $v; ?>'"></script>
 
     </body>
 </html>

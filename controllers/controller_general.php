@@ -411,4 +411,14 @@ class GeneralController
 
         return [false, 'Horario no disponible']; // Si no hay horarios definidos, se asume que está cerrado
     }
+
+	
+	/* OBTENER NIVELES DE USUARIO */
+	
+	static public function obtenerNivelesUsuarioControler(){
+		return GeneralModel::obtenerNivelesUsuarioModel();
+	}
+	
+	/* OBTENER NIVELES DE USUARIO */
+	
 }

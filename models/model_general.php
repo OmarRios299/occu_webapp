@@ -257,4 +257,23 @@ class GeneralModel extends Conexion{
         return $horarios;
     }
 	
+	
+	/* OBTENER NIVELES DE USUARIO */
+	
+	static public function obtenerNivelesUsuarioModel(){
+	
+		$stmt = Conexion::conectar()->prepare("SELECT * FROM admin_niveles WHERE estado!=2 ");
+	
+		//$stmt->bindParam(':', ,PDO::PARAM_STR);
+	
+		$stmt -> execute();
+	
+		return $stmt -> fetchAll();
+	
+		$stmt = null;
+	
+	}
+	
+	/* OBTENER NIVELES DE USUARIO */
+	
 }

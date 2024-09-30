@@ -19,6 +19,9 @@ require_once "controllers/controller_cafeterias_servicios.php";
 require_once "controllers/controller_menu_categorias.php";
 require_once "controllers/controller_menu_productos.php";
 
+//Dashboard
+require_once "controllers/controller_dashboard.php";
+
 //Models
 require_once "models/model_login.php";
 require_once "models/model_general.php";
@@ -36,6 +39,9 @@ require_once "models/model_cafeterias_servicios.php";
 //Menu
 require_once "models/model_menu_categorias.php";
 require_once "models/model_menu_productos.php";
+
+//Dashboard
+require_once "models/model_dashboard.php";
 
 $template = new TemplateController();
 $template -> template();

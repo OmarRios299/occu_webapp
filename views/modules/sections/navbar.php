@@ -1,17 +1,4 @@
-<!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <button type="button" id="sidebarCollapse" class="btn btn-menu">
-            <span class="material-icons">list</span>
-        </button>
-        <div class="nav navbar-nav ml-auto mt-2">
-            <p>Hola, <span><?= $_SESSION['nombre_completo']; ?></span></p>
-        </div>
-        <div>
-            <a class="btn btn-sesion" href="<?php echo $url ?>salir"> Cerrar sesion </a>
-        </div>
-        
-    </div>
-</nav> -->
+
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-plantilla" aria-label="Main navigation">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">OCCU</a>
@@ -38,7 +25,7 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . 'menu_categorias'; ?>"><span>Cetegorías de productos</span></a></li>
                         <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . 'menu_productos'; ?>"><span>Productos</span></a></li>
-                        <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . ''; ?>"><span>Ingredientes</span></a></li>
+                        <!-- <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . ''; ?>"><span>Ingredientes</span></a></li> -->
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -68,16 +55,3 @@
         </div>
     </div>
 </nav>
-
-<!-- <div class="nav-scroller bg-body shadow-sm">
-    <nav class="nav" aria-label="Secondary navigation">
-        <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
-        <a class="nav-link" href="#">
-            Friends
-            <span class="badge text-bg-light rounded-pill align-text-bottom">27</span>
-        </a>
-        <a class="nav-link" href="#">Explore</a>
-        <a class="nav-link" href="#">Suggestions</a>
-     
-    </nav>
-</div> -->
