@@ -26,6 +26,9 @@ $(document).ready(function () {
     if ($('#tabla_imagenes').length) {
         cargarTablaImagenes();
     }
+    if ($("#tabla_cafeterias").length) {
+        cargarTablaCafeterias();
+    }
 });
 
 // Función para inicializar el polígono y el mapa
@@ -430,4 +433,35 @@ $(document).on("submit","#form_servicios",function(){
             }
         }
     });
+});
+
+function cargarTablaCafeterias(){
+    let entidad = $("#entidad_filtro option:selected").val();
+    let ciudad = $("#ciudad_filtro option:selected").val();
+    let estatus = $('input[name="estatus"]:checked').val();
+
+    let filtro = `?tabla_cafeterias=${true}&entidad=${entidad}&ciudad=${ciudad}&estatus=${estatus}`;
+
+    if ($.fn.DataTable.isDataTable($("#tabla_cafeterias"))) {
+        $("#tabla_cafeterias").DataTable().destroy();
+    }
+   $('#tabla_cafeterias').DataTable( {
+    "ajax": {
+            "url": url + 'views/ajax/ajax_cafeterias.php' + filtro,
+            "dataSrc": function (json) {
+                return json.data;
+            },
+        },
+    "deferRender": true,
+    "retrieve": true,
+    "processing": true,
+    dom: 'Bfrtip',
+    responsive: true,
+    ordering: true,
+    "language":{"url": url+"views/assets/plugins/DataTables/Spanish.json"}
+   });
+}
+
+$(document).on("submit","#form_filtro_cafeterias",function(){
+    cargarTablaCafeterias();
 });

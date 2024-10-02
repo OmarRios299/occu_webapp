@@ -5,11 +5,20 @@ require_once "conexion.php";
 class MenuProductosModel extends Conexion
 {
 
-
     /* OBTENER PRODUCTOS */
 
-    static public function obtenerProductosModel()
+    static public function obtenerProductosModel($datos)
     {
+        $categoria ='';
+        $estatus = 'WHERE cafeterias_menu_productos.estado != 2';
+        if ($datos['categoria']!='') {
+            $categoria = 'AND cafeterias_menu_productos.id_categoria = :categoria';
+        }
+        if ($datos['estatus']=='Activas') {
+            $estatus = 'WHERE cafeterias_menu_productos.estado = 0';
+        }else if($datos['estatus']=='Inactivas'){
+            $estatus = 'WHERE cafeterias_menu_productos.estado = 1';
+        }
 
         $stmt = Conexion::conectar()->prepare("SELECT
         cafeterias_menu_productos.*,
@@ -23,14 +32,17 @@ class MenuProductosModel extends Conexion
             cafeterias_menu_productos
         INNER JOIN admin_usuarios ON cafeterias_menu_productos.id_alta = admin_usuarios.id
         INNER JOIN cafeterias_menu_categorias ON cafeterias_menu_productos.id_categoria = cafeterias_menu_categorias.id
-        WHERE cafeterias_menu_productos.estado !=2
+        $estatus
+        $categoria
         GROUP BY
             cafeterias_menu_productos.id
         ORDER BY
             cafeterias_menu_productos.id;
         ");
 
-        //$stmt->bindParam(':', ,PDO::PARAM_STR);
+        if ($datos['categoria']!='') {
+            $stmt->bindParam(':categoria', $datos['categoria'],PDO::PARAM_INT);
+        }
 
         $stmt->execute();
 

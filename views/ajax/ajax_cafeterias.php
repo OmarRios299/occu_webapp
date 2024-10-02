@@ -61,6 +61,15 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = 'registrarServiciosController';
 
+    }else if(isset($_GET['tabla_cafeterias'])){
+
+        $datos = array(
+            'ciudad' => $_GET['ciudad'],
+            'entidad' =>  $_GET['entidad'],
+            'estatus' =>  $_GET['estatus'],
+        );
+        $controller = 'obtenerCafeteriasController';
+
     }else{
 
         $datos = false;

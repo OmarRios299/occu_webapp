@@ -1,5 +1,6 @@
 <?php require_once '../../controllers/controller_admin_usuarios.php';
 require_once '../../controllers/controller_general.php';
+require_once '../../controllers/controller_template.php';
 require_once '../../models/model_admin_usuarios.php';
 require_once '../../models/model_general.php';
 
@@ -23,6 +24,16 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
             // "imagen_captura"         => isset($_POST["imagen_usuario_captura"]) ? $_POST['imagen_usuario_captura'] : false,
         );
         $controller = "registrarUsuarioController";
+
+    }else if(isset($_GET['tabla_usuarios'])){
+
+        $datos = array(
+            'ciudad' => $_GET['ciudad'],
+            'entidad' =>  $_GET['entidad'],
+            'estatus' =>  $_GET['estatus'],
+            'nivel' =>  $_GET['nivel'],
+        );
+        $controller = 'obtenerUsuariosController';
 
     }else{
 

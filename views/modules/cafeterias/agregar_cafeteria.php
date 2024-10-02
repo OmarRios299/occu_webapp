@@ -54,18 +54,33 @@
         </div>
 
         <div class="row">
-            <div class="col-md-4">
+        <div class="col-md-4">
                 <div class="form-group">
                     <label>País:</label>
-                    <input type="" class="form-control" id="pais_cafeteria" disabled>
+                    <select id="ciudad_select" class="form-select select_pais select2">
+                        <option value="" disabled>Selecciona un pais</option>
+                        <?php foreach (GeneralController::obtenerPaisesController() as $pais) {
+                            if ($pais['id'] == $_SESSION['id_pais']) {
+                            ?>
+                                <option value="<?= $pais['id'] ?>" selected><?= $pais['nombre'] ?></option>
+                            <?php
+                            } else {
+                            ?>
+                                <option value="<?= $pais['id'] ?>"><?= $pais['nombre'] ?></option>
+                            <?php
+                            }
+                            ?>
+                        <?php } ?>
+                    </select>
+                    <input type="" class="form-control select_pais" id="pais_cafeteria" disabled hidden>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label>Ciudad:</label>
-                    <select id="ciudad_select" class="form-select select2">
+                    <select id="ciudad_select" class="form-select select2 select_ciudad">
                         <option value="" disabled>Selecciona un ciudad</option>
-                        <?php foreach (CafeteriasController::obtenerCiudadesPaisController($_SESSION['pais']) as $ciudad) {
+                        <?php foreach (GeneralController::obtenerCiudadesController() as $ciudad) {
                             if ($_SESSION['ciudad'] == $ciudad['id']) {
                         ?>
                                 <option value='<?= $ciudad['id'] ?>' selected coordenadas='<?= $ciudad['coordenadas'] ?>' pais='<?= $ciudad['pais'] ?>'><?= $ciudad['nombre'] ?></option>

@@ -1,4 +1,8 @@
-
+$(document).ready(function(){
+   if ($("#tabla_usuarios").length) {
+        cargarTablaUsuarios();
+   } 
+});
 
 $(document).on("click",".btn-editar",function(){
     $("#modal_editar_usuario").modal('show');
@@ -75,4 +79,37 @@ $(document).on("submit", "#form_agregar_usuario", function() {
     }
     
 
+});
+
+
+function cargarTablaUsuarios(){
+    let entidad = $("#entidad_filtro option:selected").val();
+    let ciudad = $("#ciudad_filtro option:selected").val();
+    let estatus = $('input[name="estatus"]:checked').val();
+    let nivel = $("#filtro_nivel option:selected").val();
+
+    let filtro = `?tabla_usuarios=${true}&entidad=${entidad}&ciudad=${ciudad}&estatus=${estatus}&nivel=${nivel}`;
+
+    if ($.fn.DataTable.isDataTable($("#tabla_usuarios"))) {
+        $("#tabla_usuarios").DataTable().destroy();
+    }
+   $('#tabla_usuarios').DataTable( {
+    "ajax": {
+            "url": url + 'views/ajax/ajax_admin_usuarios.php' + filtro,
+            "dataSrc": function (json) {
+                return json.data;
+            },
+        },
+    "deferRender": true,
+    "retrieve": true,
+    "processing": true,
+    dom: 'Bfrtip',
+    responsive: true,
+    ordering: true,
+    "language":{"url": url+"views/assets/plugins/DataTables/Spanish.json"}
+   });
+}
+
+$(document).on("submit","#form_tabla_usuario",function(){
+    cargarTablaUsuarios();
 });

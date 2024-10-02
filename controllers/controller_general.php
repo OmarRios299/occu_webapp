@@ -329,38 +329,55 @@ class GeneralController
 		return  GeneralModel::obtenerCiudadesModel();
 	}
 
-	static public function obtenerCiudadesPorPaisController($pais)
+	static public function obtenerCiudadesPorPaisController($datos)
 	{
 		$data =[];
-		foreach (GeneralModel::obtenerCiudadesPorPaisModel($pais) as $item){
+		foreach (GeneralModel::obtenerCiudadesPorPaisModel($datos) as $item){
 			$data[]=array(
 				'id' => $item['id'],
 				'nombre' => $item['nombre']
 			);
 		}
-		echo json_encode($data);
+		echo json_encode(['ciudades' => $data]);
 	}
 	/* OBTENER CIUDADES */
 
 
-	// /* OBTENER ESTADOS */
+	/* OBTENER ESTADOS */
 
-	// static public function obtenerEstadosController($datos)
-	// {
-	// 	$data = [];
-	// 	$data[] = array(
-	// 		"id" => "",
-	// 		"text" => "Todos los estados",
-	// 	);
-	// 	foreach (GeneralModel::obtenerEstadosControllerModel($datos) as $estado) {
-	// 		$data[] = array(
-	// 			"id" => $estado['id'],
-	// 			"nombre" => $estado['nombre']
-	// 		);
-	// 	}
-	// }
+	static public function obtenerEstadosPorPaisController($datos)
+	{
+		$estados = [];
+		$ciudades =[];
+		if ($datos['opcion_todos']=='SI') {
+			$estados[] = array(
+				"id" => "",
+				"nombre" => "Todos los estados",
+			);
+			$ciudades[] = array(
+				"id" => "",
+				"nombre" => "Todos las ciudades",
+			);
+		}
+		
+		foreach (GeneralModel::obtenerEstadosControllerModel($datos) as $estado) {
+			$estados[] = array(
+				"id" => $estado['id'],
+				"nombre" => $estado['nombre']
+			);
+		}
+		foreach (GeneralModel::obtenerCiudadesPorPaisModel($datos) as $item){
+			$ciudades[]=array(
+				'id' => $item['id'],
+				'nombre' => $item['nombre'],
+				'coordenadas' => $item['coordenadas'],
+				'pais' => $item['pais'],
+			);
+		}
+		echo json_encode(['estados'=>$estados,'ciudades' => $ciudades]);
+	}
 
-	// /* OBTENER ESTADOS */
+	/* OBTENER ESTADOS */
 
 	// Función para traducir el nombre del día de inglés a español
     static public function traducirDia($diaIngles) {

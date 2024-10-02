@@ -729,84 +729,96 @@ $(document).on('click', '#realizarCaptura', function(){
 
 /* REALIZAR CAPTURA */
 
-// SELECT DE PAISES
-
-$(document).on("change",".select_paises",function(){
-
-    let id_pais = $(this).val();
-    filtrarEstados(id_pais);
-});
-
-// End of SELECT DE PAISES
-
-
-function filtrarEstados(id_pais='') {
-
-	let filtro = "";
-	if(id_pais!='') filtro += "&id_pais="+id_pais
-
-	if($('.select_estados').data('select2')){
-		$('.select_estados').val('').change().select2('destroy');
-	}
-
-	$(".select_estados").select2({
-		ajax: { 
-			url: url+'views/ajax/ajax_general.php?cargar_estados=si'+filtro,
-			type: "post",
-			dataType: 'json',
-			delay: 250,
-			data: function (params) {
-				return {
-					searchTerm: params.term // search term
-				};
-			},
-			processResults: function (data) {
-				return {
-					results: $.map(data, function (item) {
-						return {
-							nombre: item.nombre,
-							id: item.id
-						}
-					})
-				};
-			},
-			cache: true
-		}
-	});
-}
-
-function CargarCiudades() {
-    
-    let pais = $(".select_ciudad").attr("id_pais");
-    let filtro = pais !== '' ? "&id_pais=" + pais : ''; // Verificación más segura de la variable 'filtro'
-    
-    $(".select_ciudad").select2({
-        ajax: { 
-            url: url + 'views/ajax/ajax_general.php?cargar_ciudades=si' + filtro,
-            type: "post",
-            dataType: 'json',
-            delay: 250,
-            data: function (params) {
-                return {
-                    searchTerm: params.term // search term
-                };
-            },
-            processResults: function (data) {
-                return {
-                    results: $.map(data, function (item) {
-                        return {
-                            id: item.id, // Identificador único de cada ciudad
-                            text: item.nombre // Texto visible en el select2 (nombre de la ciudad)
-                        };
-                    })
-                };
-            },
-            cache: true
-        }
-    });
-    
-}
 
 $(document).on("click","#filtro_busqueda",function(){
     $(".filtro_busqueda").toggle();
+});
+
+$(document).on("change", ".select_pais", function() {
+    let pais = $('.select_pais option:selected').val();    
+    let opcion_todos = $(".select_pais").attr("opcion_todos");
+    let filtro = `?select_pais=${true}&pais=${pais}&todos=${opcion_todos}`;
+
+    if ($('.select_estado').data('select2')) {
+        $('.select_estado').select2('destroy').empty();
+    }
+    if ($('.select_ciudad').data('select2')) {
+        $('.select_ciudad').select2('destroy').empty();
+    }
+
+    // Llamada AJAX para obtener estados y ciudades iniciales
+    $.ajax({
+        url: url + 'views/ajax/ajax_general.php' + filtro,
+        type: "post",
+        dataType: 'json',
+        success: function(response) {
+            // Llenar el select de estados
+            let estados = response.estados;
+            $(".select_estado").select2({
+                data: $.map(estados, function(item) {
+                    return {
+                        id: item.id, 
+                        text: item.nombre
+                    };
+                })
+            });
+
+            // Llenar el select de ciudades
+            let ciudades = response.ciudades;
+            $(".select_ciudad").select2({
+                data: $.map(ciudades, function(item) {
+                    return {
+                        id: item.id, 
+                        text: item.nombre, 
+                        coordenadas: item.coordenadas,
+                        pais: item.pais
+                    };
+                })
+            });
+        }
+    });
+});
+
+// Filtrar las ciudades según el estado seleccionado
+$(document).on("change", ".select_estado", function() {
+    select_ciudades();
+});
+
+function select_ciudades() {
+    let estado = $(".select_estado option:selected").val();
+    let pais = '';
+    let opcion_todos = $(".select_estado").attr("opcion_todos");
+
+    if ($('.select_ciudad').data('select2')) {
+        $('.select_ciudad').select2('destroy').empty();
+    }
+
+    let filtro = `?select_estado=${true}&estado=${estado}&pais=${pais}&todos=${opcion_todos}`;
+    
+    // Llamada AJAX para obtener las ciudades basadas en el estado seleccionado
+    $.ajax({
+        url: url + 'views/ajax/ajax_general.php' + filtro,
+        type: "post",
+        dataType: 'json',
+        success: function(response) {
+            // Llenar el select de ciudades
+            let ciudades = response.ciudades;
+            $(".select_ciudad").select2({
+                data: $.map(ciudades, function(item) {
+                    return {
+                        id: item.id, 
+                        text: item.nombre, 
+                        coordenadas: item.coordenadas,
+                        pais: item.pais
+                    };
+                })
+            });
+        }
+    });
+}
+
+$(document).on("click", "#limpiar_filtros", function() {
+    $(".filtro").val("").trigger('change');
+    $('input[name="estatus"]').prop('checked', false); 
+    $('input[name="estatus"][value="Todos"]').prop('checked', true); 
 });

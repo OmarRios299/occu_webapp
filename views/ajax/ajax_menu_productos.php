@@ -12,7 +12,10 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 
     if(isset($_GET['productos'])){
 
-        $datos = true;
+        $datos = array(
+            'categoria' => $_GET['categoria'],
+            'estatus' => $_GET['estatus']
+        );
         $controller = "obtenerProductosController";
 
     }else if(isset($_POST['agregar_producto'])){

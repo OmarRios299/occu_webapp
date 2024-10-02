@@ -6,8 +6,22 @@ class CafeteriasModel extends Conexion {
     
     /* OBTENER CAFETERíAS */
     
-    static public function obtenerCafeteriasModel(){
-    
+    static public function obtenerCafeteriasModel($datos){
+        $entidad ='';
+        $ciudad='';
+        $estatus = 'WHERE cafeterias.estado != 2';
+        if ($datos['entidad']!='') {
+            $entidad = 'AND ciudades.id_entidad_federativa = :entidad';
+        }
+        if ($datos['ciudad']!='') {
+            $ciudad = 'AND cafeterias.id_ciudad = :ciudad';
+        }
+        if ($datos['estatus']=='Activas') {
+            $estatus = 'WHERE cafeterias.estado = 0';
+        }else if($datos['estatus']=='Inactivas'){
+            $estatus = 'WHERE cafeterias.estado = 1';
+        }
+
         $stmt = Conexion::conectar()->prepare("SELECT
         cafeterias.*,
         CONCAT(
@@ -24,9 +38,17 @@ class CafeteriasModel extends Conexion {
         INNER JOIN ciudades ON cafeterias.id_ciudad = ciudades.id
         INNER JOIN entidades_federativas ON ciudades.id_entidad_federativa = entidades_federativas.id
         INNER JOIN paises ON paises.id = entidades_federativas.id_pais
-        WHERE cafeterias.estado !=2");
+        $estatus
+        $ciudad
+        $entidad");
     
-        //$stmt->bindParam(':', ,PDO::PARAM_STR);
+        
+        if ($datos['entidad']!='') {
+            $stmt->bindParam(':entidad',$datos['entidad'] ,PDO::PARAM_INT);
+        }
+        if ($datos['ciudad']!='') {
+            $stmt->bindParam(':ciudad', $datos['ciudad'],PDO::PARAM_INT);
+        }
     
         $stmt -> execute();
     

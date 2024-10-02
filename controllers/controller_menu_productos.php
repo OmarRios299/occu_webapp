@@ -4,11 +4,11 @@ class MenuProductosController{
 
 /* OBTENER PRODUCTOS  */
 
-static public function obtenerProductosController(){
+static public function obtenerProductosController($datos){
     $url = TemplateController::obtenerUrlController();
     $data = [];
     $i =0;
-    foreach(MenuProductosModel::obtenerProductosModel() as $producto){
+    foreach(MenuProductosModel::obtenerProductosModel($datos) as $producto){
         $checked = ($producto['estado']==0) ? "checked" : "";
         $imagen='<img src="'.$url .''. $producto['imagen'].'" style="width:80px;">';
         $botones = '<button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="cafeterias_menu_productos" idRegistro="'.$producto['id'].'"></button>    

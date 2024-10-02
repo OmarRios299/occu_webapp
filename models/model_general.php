@@ -182,18 +182,33 @@ class GeneralModel extends Conexion{
 
 	/* OBTENER CIUDADES */
 	
-	static public function obtenerCiudadesPorPaisModel($pais){
-	
+	static public function obtenerCiudadesPorPaisModel($datos){
+		$estado ='';
+		$pais = '';
+		if ($datos['estado']!='') {
+			$estado = 'AND ciudades.id_entidad_federativa = :estado';
+		}
+		if ($datos['pais']!='') {
+			$pais = 'AND entidades_federativas.id_pais = :pais';
+		}
 		$stmt = Conexion::conectar()->prepare("SELECT
-		ciudades.*
+		ciudades.*,
+		paises.nombre AS pais
 		FROM
 			ciudades
 		INNER JOIN entidades_federativas ON ciudades.id_entidad_federativa = entidades_federativas.id
+		INNER JOIN paises ON entidades_federativas.id_pais = paises.id
 		WHERE
-			ciudades.estado = 0 AND entidades_federativas.id_pais=:id");
+			ciudades.estado = 0
+			$estado
+			$pais");
 
-		$stmt -> bindParam(":id", $pais, PDO::PARAM_INT);
-	
+		if ($datos['estado']!='') {
+			$stmt -> bindParam(":estado", $datos['estado'], PDO::PARAM_INT);
+		}
+		if ($datos['pais']!='') {
+			$stmt -> bindParam(":pais", $datos['pais'], PDO::PARAM_INT);
+		}
 		$stmt -> execute();
 	
 		return $stmt -> fetchAll();
@@ -207,14 +222,14 @@ class GeneralModel extends Conexion{
 	
 	/* OBTENER ESTADOS (ENTIDADES FEDERATIVAS) */
 	
-	static public function obtenerEstadosControllerModel($filtro){
+	static public function obtenerEstadosControllerModel($datos){
 	
-		$filtro = ($filtro['pais']) ? "AND id_pais=:pais" : "";
+		$filtro = ($datos['pais']) ? "AND id_pais=:pais" : "";
 
 		$stmt = Conexion::conectar()->prepare("SELECT * FROM entidades_federativas WHERE estado = 0 $filtro");
 	
-		if($filtro['pais'])
-		$stmt->bindParam(':pais', $filtro['pais'],PDO::PARAM_INT);
+		if($datos['pais'])
+		$stmt->bindParam(':pais', $datos['pais'],PDO::PARAM_INT);
 	
 		$stmt -> execute();
 	

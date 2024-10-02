@@ -3,8 +3,36 @@ class AdminUsuariosController{
     
     /* OBTENER USUARIOS */
     
-    static public function obtenerUsuariosController(){
-        return AdminUsuariosModel::obtenerUsuariosModel();
+    static public function obtenerUsuariosController($datos){
+        $url = TemplateController::obtenerUrlController();
+        $i=0;
+        $data=[];
+        foreach (AdminUsuariosModel::obtenerUsuariosModel($datos) as $usuario) {
+            // Determinar si el checkbox debe estar marcado
+            $checked = ($usuario['estado'] == 0) ? "checked" : "";
+            $botones = '<a href="' . $url . 'admin_usuarios/' . $usuario['id'] . '/editar" class="btn btn-icono btn-editar"></a>
+                        <a href="' . $url . 'admin_usuarios/' . $usuario['id'] . '/ver" class="btn btn-icono btn-ver"></a>
+                        <button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="admin_usuarios" idRegistro="' . $usuario['id'] . '"></button>';
+            $estado = '<div class="form-check form-switch">
+                        <input type="checkbox" class="form-check-input cambioEstado" id="switch' . $usuario['id'] . '" tabla="admin_usuarios" idRegistro="' . $usuario['id'] . '" ' . $checked . '>
+                        <label class="form-check-label" for="switch' . $usuario['id'] . '"></label>
+                        </div>';
+            $data[] = [
+                ++$i,
+                $botones,
+                $estado,
+                '<img width="60px" src="' . $usuario['imagen'] . '" alt="Imagen de usuario">',
+                $usuario['nombre_usuario'],
+                $usuario['correo_electronico'],
+                $usuario['telefono'],
+                $usuario['ciudad'],
+                $usuario['entidad_federativa'],
+                $usuario['pais'],
+                $usuario['nivel'],
+                $usuario['fecha_alta']
+            ];
+        }
+        return json_encode(['data'=>$data]);
     }
     
     /* OBTENER USUARIOS */

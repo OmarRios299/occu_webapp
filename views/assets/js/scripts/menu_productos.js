@@ -5,8 +5,11 @@ $(document).ready(function(){
 });
 
 function cargarTablaProductos(){
+    let estatus = $('input[name="estatus"]:checked').val();
+    let categoria = $("#categoria_filtro option:selected").val();
 
-    let filtro = `?productos=${true}`;
+    let filtro = `?productos=${true}&categoria=${categoria}&estatus=${estatus}`;
+
     if ($.fn.DataTable.isDataTable($("#tabla_productos"))) {
         $("#tabla_productos").DataTable().destroy();
     }
@@ -74,4 +77,8 @@ $(document).on("click","#btn_agregar_producto",function(){
     $("#nombre_producto").removeAttr('validarCampoEditar').attr('validarCampo');
     $(".imagen_editar").attr('src','http://localhost/OCCU/occu_webApp/views/assets/img/cafeteria_default.png');
     $("#modal_editar_productos").modal('show');
+});
+
+$(document).on("submit","#form_filtro_productos",function(){
+    cargarTablaProductos();
 });

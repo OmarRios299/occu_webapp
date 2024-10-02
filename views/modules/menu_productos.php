@@ -10,52 +10,57 @@
     </div>
 </div>
 <h6 class="subtitulo filtro_busqueda" style="display: none;">Filtro de búsqueda</h6>
-<div class="caja  filtro_busqueda" style="display: none;">
-    <div class="row">
-        <div class="col-md-4">
-            <div class="form-group">
-                <label>Categoría:</label>
-                <select class="form-control select2" id="entidad_filtro" required>
-                    <option value="" selected>Todos</option>
+<form onsubmit="return false;" id="form_filtro_productos">
+    <div class="caja  filtro_busqueda" style="display: none;">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Categoría:</label>
+                    <select class="form-control select2 filtro" id="categoria_filtro">
+                        <option value="" selected>Todos</option>
                         <?php foreach (MenuProductosModel::obtenerCategoriasModel() as $categoria) { ?>
                             <option value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
                         <?php } ?>
                     </select>
-                </select>
+                    </select>
+                </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="form-group text-center">
-                <label>Estatus:</label>
-                <div class="row">
-                    <div class="col-md-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="estatus" value="Todos">
-                            <label class="form-check-label">Todos</label>
-                        </div>
+            <div class="col-md-6">
+                <div class="form-group text-center">
+                    <label>Estatus:</label>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" checked type="radio" name="estatus" value="Todos">
+                                <label class="form-check-label">Todos</label>
+                            </div>
 
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="estatus" value="Activas">
-                            <label class="form-check-label">Activos</label>
                         </div>
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="estatus" value="Activas">
+                                <label class="form-check-label">Activos</label>
+                            </div>
 
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="estatus" value="Inactivas">
-                            <label class="form-check-label">Inactivos</label>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="estatus" value="Inactivas">
+                                <label class="form-check-label">Inactivos</label>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-4 mt-2 text-center">
-            <button type="button" class="btn btn-icono btn-buscar"></button>
+            <div class="col-md-1 mt-2">
+                <button type="submit" class="btn btn-icono btn-buscar"></button>
+            </div>
+            <div class="col-md-1 mt-2">
+                <button type="button" class="btn btn-icono btn-basura" id="limpiar_filtros"></button>
+            </div>
         </div>
     </div>
-</div>
+</form>
 <h6 class="subtitulo mt-3">Tabla de productos</h6>
 <div class="caja">
     <div class="table-responsive">

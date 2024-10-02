@@ -1512,6 +1512,10 @@ dl, ol, ul {
 .btn-buscar.btn-icono {
     background-image: url(../img/iconos/botones/icono-buscar.svg);
 }
+.btn-basura.con-icono::before, 
+.btn-basura.btn-icono {
+    background-image: url(../img/iconos/botones/icono-borrar.svg);
+}
 .btn-estadistica.btn-icono {
     background-image: url(../img/iconos/botones/icono-estadistica.svg);
 }
@@ -1693,6 +1697,11 @@ dl, ol, ul {
     position: relative;
     color: var(--color-blanco)!important;
     background-color: var(--color-gris);
+}
+.btn-basura {
+    position: relative;
+    color: var(--color-blanco)!important;
+    background-color: var(--color-rojo);
 }
 .titulo-boton .btn-agregar,
 .titulo-boton .btn-buscar,

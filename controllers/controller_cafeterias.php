@@ -3,8 +3,43 @@ class CafeteriasController{
     
     /* OBTENER CAFETERíAS */
     
-    static public function obtenerCafeteriasController(){
-        return CafeteriasModel::obtenerCafeteriasModel();
+    static public function obtenerCafeteriasController($datos){
+        $url = TemplateController::obtenerUrlController();
+        $data = [];
+        $i=0;
+        foreach (CafeteriasModel::obtenerCafeteriasModel($datos) as $cafeteria){
+            $checked = ($cafeteria['estado'] == 0) ? "checked" : "";
+                $estado = '<div class="form-check form-switch">
+                            <input type="checkbox"
+                                class="form-check-input cambioEstado"
+                                id="witch'.$cafeteria['id'].'"
+                                tabla="cafeterias"
+                                idRegistro="'.$cafeteria['id'].'"
+                                '.$checked.'
+                            <label class="custom-control-label" for="switch'.$cafeteria['id'].'"></label>
+                        </div>';
+            $botones = ' <a type="button" class="btn btn-icono btn-editar" href="'.$url. 'cafeterias/' . $cafeteria['id'].'/editar"></a>
+                        <button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="cafeterias" idRegistro="'.$cafeteria['id'].'"></button>
+                        <button class="btn btn-icono btn-servicios agregar_servicios" idRegistro="'.$cafeteria['id'].'"></button>';
+            $data[]=[
+                ++$i,
+                    $botones,
+                    $estado,    
+                    '<img width="60px;" src="'.$cafeteria['imagen'].'" alt="">',
+                    $cafeteria['nombre'],
+                    $cafeteria['horario_apertura'] .' - '. $cafeteria['horario_cierre'],
+                    $cafeteria['direccion'],
+                    $cafeteria['telefono'],
+                    $cafeteria['correo_electronico'],
+                    $cafeteria['ciudad'],
+                    $cafeteria['entidad_federativa'],
+                    $cafeteria['pais'],
+                    $cafeteria['usuario_alta'],
+                    $cafeteria['fecha_alta'],
+            ];
+        };
+
+        return json_encode(['data' => $data]);
     }
     
     /* OBTENER CAFETERíAS */

@@ -86,19 +86,25 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 		);
 		$funcion = "validarCampoSecundarioEditarController";
 
-	}else if(isset($_POST['cargar_estados'])){
+	}else if(isset($_GET['select_pais'])){
 	
 		/* CARGAR ENTIDADES FEDERATIVAS */
 		$datos = array(
-			"pais"=>$_GET['id_pais'],
+			"pais"=>$_GET['pais'],
+			"estado" => '',
+			"opcion_todos" => isset($_GET['todos'])?$_GET['todos']:'',
 		);
-		$funcion = "obtenerEstadosController";
+		$funcion = "obtenerEstadosPorPaisController";
 
-	}else if(isset($_GET['cargar_ciudades'])){
+	}else if(isset($_GET['select_estado'])){
 	
 		/* CARGAR ENTIDADES FEDERATIVAS */
-		$datos =$_GET['id_pais'];
-		$funcion = "obtenerCiudadesPorPaisController";
+		$datos = array(
+			"pais"=>'',
+			"opcion_todos" => ($_GET['todos']=='SI')?$_GET['todos']:'',
+			"estado"=>$_GET['estado'],
+		);
+		$funcion = "obtenerEstadosPorPaisController";
 
 	}else{
 		$datos = false;
