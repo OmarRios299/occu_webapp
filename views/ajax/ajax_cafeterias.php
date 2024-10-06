@@ -20,6 +20,7 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
             "ciudad"         => $_POST['ciudad'],
             "latitud"        => $_POST['latitud'],
             "longitud"       => $_POST['longitud'],
+            "horario_diferente" => $_POST['horario_diferente'],
             "imagen_subir"   => isset($_FILES["imagen_cafeteria"]) ? $_FILES['imagen_cafeteria'] : false
         );
         

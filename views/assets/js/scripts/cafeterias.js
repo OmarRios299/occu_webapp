@@ -29,6 +29,20 @@ $(document).ready(function () {
     if ($("#tabla_cafeterias").length) {
         cargarTablaCafeterias();
     }
+
+    if ($('#switch_horario').is(':checked')) {
+        $(".inp_horario").show();
+        $(".inp_horario").attr("required",true);  
+        $(".tbl_horario").hide();  
+        $(".tbl_horario").removeAttr("required");  
+    } else {
+        $(".inp_horario").hide(); 
+        $(".tbl_horario").show(); 
+        $(".inp_horario").val('');
+        $(".inp_horario").removeAttr("required"); 
+        $(".tbl_horario").attr("required",true);  
+ 
+    }
 });
 
 // Función para inicializar el polígono y el mapa
@@ -175,6 +189,7 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
     let ciudad = $("#ciudad_select option:selected").val();
     let latitud = $("#latitud_cafeteria").val();
     let longitud = $("#longitud_cafeteria").val();
+    let horario_diferente = ($("#switch_horario").is(':checked'))?'NO':'SI';
     let imagen_subir = $("#imagen_cafeteria")[0].files[0] ? $("#imagen_cafeteria")[0].files[0] : false;
 
     var datos = new FormData();
@@ -188,6 +203,7 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
     datos.append("ciudad", ciudad);
     datos.append("latitud", latitud);
     datos.append("longitud", longitud);
+    datos.append("horario_diferente", horario_diferente);
     if (imagen_subir) datos.append("imagen_cafeteria", imagen_subir);
 
     // Verificar el estado del switch para determinar qué horarios enviar
@@ -203,7 +219,7 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
         let horarios = {};
         let i = 0;
         diasSemana.forEach(function(dia) {
-            let diaMinuscula = dia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Convertir a minúsculas y remover acentos para coincidir con los IDs
+            let diaMinuscula =dia.toLowerCase(); // Convertir a minúsculas y remover acentos para coincidir con los IDs
             let switchDia = $(`#switch_${diaMinuscula}`); // Usar nombres en minúsculas y sin acentos
             if (switchDia.is(':checked')) {
                 let horaApertura = $(`#hora_apertura_${diaMinuscula}`).val();
@@ -272,25 +288,30 @@ $("#btn_seleccionar_ubicacion").on("click", function () {
 });
 
 function toggleFields(checkbox, dia) {
-    // Normalizar el nombre del día para coincidir con los IDs en el HTML
-    const diaNormalizado = dia.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    // Convertir el nombre del día a minúsculas para coincidir con los IDs generados en PHP
+    const diaNormalizado = dia.toLowerCase();
 
     // Buscar los elementos de apertura y cierre usando el nombre normalizado
     const apertura = document.getElementById(`hora_apertura_${diaNormalizado}`);
     const cierre = document.getElementById(`hora_cierre_${diaNormalizado}`);
-    
-    if (checkbox.checked) {
-        apertura.disabled = false;
-        cierre.disabled = false;
-        apertura.setAttribute('required', 'required'); 
-        cierre.setAttribute('required', 'required'); 
+
+    // Verificar si los elementos existen
+    if (apertura && cierre) {
+        if (checkbox.checked) {
+            apertura.disabled = false;
+            cierre.disabled = false;
+            apertura.setAttribute('required', 'required'); 
+            cierre.setAttribute('required', 'required'); 
+        } else {
+            apertura.disabled = true;
+            cierre.disabled = true;
+            apertura.value = '';
+            cierre.value = '';
+            apertura.removeAttribute('required'); 
+            cierre.removeAttribute('required'); 
+        }
     } else {
-        apertura.disabled = true;
-        cierre.disabled = true;
-        apertura.value = '';
-        cierre.value = '';
-        apertura.removeAttribute('required'); 
-        cierre.removeAttribute('required'); 
+        console.error(`Elementos no encontrados para el día: ${diaNormalizado}`);
     }
 }
 

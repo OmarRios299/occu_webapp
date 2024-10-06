@@ -128,12 +128,6 @@ if (isset($action[1])) {
     </div>
 </div>
 
-
-
-
-
-
-
 <div class="modal fade" id="carouselModal" tabindex="-1" aria-labelledby="carouselModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

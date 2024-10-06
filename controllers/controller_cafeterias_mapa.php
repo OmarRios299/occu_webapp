@@ -4,15 +4,23 @@ class CafeteriasMapaController{
     
     /* OBTENER CAFETERIAS */
     
-    static public function obtenerCafeteriasController(){
+    static public function obtenerCafeteriasController($datos){
         
         $data = [];
-        foreach (CafeteriasMapaModel::obtenerCafeteriasModel() as $cafeteria){
+        foreach (CafeteriasMapaModel::obtenerCafeteriasModel($datos) as $cafeteria){
 
             $horariosSimples = GeneralModel::obtenerHorariosSimplesCafeteriaModel($cafeteria['id']);
             $horariosDetallados = GeneralModel::obtenerHorariosDetalladosCafeteriaModel($cafeteria['id']);
             list($isOpen, $horarioDiaActual) = GeneralController::isOpen($horariosSimples, $horariosDetallados); 
             $statusClass = $isOpen ? 'text-success' : 'text-danger';
+
+             // Filtrar por estado si es necesario
+             if ($datos['horario'] === 'abierto' && !$isOpen) {
+                continue; // Saltar cafeterías cerradas si se filtra por abiertas
+            }
+            if ($datos['horario'] === 'cerrado' && $isOpen) {
+                continue; // Saltar cafeterías abiertas si se filtra por cerradas
+            }
     
             $status = '<span class="' . $statusClass . '">' . ($isOpen ? 'Abierto' : 'Cerrado') . '</span>';
             $horario = '<span class="' . $statusClass . '">' . htmlspecialchars($horarioDiaActual) . '</span>';

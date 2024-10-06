@@ -153,11 +153,15 @@
 
 /* - - - - - - -  - - - caja de servicios */
 
+.modal_mapa {
+    overflow: hidden;
+}
 
 .servicios .custom-carousel {
-    display: flex;
+    display:flex;
     transition: transform 0.5s ease-in-out;
     will-change: transform;
+    overflow: hidden;
 }
 
 .servicios .custom-carousel-item {
@@ -204,6 +208,42 @@
     background-color: rgba(0, 0, 0, 0.5);
     /* Fondo oscuro semi-transparente */
     z-index: 1;
+}
+
+/* - - - - - - - - estilos para el filtro y estrallas */
+
+.filtros_cafeterias .star-rating {
+    direction: rtl;
+    /* De derecha a izquierda para mejor UX */
+    font-size: 1.5rem;
+    unicode-bidi: bidi-override;
+    /* Reversión de texto */
+    display: flex;
+}
+
+.filtros_cafeterias .star-rating input {
+    display: none;
+    /* Ocultar los inputs */
+}
+
+.filtros_cafeterias .star-rating label {
+    cursor: pointer;
+    color: #ccc;
+    /* Color de las estrellas no seleccionadas */
+    font-size: inherit;
+    /* Hereda el tamaño del contenedor */
+
+}
+
+.filtros_cafeterias .star-rating input:checked~label {
+    color: #ffc107;
+    /* Color de las estrellas seleccionadas */
+}
+
+.star-rating label:hover,
+.star-rating label:hover~label {
+    color: #ffc107;
+    /* Cambiar el color al pasar el mouse sobre una estrella */
 }
 
 

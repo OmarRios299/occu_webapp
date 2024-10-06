@@ -822,3 +822,24 @@ $(document).on("click", "#limpiar_filtros", function() {
     $('input[name="estatus"]').prop('checked', false); 
     $('input[name="estatus"][value="Todos"]').prop('checked', true); 
 });
+
+function cargarServiciosFiltro() {
+    // Esta funcion se utiliza en cafeterias_mapa
+    var datos = new FormData();
+
+    datos.append("cargar_servicios", true);
+
+    $.ajax({
+        url: url + 'views/ajax/ajax_cafeterias_lista.php',
+        method: 'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (respuesta) {
+            respuesta = JSON.parse(respuesta);
+            // console.log(respuesta);
+            $("#caja_servicios").html(respuesta);
+        }
+    });
+}

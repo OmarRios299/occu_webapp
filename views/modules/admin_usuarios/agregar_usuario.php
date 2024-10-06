@@ -50,7 +50,7 @@
             </div>
             <div class="col-md-3 text-center">
                 <div class="form-group">
-                    <img src="../views/assets/img/usuario_default.png" style="width:100px;heigth:120px;" id="imagen_previsualizar">
+                    <img src="../views/assets/img/usuario_default.png" style="width:100px;height:120px;" id="imagen_previsualizar">
                 </div>
             </div>
         </div>

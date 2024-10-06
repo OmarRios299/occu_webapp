@@ -7,8 +7,27 @@ class CafeteriasMapaModel extends Conexion {
     
     /* OBTENER CAFETERIAS */
     
-    static public function obtenerCafeteriasModel(){
-    
+    static public function obtenerCafeteriasModel($datos){
+
+        $ciudad='';
+        if($datos['ciudad']!=''){
+            $ciudad ='AND cafeterias.id_ciudad = :ciudad';
+        }
+        
+        $servicios = ''; 
+        if (isset($datos['servicios']) && !empty($datos['servicios'])) {
+            $servicios_ids = array_map(function($servicio) {
+                return $servicio['id'];
+            }, $datos['servicios']);
+            
+            $servicios_ids_str = implode(',', $servicios_ids);
+            
+            $servicios = " AND cafeterias.id IN (
+                            SELECT id_cafeteria 
+                            FROM cafeterias_servicios 
+                            WHERE estado = 0 AND id_servicio IN ($servicios_ids_str))";
+        }
+
         $stmt = Conexion::conectar()->prepare("SELECT
             cafeterias.*,
             ciudades.nombre AS ciudad,
@@ -20,13 +39,17 @@ class CafeteriasMapaModel extends Conexion {
             INNER JOIN paises ON entidades_federativas.id_pais = paises.id
             WHERE cafeterias.estado = 0 
             AND paises.estado = 0 
-            AND ciudades.estado = 0");
-        
-        $stmt -> execute();
-    
-        return $stmt -> fetchAll();
-    
-        $stmt = null;
+            AND ciudades.estado = 0
+            $ciudad
+            $servicios");
+
+        if($datos['ciudad']!=''){
+            $stmt->bindParam(':ciudad', $datos['ciudad'], PDO::PARAM_INT);
+        }
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
     
     }
     

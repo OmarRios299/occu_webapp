@@ -93,8 +93,9 @@
                         <label for="">Mismo horario cada día<br>(abierto todos los días)</label>
                     </div>
                     <div class="col-md-12 d-flex justify-content-center">
+                        <?php $cheked = ($cafeteria['horario_diferente'] != 'SI') ? 'checked' : '' ?>
                         <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_horario" name="" checked>
+                            <input class="form-check-input" type="checkbox" id="switch_horario" name="" <?= $cheked ?>>
                         </div>
                     </div>
                 </div>
@@ -159,85 +160,54 @@
                     <th>Hora de Cierre</th>
                 </tr>
             </thead>
+            <?php
+            // Función para procesar los horarios de cada día
+            function procesarHorarioDia($action, $diaSemana)
+            {
+                $dia = CafeteriasController::buscarHorarioDiferenteController($action[1], $diaSemana);
+
+                // Validar si no hay registros
+                if (!$dia) {
+                    $cheked = ''; // Sin valores predeterminados
+                    $disabled = 'disabled'; // Deshabilitado si no hay registro
+                    $dia['hora_apertura'] = ''; // Valor por defecto
+                    $dia['hora_cierre'] = '';   // Valor por defecto
+                } else {
+                    $cheked = ($dia['cerrado'] != 'SI') ? 'checked' : '';
+                    $disabled = ($dia['cerrado'] == 'SI') ? 'disabled' : '';
+                }
+
+                // Retornamos un array con la información
+                return [
+                    'cheked' => $cheked,
+                    'disabled' => $disabled,
+                    'hora_apertura' => $dia['hora_apertura'],
+                    'hora_cierre' => $dia['hora_cierre']
+                ];
+            }
+
+            // Array con los días de la semana
+            $diasSemana = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+            ?>
+
             <tbody>
-                <!-- Lunes -->
-                <tr>
-                    <td>Lunes</td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_lunes" name="desbloquear_lunes" onclick="toggleFields(this, 'Lunes')" checked>
-                        </div>
-                    </td>
-                    <td><input type="time" class="form-control" name="hora_apertura_lunes" id="hora_apertura_lunes"></td>
-                    <td><input type="time" class="form-control" name="hora_cierre_lunes" id="hora_cierre_lunes"></td>
-                </tr>
-                <!-- Martes -->
-                <tr>
-                    <td>Martes</td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_martes" name="desbloquear_martes" onclick="toggleFields(this, 'Martes')">
-                        </div>
-                    </td>
-                    <td><input type="time" class="form-control" name="hora_apertura_martes" id="hora_apertura_martes" disabled></td>
-                    <td><input type="time" class="form-control" name="hora_cierre_martes" id="hora_cierre_martes" disabled></td>
-                </tr>
-                <!-- Miércoles -->
-                <tr>
-                    <td>Miércoles</td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_miercoles" name="desbloquear_miercoles" onclick="toggleFields(this, 'Miércoles')">
-                        </div>
-                    </td>
-                    <td><input type="time" class="form-control" name="hora_apertura_miercoles" id="hora_apertura_miercoles" disabled></td>
-                    <td><input type="time" class="form-control" name="hora_cierre_miercoles" id="hora_cierre_miercoles" disabled></td>
-                </tr>
-                <!-- Jueves -->
-                <tr>
-                    <td>Jueves</td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_jueves" name="desbloquear_jueves" onclick="toggleFields(this, 'Jueves')">
-                        </div>
-                    </td>
-                    <td><input type="time" class="form-control" name="hora_apertura_jueves" id="hora_apertura_jueves" disabled></td>
-                    <td><input type="time" class="form-control" name="hora_cierre_jueves" id="hora_cierre_jueves" disabled></td>
-                </tr>
-                <!-- Viernes -->
-                <tr>
-                    <td>Viernes</td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_viernes" name="desbloquear_viernes" onclick="toggleFields(this, 'Viernes')">
-                        </div>
-                    </td>
-                    <td><input type="time" class="form-control" name="hora_apertura_viernes" id="hora_apertura_viernes" disabled></td>
-                    <td><input type="time" class="form-control" name="hora_cierre_viernes" id="hora_cierre_viernes" disabled></td>
-                </tr>
-                <!-- Sábado -->
-                <tr>
-                    <td>Sábado</td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_sabado" name="desbloquear_sabado" onclick="toggleFields(this, 'Sábado')">
-                        </div>
-                    </td>
-                    <td><input type="time" class="form-control" name="hora_apertura_sabado" id="hora_apertura_sabado" disabled></td>
-                    <td><input type="time" class="form-control" name="hora_cierre_sabado" id="hora_cierre_sabado" disabled></td>
-                </tr>
-                <!-- Domingo -->
-                <tr>
-                    <td>Domingo</td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="switch_domingo" name="desbloquear_domingo" onclick="toggleFields(this, 'Domingo')">
-                        </div>
-                    </td>
-                    <td><input type="time" class="form-control" name="hora_apertura_domingo" id="hora_apertura_domingo" disabled></td>
-                    <td><input type="time" class="form-control" name="hora_cierre_domingo" id="hora_cierre_domingo" disabled></td>
-                </tr>
+                <?php foreach ($diasSemana as $diaSemana):
+                    // Obtener datos del día actual
+                    $datosDia = procesarHorarioDia($action, $diaSemana);
+                ?>
+                    <tr>
+                        <td><?= $diaSemana ?></td>
+                        <td>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="switch_<?= strtolower($diaSemana) ?>" name="desbloquear_<?= strtolower($diaSemana) ?>" onclick="toggleFields(this, '<?= $diaSemana ?>')" <?= $datosDia['cheked'] ?>>
+                            </div>
+                        </td>
+                        <td><input type="time" class="form-control" name="hora_apertura_<?= strtolower($diaSemana) ?>" id="hora_apertura_<?= strtolower($diaSemana) ?>" <?= $datosDia['disabled'] ?> value="<?= $datosDia['hora_apertura'] ?>"></td>
+                        <td><input type="time" class="form-control" name="hora_cierre_<?= strtolower($diaSemana) ?>" id="hora_cierre_<?= strtolower($diaSemana) ?>" <?= $datosDia['disabled'] ?> value="<?= $datosDia['hora_cierre'] ?>"></td>
+                    </tr>
+                <?php endforeach; ?>
             </tbody>
+
         </table>
 
     </div>

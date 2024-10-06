@@ -30,42 +30,6 @@
         color: red;
         font-size: 1.2rem;
     }
-
-    /* estilos para el filtro y estrallas */
-
-    .star-rating {
-        direction: rtl;
-        /* De derecha a izquierda para mejor UX */
-        font-size: 1.5rem;
-        unicode-bidi: bidi-override;
-        /* Reversión de texto */
-        display: flex;
-    }
-
-    .star-rating input {
-        display: none;
-        /* Ocultar los inputs */
-    }
-
-    .star-rating label {
-        cursor: pointer;
-        color: #ccc;
-        /* Color de las estrellas no seleccionadas */
-        font-size: inherit;
-        /* Hereda el tamaño del contenedor */
-
-    }
-
-    .star-rating input:checked~label {
-        color: #ffc107;
-        /* Color de las estrellas seleccionadas */
-    }
-
-    .star-rating label:hover,
-    .star-rating label:hover~label {
-        color: #ffc107;
-        /* Cambiar el color al pasar el mouse sobre una estrella */
-    }
 </style>
 <div class="container mt-4">
     <!-- Encabezado -->
@@ -88,7 +52,7 @@
     </div>
 
     <form onsubmit="return false;" id="aplicar_filtros">
-        <div class="row" id="filtros_div" style="display: none;">
+        <div class="row filtros_cafeterias" id="filtros_div" style="display: none;">
             <div class="col-md-5 cambiar-clase mb-2">
                 <div class="caja">
                     <div class="row ">

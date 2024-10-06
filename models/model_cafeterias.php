@@ -137,6 +137,7 @@ class CafeteriasModel extends Conexion {
             longitud,
             horario_apertura,
             horario_cierre,
+            horario_diferente,
             id_usuario,
             id_alta,
             fecha_alta
@@ -152,6 +153,7 @@ class CafeteriasModel extends Conexion {
             :longitud,
             :horario_apertura,
             :horario_cierre,
+            :horario_diferente,
             :id_usuario,
             :id_alta,
             :fecha_alta
@@ -166,6 +168,7 @@ class CafeteriasModel extends Conexion {
         $stmt->bindParam(':longitud', $datos['longitud'], PDO::PARAM_STR);
         $stmt->bindParam(':horario_apertura', $datos['horario_apertura'], PDO::PARAM_STR);
         $stmt->bindParam(':horario_cierre', $datos['horario_cierre'], PDO::PARAM_STR);
+        $stmt->bindParam(':horario_diferente', $datos['horario_diferente'], PDO::PARAM_STR);
         $stmt->bindParam(':id_usuario', $datos['id_alta'], PDO::PARAM_INT);
         $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
         $stmt->bindParam(':fecha_alta', $datos['fecha_alta'], PDO::PARAM_STR);
@@ -227,7 +230,8 @@ class CafeteriasModel extends Conexion {
         latitud = :latitud,
         longitud = :longitud,
         horario_apertura = :horario_apertura,
-        horario_cierre = :horario_cierre
+        horario_cierre = :horario_cierre,
+        horario_diferente=:horario_diferente
         WHERE id = :id");
     
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
@@ -239,6 +243,7 @@ class CafeteriasModel extends Conexion {
         $stmt->bindParam(':longitud', $datos['longitud'], PDO::PARAM_STR);
         $stmt->bindParam(':horario_apertura', $datos['horario_apertura'], PDO::PARAM_STR);
         $stmt->bindParam(':horario_cierre', $datos['horario_cierre'], PDO::PARAM_STR);
+        $stmt->bindParam(':horario_diferente', $datos['horario_diferente'], PDO::PARAM_STR);
         $stmt->bindParam(':id', $datos['id'], PDO::PARAM_INT);
     
         if($stmt->execute()){
@@ -434,6 +439,25 @@ class CafeteriasModel extends Conexion {
     
     /* ELIMINAR REGISTROS ANTIGUOS */
     
+    
+    /* OBTENER HORARIO DIFERENTE */
+    
+    static public function buscarHorarioDiferenteModel($cafeteria, $dia){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM cafeteria_horarios WHERE id_cafeteria = :cafeteria AND dia=:dia");
+    
+        $stmt->bindParam(':cafeteria', $cafeteria,PDO::PARAM_INT);
+        $stmt->bindParam(':dia', $dia,PDO::PARAM_STR);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetch();
+    
+        $stmt = null;
+    
+    }
+    
+    /* OBTENER HORARIO DIFERENTE */
     
 
 }

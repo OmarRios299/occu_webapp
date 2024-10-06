@@ -66,7 +66,7 @@ class CafeteriasController{
     /* REGISTRAR CAFETERIA */
     
     static public function registrarCafeteriaController($datos){
-
+        //var_dump($datos['horarios']);
         //validamos el correo electrónico y nombre
         $validacion_email = ($datos['id']) && ($datos['correo']) ? 
         GeneralModel::validarCampoEditarModel($datos['correo'],"correo_electronico","cafeterias",$datos['id'])
@@ -220,6 +220,14 @@ class CafeteriasController{
     
     /* REGISTRAR SERVICIOS */
     
+    
+    /* BUSCAR HORARIO DIFERENTE */
+    
+    static public function buscarHorarioDiferenteController($cafeteria, $dia){
+        return CafeteriasModel::buscarHorarioDiferenteModel($cafeteria, $dia);
+    }
+    
+    /* BUSCAR HORARIO DIFERENTE */
     
     
 } ?>

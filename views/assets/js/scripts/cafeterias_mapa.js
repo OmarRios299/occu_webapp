@@ -1,16 +1,33 @@
 // Variable para almacenar la instancia del mapa
 var mapa_ubicaciones_cafeterias;
+var markersArray = []; // Arreglo para almacenar los marcadores
 
 $(document).ready(function() {
     if (moduloActual == 'cafeterias_mapa') {
         cargarMapaCafeterias();
+        cargarServiciosFiltro();
     }
 });
 
 function cargarMapaCafeterias(){
-    var datos = new FormData();
+
+    const servicios = [];
+    $(".seleccionar_servicio").each(function(){
+        if ($(this).is(":checked")) {
+            servicios.push({
+                id:$(this).val()
+            });
+        }
+    });
     
+    let horario = $('input[name="horario_filtro"]:checked').val();
+    let ciudad = $("#select_ciudades_filtro option:selected").val();
+    
+    var datos = new FormData();
     datos.append("obtenerCafeterias", true);
+    datos.append("horario", horario);
+    datos.append("ciudad", ciudad);
+    datos.append("servicios", JSON.stringify(servicios)); 
     
     $.ajax({
         url: url + 'views/ajax/ajax_cafeterias_mapa.php',
@@ -21,78 +38,97 @@ function cargarMapaCafeterias(){
         processData: false,
         success: function(respuesta) {
             respuesta = JSON.parse(respuesta);
-            
+
+            // Eliminar marcadores previos si ya existen
+            clearMarkers();
+
+            // Verificar si el atributo 'coordenadas' existe y es válido
+            let coordenadasAttr = $("#select_ciudades_filtro option:selected").attr('coordenadas');
+            //console.log(coordenadasAttr);
+            let polygonCoordinates = coordenadasAttr ? JSON.parse(coordenadasAttr) : [];
+
+            const center = polygonCoordinates.length > 0 ? getGeographicCentroid(polygonCoordinates) : { lat: 29.384, lng: -107.006 };
+
             if (!mapa_ubicaciones_cafeterias) {
                 // Inicializar el mapa de Google
                 mapa_ubicaciones_cafeterias = new google.maps.Map(document.getElementById('map'), {
-                    center: { lat: 32.10, lng: -114.80 }, // Coordenadas iniciales
-                    zoom: 9,
-                    disableDefaultUI: false, // Mantiene los controles del mapa predeterminados
+                    center: center, // Coordenadas iniciales
+                    zoom: 12,
+                    disableDefaultUI: false,
                     styles: ocultar_marcadores,
-                    streetViewControl: false,  // Desactivar Pegman
-                    zoomControl: true,        // Desactivar controles de zoom
-                    mapTypeControl: true,     // Desactivar el selector de tipo de mapa
-                    fullscreenControl: true,   // Desactivar el control de pantalla completa
+                    streetViewControl: false,
+                    zoomControl: true,
+                    mapTypeControl: true,
+                    fullscreenControl: true,
                     fullscreenControlOptions: {
-                        position: google.maps.ControlPosition.TOP_CENTER, // Posiciona las herramientas de dibujo en el centro superior
-                        drawingModes: ['polygon']
+                        position: google.maps.ControlPosition.TOP_CENTER
                     },
                 });
-
-                // Iterar sobre los datos recibidos para crear marcadores
-                respuesta.data.forEach(function(cafeteria) {
-                    var nombre = cafeteria.nombre;
-                    var id = cafeteria.id;
-                    var imagen = cafeteria.imagen;
-                    var status = cafeteria.status;
-                    var latitud = parseFloat(cafeteria.latitud);
-                    var longitud = parseFloat(cafeteria.longitud);
-
-                    // Crear un ícono personalizado
-                    var customIcon = {
-                        url: url + imagen, // URL de tu icono
-                        scaledSize: new google.maps.Size(50, 50), // Tamaño del icono
-                        anchor: new google.maps.Point(25, 50) // Punto del icono que se alineará con el marcador
-                    };
-
-                    // Crear un marcador con el icono personalizado
-                    var marker = new google.maps.Marker({
-                        position: { lat: latitud, lng: longitud },
-                        map: mapa_ubicaciones_cafeterias,
-                        icon: customIcon
-                    });
-
-                    // Crear una ventana de información para el marcador
-                    var infowindow = new google.maps.InfoWindow({
-                        content: `
-                            <div style="text-align: center;">
-                                <h6>${nombre}</h6>
-                                <img src="${url}${imagen}" alt="Imagen del Marcador" class='imagen' idCafeteria='${id}' style="width: 50px; height: 50px;"/>
-                                <p>${status}</p>
-                            </div>
-                        `
-                    });
-
-                    // Agregar evento para mostrar la ventana de información al hacer clic en el marcador
-                    marker.addListener('click', function() {
-                        infowindow.open(mapa_ubicaciones_cafeterias, marker);
-                    });
-                });
             } else {
-                setTimeout(function() {
-                    google.maps.event.trigger(mapa_ubicaciones_cafeterias, 'resize');
-                }, 10);
+                // Reubicar el centro del mapa en las nuevas coordenadas
+                mapa_ubicaciones_cafeterias.setCenter(center);
             }
+
+            // Iterar sobre los datos recibidos para crear marcadores
+            respuesta.data.forEach(function(cafeteria) {
+                var nombre = cafeteria.nombre;
+                var id = cafeteria.id;
+                var imagen = cafeteria.imagen;
+                var status = cafeteria.status;
+                var latitud = parseFloat(cafeteria.latitud);
+                var longitud = parseFloat(cafeteria.longitud);
+
+                // Crear un ícono personalizado
+                var customIcon = {
+                    url: url + imagen,
+                    scaledSize: new google.maps.Size(50, 50),
+                    anchor: new google.maps.Point(25, 50)
+                };
+
+                // Crear un marcador con el icono personalizado
+                var marker = new google.maps.Marker({
+                    position: { lat: latitud, lng: longitud },
+                    map: mapa_ubicaciones_cafeterias,
+                    icon: customIcon
+                });
+
+                // Guardar el marcador en el array para luego poder eliminarlo
+                markersArray.push(marker);
+
+                // Agregar evento para abrir el modal al hacer clic en el marcador
+                marker.addListener('click', function() {
+                    abrirModalCafeteria(id);
+                });
+            });
+            
+            // Trigger de redimensionar el mapa si ya estaba inicializado
+            setTimeout(function() {
+                google.maps.event.trigger(mapa_ubicaciones_cafeterias, 'resize');
+            }, 10);
         }
     });
 }
 
+// Función para eliminar los marcadores del mapa
+function clearMarkers() {
+    markersArray.forEach(function(marker) {
+        marker.setMap(null); // Eliminar el marcador del mapa
+    });
+    markersArray = []; // Limpiar el array de marcadores
+}
 
-$(document).on("click",".imagen",function(){
-    $("#id_cafeteria").attr('idCafeteria',($(this).attr('idCafeteria')));
+function abrirModalCafeteria(id) {
+    $("#id_cafeteria").attr('idCafeteria',id);
     $("#modal_cafeteria").modal('show');
     CargarVerCafeteria();
     cargarComentarios(1);
+}
+
+$(document).on("click","#btn_filtro_mapa",function(){
+    $("#modal_filtro_mapa").modal('show');
 });
 
-    
+$(document).on("submit", "#aplicar_filtros_mapa", function () {
+    $("#modal_cafeteria").modal('hide');
+    cargarMapaCafeterias();
+});

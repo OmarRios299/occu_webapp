@@ -310,25 +310,6 @@ $(document).on("change", "#check_servicios", function () {
     }
 });
 
-function cargarServiciosFiltro() {
-    var datos = new FormData();
-
-    datos.append("cargar_servicios", true);
-
-    $.ajax({
-        url: url + 'views/ajax/ajax_cafeterias_lista.php',
-        method: 'POST',
-        data: datos,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (respuesta) {
-            respuesta = JSON.parse(respuesta);
-            // console.log(respuesta);
-            $("#caja_servicios").html(respuesta);
-        }
-    });
-}
 
 $(document).on("submit", "#aplicar_filtros", function () {
     cargarListaCafeterias(1, filtro = '');
