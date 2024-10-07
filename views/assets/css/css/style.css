@@ -2186,6 +2186,9 @@ a.fc-daygrid-event {
         width: 100%;
         margin: 0 0 0 auto;
     }
+    #pagina-inicial {
+        margin-top: 10px;
+    }
     .contenido .modulos {
         position: relative;
         height: 100%;
