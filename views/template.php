@@ -74,76 +74,54 @@ $v = "1.0.0";
         <?php
         if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 
-           
+            //paginas sin sidebar ni navbar
+            if ($moduloActual == "cafeterias_mapa") {
 
-                //paginas sin sidebar ni navbar
-                if ($moduloActual == "cafeterias_mapa") {
-
-                    echo '<div style="width: 100% !important; margin: 0 !important;height:100vh!important"><div class="">';
-                } else {
-                    //include "modules/sections/sidebar.php";
-                     echo '<div id="sistema">';
-                   
-                    echo '<div class="contenido">';
-                    include "modules/sections/navbar.php";
-                    echo '<div class="modulos">';
-                }
+                echo '<div style="width: 100% !important; margin: 0 !important;height:100vh!important"><div class="">';
+            } else {
+                //include "modules/sections/sidebar.php";
+                    echo '<div id="sistema">';
                 
-            $_SESSION['nivel'] = 'Administrador';
+                echo '<div class="contenido">';
+                include "modules/sections/navbar.php";
+                echo '<div class="modulos">';
+            }
+                
+            //$_SESSION['nivel'] = 'Administrador';
 
-            if(isset($action[0])){
+            if (isset($action[0])) {
 
-                if($_SESSION['nivel'] == 'Administrador'){
-                    //Administrador
-
-                    if( $action[0] == "dashboard"                       ||
-                        $action[0] == "admin_usuarios"                  ||
-                        $action[0] == "admin_paises"                    || 
-                        $action[0] == "cafeterias"                      || 
-                        $action[0] == "cafeterias_mapa"                 ||
-                        $action[0] == "cafeterias_lista"                ||
-                        $action[0] == "cafeterias_servicios"            ||
-                        $action[0] == "menu_categorias"                 ||  
-                        $action[0] == "menu_productos"                  ||  
-                        $action[0] == "404"                             ||
-                        $action[0] == "salir"){
-
-                        echo '<div>';
-                        // echo '<div class="container modulo-'.$action[0].'">';
-                        include "modules/".$action[0].".php";
-                        echo '</div>';
-
-                    }else{
-
-                        echo '<div class="modulo-404">';
-                         include "modules/404.php";
-                        echo '</div>';
-
-                    }
-
-                }elseif($_SESSION['nivel'] == 'Cafeteros'){
-                    //Cafeteros
-                    if( $action[0] == "dashboard"                       ||
-                        $action[0] == "404"                             ||
-                        $action[0] == "salir"){
-
-                        echo '<div class="modulo-'.$action[0].'">';
-                        include "modules/".$action[0].".php";
-                        echo '</div>';
-
-                    }else{
-
-                        echo '<div class="modulo-404">';
-                         include "modules/404.php";
-                        echo '</div>';
-
-                    }
-
-                }else{
-                    //Cliente
-                    echo '<div class="modulo-404">';
-                        include "modules/404.php";
+                //modulos que se incluyen sin importar el nivel
+                if (
+                    $action[0] == "dashboard"                   ||
+                    $action[0] == "404"                         ||
+                    $action[0] == "mantenimiento"               ||
+                    $action[0] == "cafeterias_lista"            ||
+                    $action[0] == "cafeterias_mapa"             ||
+                    $action[0] == "registrarme"                 ||
+                    $action[0] == "salir"
+                ) {
+    
+                    echo '<div class="modulo-' . $action[0] . '">';
+                    include "modules/" . $action[0] . ".php";
                     echo '</div>';
+                } else {
+    
+                    //buscamos el modulo solicitado
+                    $modulo = GeneralController::buscarModuloSistema($action[0]);
+                    if ($modulo && ($modulo['permiso_modulo'] == 1)) {
+                        //si el usuario es nivel administrador tiene acceso a todos los niveles
+                        echo '<div class="modulo-' . $action[0] . '">';
+                        include "modules/" . $action[0] . ".php";
+                        echo '</div>';
+                    } else {
+                        //si el modulo no existe o si el nivel de usuario no tiene acceso al modulo 
+                        //incluimos 404
+                        echo '<div class="modulo-404">';
+                        include "modules/404.php";
+                        echo '</div>';
+                        
+                    }
                 }
 
             }else{
@@ -155,7 +133,23 @@ $v = "1.0.0";
             }
 
             echo '</div></div></div><div class="overlay"></div>';
-        }else{
+        }else if (isset($action[0])) {
+            if (
+                $action[0] == "404"                         ||
+                $action[0] == "mantenimiento"               ||
+                $action[0] == "cafeterias_lista"            ||
+                $action[0] == "cafeterias_mapa"             ||
+                $action[0] == "registrarme"                 
+            ) {
+                echo '<div class="modulo-' . $action[0] . '">';
+                include "modules/" . $action[0] . ".php";
+                echo '</div>';
+            } else {
+                echo '<div class="modulo-404">';
+                include "modules/404.php";
+                echo '</div>';
+            }
+        } else{
 
             include "modules/login.php";
 
@@ -194,6 +188,7 @@ $v = "1.0.0";
         <!-- Custom scripts -->
         <script src="<?php echo $url; ?>views/assets/js/scripts/general.js?v='<?php echo $v; ?>'"></script>
         <script src="<?php echo $url; ?>views/assets/js/scripts/login.js?v='<?php echo $v; ?>'"></script>
+        <script src="<?php echo $url; ?>views/assets/js/scripts/registrarme.js?v='<?php echo $v; ?>'"></script>
         <!-- Administración -->
         <script src="<?php echo $url; ?>views/assets/js/scripts/admin_usuarios.js?v='<?php echo $v; ?>'"></script>
         <script src="<?php echo $url; ?>views/assets/js/scripts/admin_paises.js?v='<?php echo $v; ?>'"></script>

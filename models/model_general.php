@@ -277,7 +277,7 @@ class GeneralModel extends Conexion{
 	
 	static public function obtenerNivelesUsuarioModel(){
 	
-		$stmt = Conexion::conectar()->prepare("SELECT * FROM admin_niveles WHERE estado!=2 ");
+		$stmt = Conexion::conectar()->prepare("SELECT * FROM admin_niveles_usuario WHERE estado!=2 ");
 	
 		//$stmt->bindParam(':', ,PDO::PARAM_STR);
 	
@@ -290,5 +290,67 @@ class GeneralModel extends Conexion{
 	}
 	
 	/* OBTENER NIVELES DE USUARIO */
+
+
+	/* BUSCAR MODULO SISTEMA */
+	
+	static public function buscarModuloSistemaModel($ruta_modulo,$nivel){
+		$stmt = Conexion::conectar()->prepare("SELECT
+		IF(
+			admin_niveles_usuario_modulos.id IS NOT NULL,
+			1,
+			0
+		) AS permiso_modulo
+		FROM
+			admin_niveles_usuario_modulos
+		INNER JOIN permisos_modulos ON admin_niveles_usuario_modulos.id_modulo = permisos_modulos.id
+		INNER JOIN admin_niveles_usuario ON admin_niveles_usuario_modulos.id_nivel = admin_niveles_usuario.id
+		WHERE
+			permisos_modulos.ruta = :ruta AND admin_niveles_usuario.nombre = :nivel
+		");
+	
+		$stmt->bindParam(':ruta',$ruta_modulo,PDO::PARAM_STR);
+		$stmt->bindParam(':nivel',$nivel,PDO::PARAM_STR);
+	
+		$stmt -> execute();
+	
+		return $stmt -> fetch();
+	
+		$stmt = null;
+	
+	}
+	
+	/* BUSCAR MODULO SISTEMA */
+
+	
+	/* OBTENER MODULOS DE SISTEMA */
+	
+	static public function obtenerModulosNivelModel(){
+	
+		$stmt = Conexion::conectar()->prepare("SELECT
+		admin_niveles_usuario_modulos.*,
+		permisos_modulos.ruta,
+		permisos_modulos.nombre as modulo,
+    	permisos_areas.nombre AS area,
+		permisos_modulos.id_area
+		FROM
+			admin_niveles_usuario_modulos
+		INNER JOIN permisos_modulos ON admin_niveles_usuario_modulos.id_modulo = permisos_modulos.id
+		INNER JOIN admin_niveles_usuario ON admin_niveles_usuario_modulos.id_nivel = admin_niveles_usuario.id
+		INNER JOIN permisos_areas ON permisos_modulos.id_area = permisos_areas.id
+		WHERE admin_niveles_usuario.nombre = :nivel");
+	
+		$stmt->bindParam(':nivel', $_SESSION['nivel'],PDO::PARAM_STR);
+	
+		$stmt -> execute();
+	
+		return $stmt -> fetchAll();
+	
+		$stmt = null;
+	
+	}
+	
+	/* OBTENER MODULOS DE SISTEMA */
+
 	
 }

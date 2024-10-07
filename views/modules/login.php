@@ -15,9 +15,9 @@
                         <div class="form-group">
                             <input class="form-control" id="contrasenaIngreso" name="" placeholder="Contraseña" type="password" required>
                         </div>
-
-                        <div class="form-group d-flex justify-content-center">
-                            <input class="btn" type="submit" value="Ingresar">
+                        <div class="btn-group d-flex justify-content-center" role="group">
+                            <input class="btn active" type="submit" value="Ingresar">
+                            <a type="button" class="btn btn-primary" id="btn_registrarme" href="<?=$url.'registrarme'?>">Registrarme</a>
                         </div>
                     </form>
                 </div>

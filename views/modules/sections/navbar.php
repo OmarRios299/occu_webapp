@@ -11,7 +11,21 @@
                 <li class="nav-item">
                     <a class="nav-link nav-item" aria-current="page" item='nav1' id='nav1' href="<?= $url . 'dashboard'; ?>">Dashboard</a>
                 </li>
-                <li class="nav-item dropdown">
+                <?php foreach (GeneralController::obtenerModulosNivelController() as $area) {
+                ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle item-color nav-item" id='<?=$area['id'];?>' data-bs-toggle="dropdown" aria-expanded="false"><?=$area['nombre'];?></a>
+                        <ul class="dropdown-menu">
+
+                        <?php foreach ($area['modulos'] as $modulo){ ?>
+                            <li><a class="dropdown-item item-color nav-item" item='<?=$area['id'];?>' href="<?= $url . $modulo['ruta']; ?>"><span><?=$modulo['nombre'];?></span></a></li>
+                        <?php } ?>
+                            
+                        </ul>
+                    </li>
+                <?php 
+                }; ?>
+                <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle item-color nav-item" id='nav2' data-bs-toggle="dropdown" aria-expanded="false">Administración</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'admin_usuarios'; ?>"><span>Usuarios</span></a></li>
@@ -25,7 +39,6 @@
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . 'menu_categorias'; ?>"><span>Cetegorías de productos</span></a></li>
                         <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . 'menu_productos'; ?>"><span>Productos</span></a></li>
-                        <!-- <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . ''; ?>"><span>Ingredientes</span></a></li> -->
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -41,7 +54,7 @@
                         <li><a class="dropdown-item item-color nav-item" item='nav4' href="<?= $url . ''; ?>"><span>Para baristas</span></a></li>
                         <li><a class="dropdown-item item-color nav-item" item='nav4' href="<?= $url . ''; ?>"><span>Para cafeterías</span></a></li>
                     </ul>
-                </li>
+                </li> -->
             </ul>
             <div class="row">
                 <div class="col-md-8 mt-2 ">

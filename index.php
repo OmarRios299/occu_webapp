@@ -4,6 +4,7 @@
 require_once "controllers/controller_template.php";
 require_once "controllers/controller_general.php";
 require_once "controllers/controller_login.php";
+require_once "controllers/controller_registrarme.php";
 
 //Administración
 require_once "controllers/controller_admin_usuarios.php";
@@ -25,6 +26,7 @@ require_once "controllers/controller_dashboard.php";
 //Models
 require_once "models/model_login.php";
 require_once "models/model_general.php";
+require_once "models/model_registrarme.php";
 
 //Administración
 require_once "models/model_admin_usuarios.php";

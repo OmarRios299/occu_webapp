@@ -71,38 +71,7 @@
         </div>
     </div>
 </form>
-<style>
-    /* Ocultar el checkbox estándar */
-    .image-checkbox input[type="checkbox"] {
-        display: none;
-    }
 
-    /* Estilo de la tarjeta */
-    .image-checkbox .custom-carousel-item {
-        border: 2px solid transparent;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-
-    /* Efecto cuando el checkbox está seleccionado */
-    .image-checkbox input[type="checkbox"]:checked+.custom-carousel-item {
-        border: 2px solid #007bff;
-        /* Cambia el borde para indicar que está seleccionado */
-        opacity: 0.8;
-        /* Añade un efecto de opacidad */
-    }
-
-    /* Efecto hover */
-    .image-checkbox .custom-carousel-item:hover {
-        border: 2px solid #007bff;
-        /* Cambia el borde cuando se pasa el cursor */
-    }
-
-    .tanamo {
-        width: 150px !important;
-        height: 150px !important;
-    }
-</style>
 <h6 class="subtitulo mt-3">Tabla de cafeterías</h6>
 <div class="caja">
     <div class="table-responsive">

@@ -437,5 +437,45 @@ class GeneralController
 	}
 	
 	/* OBTENER NIVELES DE USUARIO */
+
+
+	/* BUSCAR MODULO SISTEMA */
+
+	static public function buscarModuloSistema($ruta_modulo){
+		return GeneralModel::buscarModuloSistemaModel($ruta_modulo,$_SESSION['nivel']);
+	}
+	
+	/* BUSCAR MODULO SISTEMA */
+
+	
+	/* OBTENER MODULOS PERMITIDOS POR NIVEL */
+	
+	static public function obtenerModulosNivelController(){
+		$areas = [];
+
+		foreach (GeneralModel::obtenerModulosNivelModel() as $modulo) {
+
+			if(!isset($areas[$modulo['id_area']])){
+				$areas[$modulo['id_area']] = [
+					"id"=>$modulo['id'],
+					"nombre"=>$modulo['area'],
+					'modulos'=>[]
+				];
+			}
+
+			if(!isset($areas[$modulo['id_area']]['modulos'][$modulo['modulo']])){
+				$areas[$modulo['id_area']]['modulos'][$modulo['modulo']] = [
+					'nombre'=>$modulo['modulo'],
+					'ruta'=>$modulo['ruta']
+				];
+			}
+
+		}
+
+		return $areas;
+	}
+	
+	/* OBTENER MODULOS PERMITIDOS POR NIVEL */
+	
 	
 }

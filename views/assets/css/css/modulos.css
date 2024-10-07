@@ -135,14 +135,14 @@
 }
 
 .btn-custom {
-    background-color: #5a9;
+    background-color: #FF6B6B;
     /* Color personalizado para los botones */
-    color: white;
+    color: white !important;
     border-radius: 5px;
 }
 
 .btn-custom:hover {
-    background-color: #468;
+    background-color: #FF3B3B;
     /* Color de hover */
 }
 
@@ -150,7 +150,22 @@
     color: #ffc107;
 }
 
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
 
+.card-img-top {
+    height: 200px;
+    /* Ajusta el tamaño de las imágenes */
+    object-fit: cover;
+}
+
+.favorite-icon {
+    color: red;
+    font-size: 1.2rem;
+}
 /* - - - - - - -  - - - caja de servicios */
 
 .modal_mapa {
@@ -333,4 +348,41 @@
     background-color: #007bff;
     color: white;
     border: none;
+}
+
+/* ---------------------------------------
+@@@@ modulos ---> cafeterias_lista 
+--------------------------------------- */
+
+/* - - - - - - - - - -modal de servicios */
+
+/* Ocultar el checkbox estándar */
+#modal_agregar_servicios .image-checkbox input[type="checkbox"] {
+    display: none;
+}
+
+/* Estilo de la tarjeta */
+#modal_agregar_servicios .image-checkbox .custom-carousel-item {
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+/* Efecto cuando el checkbox está seleccionado */
+#modal_agregar_servicios .image-checkbox input[type="checkbox"]:checked+.custom-carousel-item {
+    border: 2px solid #007bff;
+    /* Cambia el borde para indicar que está seleccionado */
+    opacity: 0.8;
+    /* Añade un efecto de opacidad */
+}
+
+/* Efecto hover */
+#modal_agregar_servicios .image-checkbox .custom-carousel-item:hover {
+    border: 2px solid #007bff;
+    /* Cambia el borde cuando se pasa el cursor */
+}
+
+#modal_agregar_servicios .tanamo {
+    width: 150px !important;
+    height: 150px !important;
 }

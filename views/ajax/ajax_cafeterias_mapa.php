@@ -5,9 +5,7 @@ require_once '../../controllers/controller_general.php';
 require_once '../../models/model_cafeterias_mapa.php';
 require_once '../../models/model_general.php';
 
-session_start();
 
-if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 
     if(isset($_POST['obtenerCafeterias'])){
 
@@ -25,7 +23,3 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
     }
 
     echo ($datos) ? CafeteriasMapaController::$controller($datos) : "error";
-
-}else{
-    echo "session_expired";
-}
