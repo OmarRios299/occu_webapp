@@ -40,9 +40,9 @@ class AdminUsuariosController{
     
     /* INSERTAR USUARIO */
     
-    static public function inserarUsuarioController($datos){
-        return AdminUsuariosModel::insertarUsuariosModel($datos);
-    }
+    // static public function inserarUsuarioController($datos){
+    //     return AdminUsuariosModel::insertarUsuariosModel($datos);
+    // }
     
     /* INSERTAR USUARIO */
     
@@ -66,8 +66,8 @@ class AdminUsuariosController{
 
         //validamos el correo electrónico
         $validacion_email = ($datos['id']) ? 
-        GeneralModel::validarCampoEditarModel($datos['correo_electronico'],"correo_electronico","admin_usuarios",$datos['id'])
-        : GeneralModel::validarCampoModel($datos['correo_electronico'],"correo_electronico","admin_usuarios");
+        GeneralModel::validarCampoEditarModel($datos['correo'],"correo_electronico","admin_usuarios",$datos['id'])
+        : GeneralModel::validarCampoModel($datos['correo'],"correo_electronico","admin_usuarios");
 
         //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
         if($validacion_email) return "error_validacion_email";

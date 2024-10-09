@@ -172,12 +172,6 @@ function placeMarkerAndSaveData(latlng) {
         .catch(error => console.error('Error al obtener la dirección:', error));
 }
 
-
-/// el mapa parece estar funcionando bien, hay que hacer mas pruebas
-//  tratar de optener la ciuadad automaticamente
-//   guardar el registro funcion
-
-
 $(document).on("submit", "#form_agregar_cafeteria", function (e) {
     e.preventDefault(); // Prevenir el comportamiento por defecto del formulario
 

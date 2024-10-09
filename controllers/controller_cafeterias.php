@@ -4,6 +4,10 @@ class CafeteriasController{
     /* OBTENER CAFETERíAS */
     
     static public function obtenerCafeteriasController($datos){
+
+        if($_SESSION['nivel']!='Administrador'){
+            $datos['usuario'] = $_SESSION['id'];
+        }
         $url = TemplateController::obtenerUrlController();
         $data = [];
         $i=0;

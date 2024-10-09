@@ -71,52 +71,52 @@ class AdminUsuariosModel extends Conexion
 
     /* INSERTAR USUARIOS */
 
-    static public function insertarUsuariosModel($datos)
-    {
+    // static public function insertarUsuariosModel($datos)
+    // {
 
-        $stmt = Conexion::conectar()->prepare("INSERT INTO admin_usuarios(
-            nombre,
-            apellido,
-            id_ciudad,
-            correo_electronico,
-            contrasena,
-            nivel,
-            telefono,
-            imagen,
-            id_alta,
-            fecha_alta
-        )
-        VALUES(
-            :nombre,
-            :apellido,
-            :id_ciudad,
-            :correo_electronico,
-            :contrasena,
-            :nivel,
-            :telefono,
-            :imagen,
-            :id_alta,
-            :fecha_alta
-        )");
+    //     $stmt = Conexion::conectar()->prepare("INSERT INTO admin_usuarios(
+    //         nombre,
+    //         apellido,
+    //         id_ciudad,
+    //         correo_electronico,
+    //         contrasena,
+    //         nivel,
+    //         telefono,
+    //         imagen,
+    //         id_alta,
+    //         fecha_alta
+    //     )
+    //     VALUES(
+    //         :nombre,
+    //         :apellido,
+    //         :id_ciudad,
+    //         :correo_electronico,
+    //         :contrasena,
+    //         :nivel,
+    //         :telefono,
+    //         :imagen,
+    //         :id_alta,
+    //         :fecha_alta
+    //     )");
 
-        $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
-        $stmt->bindParam(':apellido', $datos['apellido'], PDO::PARAM_STR);
-        $stmt->bindParam(':id_ciudad', $datos['id_ciudad'], PDO::PARAM_INT);
-        $stmt->bindParam(':correo_electronico', $datos['correo_electronico'], PDO::PARAM_STR);
-        $stmt->bindParam(':contrasena', $datos['contrasena'], PDO::PARAM_STR);
-        $stmt->bindParam(':nivel', $datos['nivel'], PDO::PARAM_INT);
-        $stmt->bindParam(':telefono', $datos['telefono'], PDO::PARAM_STR);
-        $stmt->bindParam(':imagen', $datos['imagen'], PDO::PARAM_STR);
-        $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
-        $stmt->bindParam(':fecha_alta', $datos['fecha_alta'], PDO::PARAM_STR);
+    //     $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
+    //     $stmt->bindParam(':apellido', $datos['apellido'], PDO::PARAM_STR);
+    //     $stmt->bindParam(':id_ciudad', $datos['id_ciudad'], PDO::PARAM_INT);
+    //     $stmt->bindParam(':correo_electronico', $datos['correo'], PDO::PARAM_STR);
+    //     $stmt->bindParam(':contrasena', $datos['contrasena'], PDO::PARAM_STR);
+    //     $stmt->bindParam(':nivel', $datos['nivel'], PDO::PARAM_INT);
+    //     $stmt->bindParam(':telefono', $datos['telefono'], PDO::PARAM_STR);
+    //     $stmt->bindParam(':imagen', $datos['imagen'], PDO::PARAM_STR);
+    //     $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
+    //     $stmt->bindParam(':fecha_alta', $datos['fecha_alta'], PDO::PARAM_STR);
 
-        if ($stmt->execute()) {
-            return 'success';
-        } else {
-            return 'error';
-        }
-        $stmt = null;
-    }
+    //     if ($stmt->execute()) {
+    //         return 'success';
+    //     } else {
+    //         return 'error';
+    //     }
+    //     $stmt = null;
+    // }
 
     /* INSERTAR USUARIOS */
 

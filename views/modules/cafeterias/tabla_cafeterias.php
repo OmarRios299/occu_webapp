@@ -1,7 +1,7 @@
 <div class="titulo-boton">
     <h1 class="titulo-modulo">Cafeterías</h1>
     <div class="row tetxt-end">
-        <div class="col-md">
+        <div class="col-md" <?= $ocultar; ?>>
             <button type="button" class="btn con-icono btn-buscar" id="filtro_busqueda">Filtrar</button>
         </div>
         <div class="col-md">

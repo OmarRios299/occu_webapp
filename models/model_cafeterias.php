@@ -10,6 +10,7 @@ class CafeteriasModel extends Conexion {
         $entidad ='';
         $ciudad='';
         $estatus = 'WHERE cafeterias.estado != 2';
+        $usuario = '';
         if ($datos['entidad']!='') {
             $entidad = 'AND ciudades.id_entidad_federativa = :entidad';
         }
@@ -20,6 +21,9 @@ class CafeteriasModel extends Conexion {
             $estatus = 'WHERE cafeterias.estado = 0';
         }else if($datos['estatus']=='Inactivas'){
             $estatus = 'WHERE cafeterias.estado = 1';
+        }
+        if (isset($datos['usuario']) && $datos['usuario']!='') {
+            $usuario = 'AND cafeterias.id_usuario = :usuario';
         }
 
         $stmt = Conexion::conectar()->prepare("SELECT
@@ -40,7 +44,8 @@ class CafeteriasModel extends Conexion {
         INNER JOIN paises ON paises.id = entidades_federativas.id_pais
         $estatus
         $ciudad
-        $entidad");
+        $entidad
+        $usuario");
     
         
         if ($datos['entidad']!='') {
@@ -48,6 +53,9 @@ class CafeteriasModel extends Conexion {
         }
         if ($datos['ciudad']!='') {
             $stmt->bindParam(':ciudad', $datos['ciudad'],PDO::PARAM_INT);
+        }
+        if (isset($datos['usuario']) && $datos['usuario']!='') {
+            $stmt->bindParam(':usuario', $datos['usuario'],PDO::PARAM_INT);
         }
     
         $stmt -> execute();

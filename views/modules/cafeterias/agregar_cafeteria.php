@@ -57,7 +57,7 @@
         <div class="col-md-4">
                 <div class="form-group">
                     <label>País:</label>
-                    <select id="ciudad_select" class="form-select select_pais select2">
+                    <select id="pais_select" class="form-select select_pais select2" disabled>
                         <option value="" disabled>Selecciona un pais</option>
                         <?php foreach (GeneralController::obtenerPaisesController() as $pais) {
                             if ($pais['id'] == $_SESSION['id_pais']) {

@@ -1,5 +1,6 @@
 <?php
 if(!isset($action[1])){
+$ocultar = ($_SESSION['nivel']=='Administrador') ? "" : "style='display:none;'";
 include "cafeterias/tabla_cafeterias.php";
 }else{
     if($action[1]=="agregar"){

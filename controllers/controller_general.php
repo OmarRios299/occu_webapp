@@ -457,7 +457,7 @@ class GeneralController
 
 			if(!isset($areas[$modulo['id_area']])){
 				$areas[$modulo['id_area']] = [
-					"id"=>$modulo['id'],
+					"id"=>$modulo['id_area'],
 					"nombre"=>$modulo['area'],
 					'modulos'=>[]
 				];

@@ -1,4 +1,3 @@
-
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-plantilla" aria-label="Main navigation">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">OCCU</a>
@@ -12,18 +11,28 @@
                     <a class="nav-link nav-item" aria-current="page" item='nav1' id='nav1' href="<?= $url . 'dashboard'; ?>">Dashboard</a>
                 </li>
                 <?php foreach (GeneralController::obtenerModulosNivelController() as $area) {
-                ?>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle item-color nav-item" id='<?=$area['id'];?>' data-bs-toggle="dropdown" aria-expanded="false"><?=$area['nombre'];?></a>
-                        <ul class="dropdown-menu">
+                    if ($area['id'] == 0) {
+                        foreach ($area['modulos'] as $modulo) { 
+                        $nombre = ($modulo['nombre']=='Cafeterías') ? 'Mis cafeterías' : $modulo['nombre'];
+                        ?>
+                            <li class="nav-item">
+                                <a class="nav-link nav-item" aria-current="page" item='nav1' id='nav1' href="<?= $url . $modulo['ruta'] ?>"><?= $nombre;?></a>
+                            </li>
+                        <?php }
+                    } else {
+                        ?>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle item-color nav-item" id='<?= $area['id']; ?>' data-bs-toggle="dropdown" aria-expanded="false"><?= $area['nombre']; ?></a>
+                            <ul class="dropdown-menu">
 
-                        <?php foreach ($area['modulos'] as $modulo){ ?>
-                            <li><a class="dropdown-item item-color nav-item" item='<?=$area['id'];?>' href="<?= $url . $modulo['ruta']; ?>"><span><?=$modulo['nombre'];?></span></a></li>
-                        <?php } ?>
-                            
-                        </ul>
-                    </li>
-                <?php 
+                                <?php foreach ($area['modulos'] as $modulo) { ?>
+                                    <li><a class="dropdown-item item-color nav-item" item='<?= $area['id']; ?>' href="<?= $url . $modulo['ruta']; ?>"><span><?= $modulo['nombre']; ?></span></a></li>
+                                <?php } ?>
+
+                            </ul>
+                        </li>
+                <?php
+                    }
                 }; ?>
                 <!-- <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle item-color nav-item" id='nav2' data-bs-toggle="dropdown" aria-expanded="false">Administración</a>
@@ -57,14 +66,14 @@
                 </li> -->
             </ul>
             <div class="row">
-                <div class="col-md-8 mt-2 ">
+                <div class="col-md-8 mt-2">
                     <p class="letras-blancas">Hola, <i class="bi bi-house"></i><span><?= $_SESSION['nombre_completo']; ?></span></p>
                 </div>
                 <div class="col-md-4">
                     <a class="btn btn-sesion" href="<?php echo $url ?>salir"> Cerrar sesion </a>
                 </div>
-
             </div>
         </div>
+
     </div>
 </nav>
