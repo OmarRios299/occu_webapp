@@ -1,0 +1,117 @@
+$(document).on("click", "#btn_siguiente1, #btn_regresar1", function () {
+    $("#caja_nivel").toggle();
+    $("#caja_nombre").toggle();
+});
+$(document).on("click", "#btn_siguiente2, #btn_regresar2", function () {
+    $("#caja_nombre").toggle();
+    $("#caja_correo").toggle();
+});
+
+/*=====================================
+=            VALIDAR CAMPO            =
+=====================================*/
+
+$(document).on("change", ".registroValidarCampo", function () {
+
+    let input = $(this);
+    let nombre = $(this).val();
+    let columna = $(this).attr("columna");
+    let tabla = $(this).attr("tabla");
+    let mensaje = $(this).attr("mensaje");
+
+    let datos = new FormData();
+
+    datos.append("valorCampo", nombre);
+    datos.append("columnaCampo", columna);
+    datos.append("tablaCampo", tabla);
+
+    $.ajax({
+        url: url + "views/ajax/ajax_registrarme.php",
+        method: "POST",
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (respuesta) {
+
+            if (respuesta == 0) {
+
+                $(input).addClass("is-invalid");
+                $(input).next().html(mensaje);
+                $(input).next().show();
+
+            } else {
+
+                $(input).removeClass("is-invalid");
+                $(input).next().hide();
+
+            }
+        }
+    });
+
+});
+
+/*=====  End of VALIDAR CAMPO  ======*/
+
+$(document).on("submit", "#form_registrarme", function () {
+    let id_usuario = $("#id_usuario").val();
+    let contrasena = $("#contrasena_usuario_registrar").val();
+    let confirmar_contrasena = $("#confirmar_contrasena_usuario_registrar").val();
+
+    if (
+        !$("#correo_usuario_registrar").hasClass("is-invalid") &&
+        ( //validación de contraseña
+            (contrasena == confirmar_contrasena) || // la contraseña y su confirmación coinciden
+            (id_usuario != "") // se está editando el usuario y no se toma en cuenta la contraseña
+        )
+    ) {
+
+        let nombre = $("#nombre_usuario_registrar").val();
+        let apellido = $("#apellido_usuario_registrar").val();
+        let email = $("#correo_usuario_registrar").val();
+        //let celular = $("#telefono_usuario_registrar").val();
+        let nivel = $("#select_nivel option:selected").val();
+
+        var datos = new FormData();
+
+        datos.append("registrar_usuario", true)
+        datos.append("nombre", nombre);
+        datos.append("apellido", apellido);
+        datos.append("correo", email);
+        if (contrasena == confirmar_contrasena) datos.append("contrasena", contrasena);
+        // datos.append("telefono", celular);
+        datos.append("nivel", nivel);
+
+        $.ajax({
+            url: url + 'views/ajax/ajax_registrarme.php',
+            method: 'POST',
+            data: datos,
+            cache: false,
+            contentType: false,
+            processData: false,
+            beforeSend: cargaSistema(true),  // manda a llamar loading y desactiva inputs submit
+            success: function (respuesta) {
+                console.log(respuesta);
+                if (respuesta == "session_expired") {
+                    // si la sesión con el servidor expiró, recarga el sitio
+                    sesionExpirada();
+                } else if (respuesta == "error_validacion_email") {
+                    // error en validación de email por parte del servidor
+                    $("#correo_usuario_registrar").addClass('is-invalid').next().show();
+                    swal("¡Error!", "Por favor verifica el correo electrónico.", "error");
+                } else if (respuesta == "success") {
+                    // el registro se realizó exitosamente
+                    (id_usuario != "") ? alertaUpdate() : alertaInsert();
+                    //window.history.back();
+                } else {
+                    // se recibió un mensaje diferente a success
+                    swal("¡Error!", "Ha ocurrido un error.", "error");
+                }
+                // desactivamos el loading y habilitamos los inputs submit
+                cargaSistema(false);
+            }
+        });
+    }
+
+
+});

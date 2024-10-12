@@ -5,7 +5,7 @@ var markersArray = []; // Arreglo para almacenar los marcadores
 $(document).ready(function() {
     if (moduloActual == 'cafeterias_mapa') {
         cargarMapaCafeterias();
-        cargarServiciosFiltro();
+        //cargarServiciosFiltro();
     }
 });
 
@@ -126,6 +126,7 @@ function abrirModalCafeteria(id) {
 
 $(document).on("click","#btn_filtro_mapa",function(){
     $("#modal_filtro_mapa").modal('show');
+    cargarServiciosFiltro();
 });
 
 $(document).on("submit", "#aplicar_filtros_mapa", function () {

@@ -1,4 +1,6 @@
 <?php
+require_once 'config/env.php';
+loadEnv(__DIR__ . '/.env');
 
 //Controllers
 require_once "controllers/controller_template.php";

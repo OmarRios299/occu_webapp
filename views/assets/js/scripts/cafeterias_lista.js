@@ -10,7 +10,7 @@ $(document).ready(function () {
 
         if ($('#div_lista_cafeterias').length) {
             cargarListaCafeterias(paginaActual);
-            cargarServiciosFiltro();
+            //cargarServiciosFiltro();
         }
 
         $('#boton-siguiente').on('click', function () {
@@ -134,6 +134,7 @@ function CargarVerCafeteria() {
 $(document).on("click", "#abrir_filtros", function () {
     $('#filtros_div').toggle();
     $(this).attr("open", $(this).attr("open") === 'si' ? 'no' : 'si');
+    cargarServiciosFiltro();
 });
 
 $(document).on("click", ".ver_img_modal", function () {

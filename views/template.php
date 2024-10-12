@@ -174,7 +174,7 @@ $v = "1.0.0";
     <script src="<?php echo $url; ?>views/assets/js/jquery-3.7.1.min.js"></script>
 
     <!-- Mapa google -->
-    <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsDthuyGWYSIyMtMPjmbq7Epz8ABUrrHY&libraries=geometry,drawing&v=beta" defer></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=<?=TemplateController::obtenerKeyGoogle()?>&libraries=geometry,drawing&v=beta" defer></script>
 
     <!-- Popper.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>

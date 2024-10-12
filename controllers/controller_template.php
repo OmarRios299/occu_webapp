@@ -16,10 +16,17 @@ class TemplateController{
 	
 	static public function obtenerUrlController(){
 
-		return "http://localhost/OCCU/occu_webApp/";
+		// return "http://localhost/OCCU/occu_webApp/";
+		return getenv("APP_URL");
 
 	}
 	
 	/* End of URL DEL PROYECTO */
+	
+	static public function obtenerKeyGoogle(){
+		return getenv('GOOGLE_API');
+	}
+	
+	
 	
 }
