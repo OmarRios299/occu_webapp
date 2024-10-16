@@ -1,4 +1,16 @@
 
+// fetch('/config/googleApiKey.php')
+//     .then(response => {
+//         if (!response.ok) {
+//             throw new Error('Error al obtener la clave de API');
+//         }
+//         return response.json();
+//     })
+//     .then(data => {
+//         const googleApiKey = data.apiKey;
+//     })
+//     .catch(error => console.error(error));
+
 var key = 'AIzaSyAsDthuyGWYSIyMtMPjmbq7Epz8ABUrrHY';
 
 let map_registrar;

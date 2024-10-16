@@ -14,6 +14,7 @@
 
 require_once __DIR__ . '/../config/env.php';
 loadEnv(__DIR__ . '/../.env');
+//loadEnv(__DIR__ . '/../../.env');
 
 class Conexion{
 

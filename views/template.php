@@ -204,6 +204,7 @@ $v = "1.0.0";
     <!-- Administración -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/admin_usuarios.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/admin_paises.js?v='<?php echo $v; ?>'"></script>
+    <script src="<?php echo $url; ?>views/assets/js/scripts/admin_pagina_inicial.js?v='<?php echo $v; ?>'"></script>
     <!-- Cafeterías -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_mapa.js?v='<?php echo $v; ?>'"></script>

@@ -27,7 +27,7 @@
                     <p class="letras-blancas">Hola, bienvenido<i class="bi bi-house"></i><span></span></p>
                 </div>
                 <div class="col-md-4">
-                    <a class="btn btn-sesion" href="<?php echo $url ?>login"> Iniciar sesion </a>
+                    <a class="btn btn-iniciar-sesion" href="<?php echo $url ?>login"> Iniciar sesion </a>
                 </div>
 
             </div>
