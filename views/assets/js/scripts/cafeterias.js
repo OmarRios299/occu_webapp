@@ -11,7 +11,7 @@
 //     })
 //     .catch(error => console.error(error));
 
-var key = 'AIzaSyAsDthuyGWYSIyMtMPjmbq7Epz8ABUrrHY';
+var key = 'AIzaSyA6yNUCPlFCRtMRWIrrWLUAUldCb9chQzw';
 
 let map_registrar;
 let currentMarker_registrar = null;

@@ -75,8 +75,8 @@
     foreach (PaginaInicialController::obtenerCarouselController() as $item) {
       ++$i;
     ?>
-      <div class="carousel-item active">
-        <img src="<?= $url . $item['imagen'] ?>" class="d-block w-100" alt="Slide 1">
+      <div class="carousel-item <?= ($i == 1) ? 'active' : '' ?>">
+        <img src="<?= $url . $item['imagen'] ?>" class="d-block w-100" alt="Slide <?= $i ?>">
         <div class="container">
           <div class="carousel-caption">
             <h1><?= $item['titulo'] ?></h1>
@@ -88,19 +88,15 @@
     <?php } ?>
   </div>
 
-  <?php if ($i > 1) {
-    $btn = 0;
-    for ($btn = 0; $btn < $i; $btn++) {
-  ?>
-      <div class="carousel-indicators">
+  <?php if ($i > 1) { ?>
+    <div class="carousel-indicators">
+      <?php for ($btn = 0; $btn < $i; $btn++) { ?>
         <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="<?= $btn ?>"
           class="<?= $btn === 0 ? 'active' : '' ?>"
           aria-current="<?= $btn === 0 ? 'true' : 'false' ?>"
           aria-label="Slide <?= $btn + 1 ?>"></button>
-      </div>
-    <?php
-    }
-    ?>
+      <?php } ?>
+    </div>
 
     <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -110,10 +106,10 @@
       <span class="carousel-control-next-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Next</span>
     </button>
-  <?php
-  } ?>
+  <?php } ?>
 
 </div>
+
 
 
 <?php
