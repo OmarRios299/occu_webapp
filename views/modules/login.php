@@ -1,9 +1,9 @@
 <!-- Modulo / Login -->
 <div class="login d-flex align-items-center">
     <div class="container-fluid">
-        <div class="row">
+        <div class="row imagen">
             <div class="col-md-6 mx-auto">
-                <div class="formulario">
+                <div class="formulario caja">
                     <img src="<?php echo $url; ?>views/assets/css/img/logo/logo.png" class="logo" alt="">
                     <!-- Form -->
                     <form id="formularioIngreso" onsubmit="return false;">

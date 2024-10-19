@@ -1,8 +1,11 @@
 <?php
 
 require_once "../../controllers/controller_registrarme.php";
+require_once "../../controllers/controller_template.php";
 require_once "../../models/model_registrarme.php";
 require_once "../../models/model_general.php";
+require_once "../../controllers/MailchimpTransactional/vendor/autoload.php";
+require_once '../../controllers/controller_mailchimp.php';
 
 
 if(isset($_POST['registrar_usuario'])){

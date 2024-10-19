@@ -38,7 +38,7 @@ $v = "1.0.0";
     <meta name="msapplication-navbutton-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-    <link rel="icon" sizes="192x192" href="<?php echo $url; ?>views/assets/css/img/favicon/favicon-192.png">
+    <link rel="icon" sizes="192x192" href="<?php echo $url; ?>views/assets/img/logo_1.png">
 
     <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -130,7 +130,12 @@ $v = "1.0.0";
             echo '<div class="contenido">';
             include "modules/sections/sidebar.php";
             echo '<div>';
-        } else {
+        } else if ($moduloActual == "login") {
+            echo '<div id="sistema">';
+            echo '<div class="content-login">';
+            include "modules/sections/sidebar.php";
+            echo '<div>';
+        }  else {
             echo '<div id="sistema">';
             echo '<div class="contenido">';
             include "modules/sections/sidebar.php";

@@ -2182,6 +2182,12 @@ a.fc-daygrid-event {
         /* padding: 15px; */
         transition: all 0.25s;
     }
+    #sistema > .content-login {
+        flex: none;
+        width: calc( 80% - 230px);
+        margin: 0px auto auto auto;
+        justify-content: center !important; 
+    }
     #sistema > .contenido.simple {
         width: 100%;
         margin: 0 0 0 auto;
@@ -2286,8 +2292,8 @@ color: #ffffff;
     @@@@ estructura
     --------------------------------------- */
     #sistema .contenido {
-        padding: 25px 16px;
-        margin-top: 50px !important;
+        padding: 25px;
+        /* margin-top: 50px !important; */
 
     }
     .navbar {

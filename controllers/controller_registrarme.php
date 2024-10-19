@@ -1,4 +1,4 @@
-<?php 
+<?php   
 class RegistrarmeController{
    
    static public function registrarUsuarioController($datos){
@@ -17,8 +17,8 @@ class RegistrarmeController{
         //damos de alta el registro en la bd
         $datos['id_alta'] = 0;
         $datos['fecha_alta']= date("Y-m-d H:i:s");
-        RegistrarmeModel::insertarUsuarioModel($datos);
-
+       // RegistrarmeModel::insertarUsuarioModel($datos);
+        Mailchimp::enviarCorreoRegistroController();
 
        return "success"; 
    } 
