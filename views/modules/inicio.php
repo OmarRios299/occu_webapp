@@ -111,12 +111,11 @@
 </div>
 
 
-
-<?php
-foreach (PaginaInicialController::obtenerCardsController() as $item) {
-?>
-  <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-    <div class="col">
+<div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
+  <?php
+  foreach (PaginaInicialController::obtenerCardsController() as $item) {
+  ?>
+  <div class="col" onclick="window.location.href='<?= $item['enlace'] ?>';">
       <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('<?= $url . $item['imagen'] ?>');">
         <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1 fondo">
           <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><?= $item['descripcion'] ?></h3>
@@ -141,3 +140,4 @@ foreach (PaginaInicialController::obtenerCardsController() as $item) {
       </div>
     </div>
   <?php } ?>
+</div>
