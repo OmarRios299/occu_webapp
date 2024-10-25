@@ -1,72 +1,74 @@
 $(document).ready(function () {
 
-    if (grafica_ciudades) {
+    if (moduloActual == 'dashboard') {
+        if (grafica_ciudades) {
 
-        // Destruimos la gráfica si ya existe para evitar conflictos
-        if (grafica_ciudades && grafica_ciudades.destroy) {
-            grafica_ciudades.destroy();
-        }
-    
-        // Creamos la nueva gráfica
-        grafica_ciudades = new Chart(document.getElementById('grafica_ciudades').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: grafica_ciudades.map(ciudad => ciudad.nombre),
-                datasets: [
-                    {
-                        label: 'Cafeterías',
-                        data: grafica_ciudades.map(ciudad => ciudad.total_cafeterias),
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',  // Puedes ajustar los colores
-                        borderColor: 'rgba(255, 99, 132, 1)',
-                        borderWidth: 1,
-                        fill: false
-                    },
-                    {
-                        label: 'Propietarios',
-                        data: grafica_ciudades.map(ciudad => ciudad.total_propietarios),
-                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
-                        borderWidth: 1,
-                        fill: false
-                    },
-                    {
-                        label: 'Baristas',
-                        data: grafica_ciudades.map(ciudad => ciudad.total_baristas),
-                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 1,
-                        fill: false
-                    },
-                    {
-                        label: 'Consumidores',
-                        data: grafica_ciudades.map(ciudad => ciudad.total_consumidores),
-                        backgroundColor: 'rgba(153, 102, 255, 0.2)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
-                        borderWidth: 1,
-                        fill: false
-                    }
-                ]
-            },
-            options: {
-                responsive: true,
-                plugins: {
-                    title: {
-                        display: true,
-                        text: "Gráfica comparativa"
-                    },
-                    legend: {
-                        display: true
-                    }
+            // Destruimos la gráfica si ya existe para evitar conflictos
+            if (grafica_ciudades && grafica_ciudades.destroy) {
+                grafica_ciudades.destroy();
+            }
+
+            // Creamos la nueva gráfica
+            grafica_ciudades = new Chart(document.getElementById('grafica_ciudades').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: grafica_ciudades.map(ciudad => ciudad.nombre),
+                    datasets: [
+                        {
+                            label: 'Cafeterías',
+                            data: grafica_ciudades.map(ciudad => ciudad.total_cafeterias),
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',  // Puedes ajustar los colores
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'Propietarios',
+                            data: grafica_ciudades.map(ciudad => ciudad.total_propietarios),
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'Baristas',
+                            data: grafica_ciudades.map(ciudad => ciudad.total_baristas),
+                            backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                            borderColor: 'rgba(75, 192, 192, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        },
+                        {
+                            label: 'Consumidores',
+                            data: grafica_ciudades.map(ciudad => ciudad.total_consumidores),
+                            backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                            borderColor: 'rgba(153, 102, 255, 1)',
+                            borderWidth: 1,
+                            fill: false
+                        }
+                    ]
                 },
-                scales: {
-                    y: {
-                        beginAtZero: true // Asegura que el eje y comience en 0
+                options: {
+                    responsive: true,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "Gráfica comparativa"
+                        },
+                        legend: {
+                            display: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true // Asegura que el eje y comience en 0
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
-    
+
 });
 
 function cargarMetricosDashboard() {

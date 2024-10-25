@@ -102,7 +102,7 @@ $(document).on("submit", "#form_registrarme", function () {
                 } else if (respuesta == "success") {
                     // el registro se realizó exitosamente
                     (id_usuario != "") ? alertaUpdate() : alertaInsert();
-                    //window.history.back();
+                    window.location = url+"registrarme/verificacion";
                 } else {
                     // se recibió un mensaje diferente a success
                     swal("¡Error!", "Ha ocurrido un error.", "error");
@@ -113,5 +113,57 @@ $(document).on("submit", "#form_registrarme", function () {
         });
     }
 
+});
+
+$(document).on('submit', '#formularioVerificacion', function(){
+
+    let usuario     = $("#usuarioVerificacion").val();
+    let contrasena  = $("#contrasenaVerificacion").val();
+
+    let datos = new FormData();
+
+    datos.append("usuarioVerificacion", usuario);
+    datos.append("contrasena", contrasena);
+    datos.append("pin", $("#pinVerificacion").val());
+
+    $.ajax({
+        url:url+"views/ajax/ajax_registrarme.php",
+        method:"POST",
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function() {
+
+            loading(true);
+
+        },
+        success:function(respuesta){
+            
+            console.log("respuesta", respuesta);
+
+            loading(false);
+
+            if(respuesta === "dashboard"){
+
+                window.location = url+"dashboard";
+
+            }else if(respuesta === "desactivado"){
+
+                swal("¡Error!", "¡El usuario esta desactivado!", "error");
+
+            }else if(respuesta === "verificacion"){
+
+                swal("¡Error!", "¡El código de verificación es incorrecto!", "error");
+
+            }else{
+
+                swal("¡Error!", "¡Usuario o contraseña incorrectos!", "error");
+
+            }
+
+        }
+
+    });
 
 });

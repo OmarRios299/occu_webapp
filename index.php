@@ -1,6 +1,7 @@
 <?php
 require_once 'config/env.php';
 loadEnv(__DIR__ . '/.env');
+
 //loadEnv(__DIR__ . '/../.env');
 //require_once 'config/googleApiKey.php';
 

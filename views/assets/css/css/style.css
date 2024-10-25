@@ -2169,6 +2169,12 @@ a.fc-daygrid-event {
         display: flex;
         height: 100vh;
     }
+    .content-login {
+        margin-top: 50px !important;
+    }
+    .registrarme-content {
+        margin-top: 50px !important;
+    }
     #sistema > .navbar {
         position: fixed;
         top: 0;
@@ -2276,11 +2282,11 @@ a.fc-daygrid-event {
     font-size: 0;
     padding: 1.125rem;
     margin-right: 25px;
-    background-color: var(--color-verde-azulado);
+    background-color:#08b47e;
     background-repeat: no-repeat;
     background-size: auto 1.5rem;
     background-position: center;
-    background-image: url(../img/iconos/botones/iniciar-sesion.png);
+    background-image: url(../img/iconos/botones/icono-login.svg);
 }
 
 .letras-blancas{
@@ -2293,8 +2299,11 @@ color: #ffffff;
     --------------------------------------- */
     #sistema .contenido {
         padding: 25px;
-        /* margin-top: 50px !important; */
+        margin-top: 50px !important;
 
+    }
+    .content-login {
+        margin-top: 50px !important;
     }
     .navbar {
         padding: .75rem .5rem;

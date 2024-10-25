@@ -1,23 +1,22 @@
-
-// fetch('/config/googleApiKey.php')
-//     .then(response => {
-//         if (!response.ok) {
-//             throw new Error('Error al obtener la clave de API');
-//         }
-//         return response.json();
-//     })
-//     .then(data => {
-//         const googleApiKey = data.apiKey;
-//     })
-//     .catch(error => console.error(error));
-
-var key = 'AIzaSyA6yNUCPlFCRtMRWIrrWLUAUldCb9chQzw';
-
+let googleApiKey;
 let map_registrar;
 let currentMarker_registrar = null;
 let allowedPolygon_registrar;
 
 $(document).ready(function () {
+    // optione la api key
+    fetch(`${url}/config/googleApiKey.php`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error al obtener la clave de API');
+        }
+        return response.json();
+    })
+    .then(data => {
+        googleApiKey = data.apiKey;
+    })
+    .catch(error => console.error(error));
+
     if (moduloActual == 'cafeterias' && $('#ciudad_select').length) {
         initializePolygonAndMap(); // Inicializa el mapa y el polígono
 
@@ -153,7 +152,7 @@ function placeMarkerAndSaveData(latlng) {
     });
 
     // Obtener y guardar la dirección
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng.lat()},${latlng.lng()}&key=` + key)
+    fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng.lat()},${latlng.lng()}&key=` + googleApiKey)
         .then(response => response.json())
         .then(data => {
             if (data.results[0]) {
@@ -203,7 +202,7 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
     datos.append("registrar_cafeteria", true);
     if (id_cafeteria) datos.append("id_cafeteria", id_cafeteria);
     datos.append("nombre", nombre);
-    datos.append("correo", email);
+    if (email) datos.append("correo", email);
     datos.append("telefono", celular);
     datos.append("direccion", direccion);
     datos.append("ciudad", ciudad);

@@ -14,7 +14,7 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         $datos = array(
             "id"             => isset($_POST['id_cafeteria']) ? $_POST['id_cafeteria'] : false,
             "nombre"         => $_POST['nombre'],
-            "correo"         => $_POST['correo'],
+            "correo"             => isset($_POST['correo']) ? $_POST['correo'] : false,
             "telefono"       => $_POST['telefono'],
             "direccion"      => $_POST['direccion'],
             "ciudad"         => $_POST['ciudad'],

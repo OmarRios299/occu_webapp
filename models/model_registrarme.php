@@ -18,7 +18,8 @@ class RegistrarmeModel extends Conexion {
         nivel, 
         imagen,
         id_alta, 
-        fecha_alta) 
+        fecha_alta,
+        pin) 
         VALUES (
         :nombre, 
         :apellido, 
@@ -28,7 +29,8 @@ class RegistrarmeModel extends Conexion {
         :nivel, 
         'views/assets/img/usuario_default.png',
         :id_alta, 
-        :fecha_alta)");
+        :fecha_alta,
+        :pin)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':apellido', $datos['apellido'], PDO::PARAM_STR);
@@ -38,6 +40,7 @@ class RegistrarmeModel extends Conexion {
        // $stmt->bindParam(':telefono', $datos['telefono'], PDO::PARAM_STR);
         $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
         $stmt->bindParam(':fecha_alta', $datos['fecha_alta'], PDO::PARAM_STR);
+        $stmt->bindParam(':pin', $datos['pin'], PDO::PARAM_STR);
 
         if($stmt->execute()){
             return $conexion-> lastInsertId();
@@ -49,5 +52,28 @@ class RegistrarmeModel extends Conexion {
     }
     
     /* INSERTAR USUARIO */
+
+    
+    /* CODIGO DE VERIFICACION */
+    
+    static public function codigoVerificacionModel($datos){
+    
+        $stmt = Conexion::conectar()->prepare("UPDATE admin_usuarios SET verificado = 'Si' WHERE id = :id");
+    
+        $stmt->bindParam(":id", $datos['id'], PDO::PARAM_INT);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+    
+        $stmt = null;
+    
+    }
+    
+    /* CODIGO DE VERIFICACION */
+    
+    
 }
 ?>
