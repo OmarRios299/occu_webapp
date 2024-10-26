@@ -26,6 +26,7 @@ $(document).ready(function(){
 	    language: { url: url + "views/assets/plugins/DataTables/Spanish.json" },
 	    responsive: true,
 	    ordering: true,
+        pagingType: "simple" // Tipo de paginación: simple, simple_numbers, full, full_numberss
 	});
 
 

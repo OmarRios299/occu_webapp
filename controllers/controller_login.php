@@ -20,23 +20,27 @@ class LoginController{
 				if($respuesta['estado'] == 0){
 					//usuario activo
 					
-					//variables de sesión
-					session_start();
-					$_SESSION['iniciarSesion'] = "ok";
-					$_SESSION['id'] = $respuesta['id'];
-					$_SESSION['nivel'] = $respuesta['nivel'];
-					$_SESSION['nombre_completo'] = $respuesta['nombre'];
-					$_SESSION['imagen_usuario'] = $respuesta['imagen'];
-					$_SESSION['ciudad'] = $respuesta['id_ciudad'];
-					$_SESSION['pais'] = $respuesta['id_pais'];
-					
-					$token_sesion = uniqid();
-					date_default_timezone_set("America/Tijuana");
-					setcookie('token_session', $token_sesion,time() + (3600 * 8),'/');
-					
-					LoginModel::actualizarTokenSession($respuesta['id'],$token_sesion);
-					
-					echo 'dashboard';
+					if ($respuesta['verificado']=='Si') {
+						//variables de sesión
+						session_start();
+						$_SESSION['iniciarSesion'] = "ok";
+						$_SESSION['id'] = $respuesta['id'];
+						$_SESSION['nivel'] = $respuesta['nivel'];
+						$_SESSION['nombre_completo'] = $respuesta['nombre'];
+						$_SESSION['imagen_usuario'] = $respuesta['imagen'];
+						$_SESSION['ciudad'] = $respuesta['id_ciudad'];
+						$_SESSION['pais'] = $respuesta['id_pais'];
+						
+						$token_sesion = uniqid();
+						date_default_timezone_set("America/Tijuana");
+						setcookie('token_session', $token_sesion,time() + (3600 * 8),'/');
+						
+						LoginModel::actualizarTokenSession($respuesta['id'],$token_sesion);
+						
+						echo 'dashboard';
+					}else{
+						echo 'verificacion';
+					}
 
 				}else{
 					//usuario desactivado

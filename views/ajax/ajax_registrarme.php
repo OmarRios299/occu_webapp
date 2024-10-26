@@ -4,8 +4,8 @@ require_once "../../controllers/controller_registrarme.php";
 require_once "../../controllers/controller_template.php";
 require_once "../../models/model_registrarme.php";
 require_once "../../models/model_general.php";
-require_once "../../controllers/MailchimpTransactional/vendor/autoload.php";
-require_once '../../controllers/controller_mailchimp.php';
+require_once '../../controllers/controller_phpMailer.php';
+require_once "../../models/model_login.php";
 
 
 if(isset($_POST['registrar_usuario'])){
@@ -29,6 +29,22 @@ if(isset($_POST['registrar_usuario'])){
         "tabla" => $_POST['tablaCampo']
     );
     $controller = "validarCampoController";
+
+}else if (isset($_POST['usuarioVerificacion'])) {
+
+    $datos = array(
+        "usuario"                => $_POST['usuarioVerificacion'],
+        "contrasena"              => $_POST['contrasena'],
+        "pin"                => $_POST['pin'],
+    );
+    $controller = "validarUsuarioController";
+
+}else if (isset($_POST['reenviar_codigo_correo'])) {
+
+    $datos = array(
+        "correo"                => $_POST['reenviar_codigo_correo'],
+    );
+    $controller = "reenviarCodigoController";
 } else {
     $datos = false;
 }
