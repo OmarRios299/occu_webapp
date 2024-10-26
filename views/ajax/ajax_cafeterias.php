@@ -14,15 +14,14 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         $datos = array(
             "id"             => isset($_POST['id_cafeteria']) ? $_POST['id_cafeteria'] : false,
             "nombre"         => $_POST['nombre'],
-            "correo"             => isset($_POST['correo']) ? $_POST['correo'] : false,
+            "correo"         => $_POST['correo'],
             "telefono"       => $_POST['telefono'],
             "direccion"      => $_POST['direccion'],
             "ciudad"         => $_POST['ciudad'],
             "latitud"        => $_POST['latitud'],
             "longitud"       => $_POST['longitud'],
             "horario_diferente" => $_POST['horario_diferente'],
-            "imagen_subir"   => isset($_FILES["imagen_cafeteria"]) ? $_FILES['imagen_cafeteria'] : false,
-            "descripcion"       => $_POST['descripcion'],
+            "imagen_subir"   => isset($_FILES["imagen_cafeteria"]) ? $_FILES['imagen_cafeteria'] : false
         );
         
         if (isset($_POST['horario_apertura']) && isset($_POST['horario_cierre'])) {

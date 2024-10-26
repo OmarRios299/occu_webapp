@@ -23,7 +23,7 @@ if (!isset($_SESSION['iniciarSesion']) && isset($_COOKIE['token_session'])) {
 
 $template = new TemplateController();
 $url = $template->obtenerUrlController();
-$v = "1.0.0";
+$v = "1.0.1";
 
 ?>
 <!DOCTYPE html>
@@ -130,7 +130,7 @@ $v = "1.0.0";
             echo '<div class="contenido">';
             include "modules/sections/sidebar.php";
             echo '<div>';
-        } else if ($moduloActual == "login" || $moduloActual == "registrarme") {
+        } else if ($moduloActual == "login") {
             echo '<div id="sistema">';
             echo '<div class="content-login">';
             include "modules/sections/sidebar.php";

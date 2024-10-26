@@ -17,9 +17,7 @@
                         </div>
                         <div class="btn-group d-flex justify-content-center" role="group">
                             <input class="btn active" type="submit" value="Ingresar">
-                        </div>
-                        <div class="text-center mt-3">
-                        <a type="button" id="btn_registrarme" href="<?=$url.'registrarme'?>">Registrarme</a>
+                            <a type="button" class="btn btn-primary" id="btn_registrarme" href="<?=$url.'registrarme'?>">Registrarme</a>
                         </div>
                     </form>
                 </div>

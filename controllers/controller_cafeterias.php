@@ -72,21 +72,16 @@ class CafeteriasController{
     static public function registrarCafeteriaController($datos){
         //var_dump($datos['horarios']);
         //validamos el correo electrónico y nombre
-        if ($datos['correo']) {
-            $validacion_email = ($datos['id']) && ($datos['correo']) ? 
-            GeneralModel::validarCampoEditarModel($datos['correo'],"correo_electronico","cafeterias",$datos['id'])
-            : GeneralModel::validarCampoModel($datos['correo'],"correo_electronico","cafeterias");
-            if($validacion_email) return "error_validacion_email";
-        }else{
-
-        }
+        $validacion_email = ($datos['id']) && ($datos['correo']) ? 
+        GeneralModel::validarCampoEditarModel($datos['correo'],"correo_electronico","cafeterias",$datos['id'])
+        : GeneralModel::validarCampoModel($datos['correo'],"correo_electronico","cafeterias");
 
         $validacion_nombre = ($datos['id']) ? 
         GeneralModel::validarCampoEditarModel($datos['nombre'],"nombre","cafeterias",$datos['id'])
         : GeneralModel::validarCampoModel($datos['nombre'],"nombre","cafeterias");
 
         //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
-        
+        if($validacion_email) return "error_validacion_email";
         if($validacion_nombre) return "error_validacion_nombre";
 
         if($datos['id']){

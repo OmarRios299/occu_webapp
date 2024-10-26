@@ -148,8 +148,7 @@ class CafeteriasModel extends Conexion {
             horario_diferente,
             id_usuario,
             id_alta,
-            fecha_alta,
-            descripcion
+            fecha_alta
         )
         VALUES(
             :nombre,
@@ -165,8 +164,7 @@ class CafeteriasModel extends Conexion {
             :horario_diferente,
             :id_usuario,
             :id_alta,
-            :fecha_alta,
-            :descripcion
+            :fecha_alta
         )");
     
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
@@ -182,7 +180,6 @@ class CafeteriasModel extends Conexion {
         $stmt->bindParam(':id_usuario', $datos['id_alta'], PDO::PARAM_INT);
         $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
         $stmt->bindParam(':fecha_alta', $datos['fecha_alta'], PDO::PARAM_STR);
-        $stmt->bindParam(':descripcion', $datos['descripcion'], PDO::PARAM_STR);
     
         if ($stmt->execute()) {
             return $conexion->lastInsertId();
@@ -242,8 +239,7 @@ class CafeteriasModel extends Conexion {
         longitud = :longitud,
         horario_apertura = :horario_apertura,
         horario_cierre = :horario_cierre,
-        horario_diferente=:horario_diferente,
-        descripcion = :descripcion
+        horario_diferente=:horario_diferente
         WHERE id = :id");
     
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
@@ -256,7 +252,6 @@ class CafeteriasModel extends Conexion {
         $stmt->bindParam(':horario_apertura', $datos['horario_apertura'], PDO::PARAM_STR);
         $stmt->bindParam(':horario_cierre', $datos['horario_cierre'], PDO::PARAM_STR);
         $stmt->bindParam(':horario_diferente', $datos['horario_diferente'], PDO::PARAM_STR);
-        $stmt->bindParam(':descripcion', $datos['descripcion'], PDO::PARAM_STR);
         $stmt->bindParam(':id', $datos['id'], PDO::PARAM_INT);
     
         if($stmt->execute()){
