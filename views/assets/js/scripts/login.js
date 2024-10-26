@@ -36,6 +36,11 @@ $(document).on('submit', '#formularioIngreso', function(){
 
                 swal("¡Error!", "¡El usuario esta desactivado!", "error");
 
+            }else if(respuesta === "verificacion"){
+
+                swal("¡Error!", "¡Esta cuenta no esta verificada!", "error");
+                window.location = url+"registrarme/verificacion";
+
             }else{
 
                 swal("¡Error!", "¡Usuario o contraseña incorrectos!", "error");

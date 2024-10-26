@@ -101,8 +101,16 @@ $(document).on("submit", "#form_registrarme", function () {
                     swal("¡Error!", "Por favor verifica el correo electrónico.", "error");
                 } else if (respuesta == "success") {
                     // el registro se realizó exitosamente
-                    (id_usuario != "") ? alertaUpdate() : alertaInsert();
-                    //window.history.back();
+                    //(id_usuario != "") ? alertaUpdate() : alertaInsert();
+                    swal({
+                       title: "¡Bien!",
+                       text: "Tu registro se realizó con éxito.",
+                       icon: "success",
+                       button: "Aceptar",
+                    }).then(function() {
+                        window.location = url+"registrarme/verificacion";
+                    });
+                    
                 } else {
                     // se recibió un mensaje diferente a success
                     swal("¡Error!", "Ha ocurrido un error.", "error");
@@ -113,5 +121,103 @@ $(document).on("submit", "#form_registrarme", function () {
         });
     }
 
+});
+
+$(document).on('submit', '#formularioVerificacion', function(){
+
+    let usuario     = $("#usuarioVerificacion").val();
+    let contrasena  = $("#contrasenaVerificacion").val();
+
+    let datos = new FormData();
+
+    datos.append("usuarioVerificacion", usuario);
+    datos.append("contrasena", contrasena);
+    datos.append("pin", $("#pinVerificacion").val());
+
+    $.ajax({
+        url:url+"views/ajax/ajax_registrarme.php",
+        method:"POST",
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: function() {
+
+            loading(true);
+
+        },
+        success:function(respuesta){
+            
+            console.log("respuesta", respuesta);
+
+            loading(false);
+
+            if(respuesta === "dashboard"){
+
+                window.location = url+"dashboard";
+
+            }else if(respuesta === "desactivado"){
+
+                swal("¡Error!", "¡El usuario esta desactivado!", "error");
+
+            }else if(respuesta === "verificacion"){
+
+                swal("¡Error!", "¡El código de verificación es incorrecto!", "error");
+
+            }else{
+
+                swal("¡Error!", "¡Usuario o contraseña incorrectos!", "error");
+
+            }
+
+        }
+
+    });
 
 });
+
+$(document).on("click","#brn_reenviar_codigo",function(){
+    $("#modal_reenviar_codigo").modal('show');
+});
+
+$(document).on("click","#reenviar",function(){
+    var datos = new FormData();
+    
+    datos.append("reenviar_codigo_correo", $("#reenviar_correo").val());
+    
+    $.ajax({
+        url:url+'views/ajax/ajax_registrarme.php',
+        method:'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success:function(respuesta){
+            console.log(respuesta);
+            if(respuesta === "invalido"){
+
+                swal("¡Error!", "¡Este correo no ha sido registrado anteriormente!", "error");
+
+            }else if(respuesta === "verificado"){
+
+                swal("¡Error!", "¡Este correo ya ha sido verificado anteriormente!", "error");
+
+            }else{
+                swal("¡Bien!", "El código se envió exitosamente", "success");
+            }
+        }
+    });
+});
+$(document).on('click', '#togglePassword', function() {
+    const passwordInput = $('#contrasena_usuario_registrar');
+    
+    // Alterna el tipo de input entre 'password' y 'text'
+    const type = passwordInput.attr('type') === 'password' ? 'text' : 'password';
+    passwordInput.attr('type', type);
+    
+    // Alterna el ícono entre "ojo abierto" y "ojo cerrado"
+    $(this).find('i').toggleClass('fa-eye fa-eye-slash');
+});
+
+
+

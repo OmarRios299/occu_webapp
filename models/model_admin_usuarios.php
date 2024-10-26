@@ -41,9 +41,9 @@ class AdminUsuariosModel extends Conexion
         paises.nombre AS pais
         FROM
             admin_usuarios
-        INNER JOIN ciudades ON admin_usuarios.id_ciudad = ciudades.id
-        INNER JOIN entidades_federativas ON ciudades.id_entidad_federativa = entidades_federativas.id
-        INNER JOIN paises ON paises.id = entidades_federativas.id_pais
+        LEFT JOIN ciudades ON admin_usuarios.id_ciudad = ciudades.id
+        LEFT JOIN entidades_federativas ON ciudades.id_entidad_federativa = entidades_federativas.id
+        LEFT JOIN paises ON paises.id = entidades_federativas.id_pais
         $estatus
         $ciudad
         $nivel
