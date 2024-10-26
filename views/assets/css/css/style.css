@@ -729,9 +729,6 @@ input.form-control, select.form-control, .select2 {
     height: calc(.8rem + 1.15rem + 5px);
     background-color:var(--plantilla-claro);
 }
-textarea.form-control {
-    background-color:var(--plantilla-claro);
-}
 input[type=checkbox].form-control {
     height: auto!important;
     width: auto;
@@ -1256,11 +1253,6 @@ dl, ol, ul {
     background-color: var(--color-azul-marino);
     border-color: var(--color-azul-marino);
 }
-.btn-comentario {
-    color: var(--color-blanco)!important;
-    background-color: var(--color-azul-marino);
-    border-color: var(--color-azul-marino);
-}
 .btn-mas {
     color: var(--color-blanco)!important;
     border-color: var(--color-verde);
@@ -1354,10 +1346,6 @@ dl, ol, ul {
     background-color: var(--color-transparente);
 }
 .btn-imprimir.con-borde {
-    color: var(--color-azul-marino)!important;
-    background-color: var(--color-transparente);
-}
-.btn-comentario.con-borde {
     color: var(--color-azul-marino)!important;
     background-color: var(--color-transparente);
 }
@@ -1499,10 +1487,6 @@ dl, ol, ul {
 .btn-imprimir.con-icono::before, 
 .btn-imprimir.btn-icono {
     background-image: url(../img/iconos/botones/icono-imprimir.svg);
-}
-.btn-comentario.con-icono::before, 
-.btn-comentario.btn-icono {
-    background-image: url(../img/iconos/botones/icono-comentario.svg);
 }
 .btn-agregar.con-icono::before, 
 .btn-mas.con-icono::before,
@@ -2185,12 +2169,6 @@ a.fc-daygrid-event {
         display: flex;
         height: 100vh;
     }
-    .content-login {
-        margin-top: 50px !important;
-    }
-    .registrarme-content {
-        margin-top: 50px !important;
-    }
     #sistema > .navbar {
         position: fixed;
         top: 0;
@@ -2298,11 +2276,11 @@ a.fc-daygrid-event {
     font-size: 0;
     padding: 1.125rem;
     margin-right: 25px;
-    background-color:#08b47e;
+    background-color: var(--color-verde-azulado);
     background-repeat: no-repeat;
     background-size: auto 1.5rem;
     background-position: center;
-    background-image: url(../img/iconos/botones/icono-login.svg);
+    background-image: url(../img/iconos/botones/iniciar-sesion.png);
 }
 
 .letras-blancas{
@@ -2315,11 +2293,8 @@ color: #ffffff;
     --------------------------------------- */
     #sistema .contenido {
         padding: 25px;
-        margin-top: 50px !important;
+        /* margin-top: 50px !important; */
 
-    }
-    .content-login {
-        margin-top: 50px !important;
     }
     .navbar {
         padding: .75rem .5rem;

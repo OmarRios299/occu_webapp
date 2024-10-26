@@ -162,7 +162,7 @@
 }
 
 .card-img-top {
-    height: 100px;
+    height: 200px;
     /* Ajusta el tamaño de las imágenes */
     object-fit: cover;
 }
@@ -175,10 +175,6 @@
 
 .modal_mapa {
     overflow: hidden;
-}
-
-.card {
-    border-radius: 10%;
 }
 
 .servicios .custom-carousel {

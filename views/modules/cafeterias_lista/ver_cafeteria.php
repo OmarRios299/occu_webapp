@@ -100,7 +100,7 @@ if (isset($action[1])) {
         </div>
         <div class="col-md-2 mt-3">
             <div class='text-end'>
-                <button type="button" class="btn btn-icono btn-comentario" id="btn_agregar_comentario"></button>
+                <button type="button" class="btn btn-icono btn-imprimir" id="btn_agregar_comentario"></button>
             </div>
         </div>
         <div class="col-md-11 mb-3 comentario-area" style="display: none;">

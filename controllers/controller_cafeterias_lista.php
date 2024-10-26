@@ -25,8 +25,8 @@ class CafeteriasListaController{
             }
 
             $html .= '
-            <div class="col-12 col-md-6 col-lg-4 mb-4">
-                <div class="card h-100">
+            <div class="col-12 col-md-6 col-lg-4 mb-4 modal_cafeteria">
+                <div class="card">
                     <a href="' . $url . 'cafeterias_lista/' . $cafeteria['id'] . '">
                         <img src="' . htmlspecialchars($cafeteria['imagen']) . '" class="card-img-top" alt="' . htmlspecialchars($cafeteria['nombre']) . '">
                     </a>
@@ -83,7 +83,6 @@ class CafeteriasListaController{
             'horario' => $horario,
             'longitud' => $cafeteria['longitud'],
             'latitud' => $cafeteria['latitud'],
-            'descripcion' => $cafeteria['descripcion'],
         );
 
         $active='active';
@@ -155,13 +154,8 @@ class CafeteriasListaController{
     /* REGISTRAR COMENTARIO */
     
     static public function registrarComentarioController($datos){
-        
-        if (isset($_SESSION['id']) && $_SESSION['id']!='') {
-            $datos['id_usuario'] = $_SESSION['id'];
-            return CafeteriasListaModel::registrarComentarioModel($datos);
-        }else{
-            return 'sesion';
-        }
+        $datos['id_usuario'] = $_SESSION['id'];
+        return CafeteriasListaModel::registrarComentarioModel($datos);
     }
     
     /* REGISTRAR COMENTARIO */
