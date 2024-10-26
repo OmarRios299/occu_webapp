@@ -124,7 +124,6 @@ function CargarVerCafeteria() {
                 $("#info3").html('<b>Correo: </b><a id="copiar_correo" href="#">' + respuesta.data.correo + '</a>');
                 $("#info4").html('<b>Horario: </b>' + respuesta.data.horario + ' <br/> ' + respuesta.data.status);
                 $(".ir_googlemaps").attr("latitud", respuesta.data.latitud).attr('longitud', respuesta.data.longitud);
-                $("#descripcion").html(respuesta.data.descripcion);
             }
         }
     });
@@ -245,16 +244,6 @@ $(document).on("click", "#btn_aceptar_comentario", function () {
                 }).then(function () {
                     window.location = "";
                 });
-            }else if(respuesta == 'sesion'){
-                swal({
-                    title: "¡Inicia sesión!",
-                    text: "Inicia sesión para registrar tu comentario.",
-                    icon: "warning",
-                    button: "Aceptar",
-                }).then(function () {
-                    window.location = url+"login";
-                });
-                
             } else {
                 swal("¡Error!", "Ha ocurrido un error.", "error");
             }

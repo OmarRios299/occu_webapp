@@ -107,10 +107,7 @@
     </form>
 
 
-    <!-- Contenedor para Listado de Cafeterías -->
-    <div class="row mt-3" id="div_lista_cafeterias">
-        <!-- Aquí se cargarán las cafeterías dinámicamente -->
-    </div>
+
     <!-- Contenedor de búsqueda y paginación -->
     <div class="d-flex justify-content-between">
         <!-- Input de Filtrado -->
@@ -125,7 +122,10 @@
         </div>
     </div>
 
-
+    <!-- Contenedor para Listado de Cafeterías -->
+    <div class="row mt-3" id="div_lista_cafeterias">
+        <!-- Aquí se cargarán las cafeterías dinámicamente -->
+    </div>
 
 </div>
 

@@ -130,7 +130,7 @@ $v = "1.0.1";
             echo '<div class="contenido">';
             include "modules/sections/sidebar.php";
             echo '<div>';
-        } else if ($moduloActual == "login" || $moduloActual == "registrarme") {
+        } else if ($moduloActual == "login") {
             echo '<div id="sistema">';
             echo '<div class="content-login">';
             include "modules/sections/sidebar.php";
