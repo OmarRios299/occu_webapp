@@ -17,8 +17,11 @@ class RegistrarmeController{
         //damos de alta el registro en la bd
         $datos['id_alta'] = 0;
         $datos['fecha_alta']= date("Y-m-d H:i:s");
+
+        $datos['pin'] = rand(100000, 999999); // Generar un PIN de 6 dígitos
         RegistrarmeModel::insertarUsuarioModel($datos);
-        //Mailchimp::enviarCorreoRegistroController();
+        MailController::enviarCorreoRegistro($datos);
+
 
        return "success"; 
    } 
