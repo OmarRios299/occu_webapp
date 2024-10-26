@@ -85,6 +85,12 @@
                     <button class="btn btn-outline-secondary" type="button">Subir</button>
                 </div>
             </div>
+            <div class="col-md-12 mt-3">
+                <div class="form-group">
+                    <label>Descripción:</label>
+                    <textarea class="form-control" cols="30" rows="2" id="descripcion_cafeteria" placeholder="Una breve descripción de la cafetería y su ambiente acogedor."><?= $cafeteria['descripcion'] ?></textarea>
+                </div>
+            </div>
         </div>
         <div class="row mt-5">
             <div class="col-md-4">

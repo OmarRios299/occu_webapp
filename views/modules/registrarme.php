@@ -1,6 +1,19 @@
 <?php
 if (!isset($action[1])) {
 ?>
+   <style>
+      .input-group {
+         display: flex;
+         align-items: center;
+      }
+
+      .input-group-text {
+         cursor: pointer;
+         padding: 0.5em;
+         background: none;
+         border: none;
+      }
+   </style>
    <div class="titulo-boton registrarme-content">
       <h1 class="titulo-modulo">Registrarme</h1>
    </div>
@@ -15,7 +28,7 @@ if (!isset($action[1])) {
                   <select class="form-control" id="select_nivel">
                      <option value="" disabled selected>Selecciona una opción</option>
                      <option value="Cliente">Busco una cafetería para disfrutar de un buen café</option>
-                     <option value="Barista">Soy barista y estoy interesado/a en oportunidades de trabajo</option>
+                     <!-- <option value="Barista">Soy barista y estoy interesado/a en oportunidades de trabajo</option> -->
                      <option value="Propietario">Tengo una o varias cafeterías y quiero conectarme con otros amantes del café</option>
                   </select>
                </div>
@@ -62,12 +75,24 @@ if (!isset($action[1])) {
             </div>
             <div class="col-md-6">
                <div class="form-group">
-                  <label>Contraseña:</label>
-                  <input type="text" class="form-control input_usuario" id="contrasena_usuario_registrar" required>
+                  <div class="row">
+                     <div class="col-md-10">
+                        <label>Contraseña:</label>
+                     </div>
+                     <div class="col-md-2">
+                        <span class="input-group-text" id="togglePassword">
+                           <i class="fa fa-eye" aria-hidden="true"></i>
+                        </span>
+                     </div>
+                  </div>
+                  <div class="input-group">
+                     <input type="password" class="form-control input_usuario" id="contrasena_usuario_registrar" required>
+                  </div>
                </div>
             </div>
+
             <div class="col-md-6">
-               <div class="form-group">
+               <div class="form-group mt-1">
                   <label for="">Confirmar contraseña:</label>
                   <input class="form-control input_usuario" type="password" id="confirmar_contrasena_usuario_registrar" required>
                </div>
@@ -90,7 +115,7 @@ if (!isset($action[1])) {
                   <!-- Form -->
                   <form id="formularioVerificacion" onsubmit="return false;">
                      <div class="alert alert-primary" role="alert">
-                     Hemos enviado un código de verificación a tu correo electronico.
+                        Hemos enviado un código de verificación a tu correo electronico.
                      </div>
                      <div class="form-group">
                         <input class="form-control" id="usuarioVerificacion" name="" placeholder="Correo" type="text" required>
@@ -105,6 +130,9 @@ if (!isset($action[1])) {
                         <input class="btn active" type="submit" value="Ingresar">
                      </div>
                   </form>
+                  <div class="col-md-12 d-flex justify-content-center mt-3">
+                     <a type="button" href="#" id="brn_reenviar_codigo">Reenviar código de verificación</button>
+                  </div>
                </div>
             </div>
          </div>
@@ -114,3 +142,31 @@ if (!isset($action[1])) {
 }
 
 ?>
+
+<div class="modal fade" id="modal_reenviar_codigo" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+   <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <input type="hidden" id="id_cafeteria">
+            <h5 class="modal-title" id="modalLabel">Reenviando código de verificación</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body modal_mapa">
+            <div class="row">
+               <div class="col-md-12">
+                  <div class="form-group">
+                     <label>Correo:</label>
+                     <input type="email" class="form-control" id="reenviar_correo">
+                  </div>
+               </div>
+            </div>
+         </div>
+         <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="btn" class="btn btn-primary" id="reenviar">Reenviar</button>
+         </div>
+      </div>
+   </div>
+</div>
+
+<!-- Falta poder reenviar el correo de verificacion -->

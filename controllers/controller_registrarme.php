@@ -109,6 +109,27 @@ class RegistrarmeController{
 	}
 	
 	/* End of INGRESO */	
+
+    
+    /* REENVIAR CODIGO */
+    
+    static public function reenviarCodigoController($datos){
+        $respuesta = LoginModel::ingresoModel($datos["correo"]);
+        if (!$respuesta) {
+            return 'invalido';
+        }else if ($respuesta['verificado']=='Si') {
+            return 'verificado';
+        }else{
+            $datos['pin'] = rand(100000, 999999);
+            RegistrarmeModel::reenviarcodigoModel($datos);
+            MailController::enviarCorreoRegistro($datos);
+        }
+        return 'success';
+        
+    }
+    
+    /* REENVIAR CODIGO */
+    
     
 }
 ?>

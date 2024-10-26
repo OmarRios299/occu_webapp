@@ -71,6 +71,23 @@ class RegistrarmeModel extends Conexion {
         $stmt = null;
     
     }
+
+    static public function reenviarcodigoModel($datos){
+    
+        $stmt = Conexion::conectar()->prepare("UPDATE admin_usuarios SET pin = :codigo WHERE correo_electronico = :correo");
+    
+        $stmt->bindParam(":codigo", $datos['pin'], PDO::PARAM_STR);
+        $stmt->bindParam(":correo", $datos['correo'], PDO::PARAM_STR);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+    
+        $stmt = null;
+    
+    }
     
     /* CODIGO DE VERIFICACION */
     

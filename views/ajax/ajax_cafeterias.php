@@ -21,7 +21,8 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
             "latitud"        => $_POST['latitud'],
             "longitud"       => $_POST['longitud'],
             "horario_diferente" => $_POST['horario_diferente'],
-            "imagen_subir"   => isset($_FILES["imagen_cafeteria"]) ? $_FILES['imagen_cafeteria'] : false
+            "imagen_subir"   => isset($_FILES["imagen_cafeteria"]) ? $_FILES['imagen_cafeteria'] : false,
+            "descripcion"       => $_POST['descripcion'],
         );
         
         if (isset($_POST['horario_apertura']) && isset($_POST['horario_cierre'])) {

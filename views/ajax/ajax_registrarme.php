@@ -38,6 +38,13 @@ if(isset($_POST['registrar_usuario'])){
         "pin"                => $_POST['pin'],
     );
     $controller = "validarUsuarioController";
+
+}else if (isset($_POST['reenviar_codigo_correo'])) {
+
+    $datos = array(
+        "correo"                => $_POST['reenviar_codigo_correo'],
+    );
+    $controller = "reenviarCodigoController";
 } else {
     $datos = false;
 }

@@ -196,6 +196,7 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
     let longitud = $("#longitud_cafeteria").val();
     let horario_diferente = ($("#switch_horario").is(':checked'))?'NO':'SI';
     let imagen_subir = $("#imagen_cafeteria")[0].files[0] ? $("#imagen_cafeteria")[0].files[0] : false;
+    let descripcion = $("#descripcion_cafeteria").val();
 
     var datos = new FormData();
 
@@ -209,6 +210,7 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
     datos.append("latitud", latitud);
     datos.append("longitud", longitud);
     datos.append("horario_diferente", horario_diferente);
+    datos.append("descripcion", descripcion);
     if (imagen_subir) datos.append("imagen_cafeteria", imagen_subir);
 
     // Verificar el estado del switch para determinar qué horarios enviar
