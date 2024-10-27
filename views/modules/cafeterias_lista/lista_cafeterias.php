@@ -106,19 +106,20 @@
         </div>
     </form>
 
-
+    <div class="row">
+        <!-- Input de Filtrado -->
+        <div class="col-md-12">
+            <input type="text" id="filtro-input" class="form-control" placeholder="Buscar cafeterías..." style="display: none;">
+        </div>
+    </div>
     <!-- Contenedor para Listado de Cafeterías -->
     <div class="row mt-3" id="div_lista_cafeterias">
         <!-- Aquí se cargarán las cafeterías dinámicamente -->
     </div>
     <!-- Contenedor de búsqueda y paginación -->
-    <div class="d-flex justify-content-between">
-        <!-- Input de Filtrado -->
-        <div class="col-md-6">
-            <input type="text" id="filtro-input" class="form-control w-80" placeholder="Buscar cafeterías..." style="display: none;">
-        </div>
+    <div class="row">
         <!-- Botones de Paginación -->
-        <div class="col-md-3 text-end">
+        <div class="col-md-12 text-end">
             <button id="boton-anterior" class="btn btn-primary" data-pagina="1">
                 << </button>
                     <button id="boton-siguiente" class="btn btn-primary" data-pagina="1">>></button>

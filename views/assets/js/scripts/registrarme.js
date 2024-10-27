@@ -32,6 +32,7 @@ $(document).on("change", ".registroValidarCampo", function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success: function (respuesta) {
 
             if (respuesta == 0) {
@@ -46,6 +47,7 @@ $(document).on("change", ".registroValidarCampo", function () {
                 $(input).next().hide();
 
             }
+            cargaSistema(false);
         }
     });
 
@@ -141,16 +143,12 @@ $(document).on('submit', '#formularioVerificacion', function(){
         cache: false,
         contentType: false,
         processData: false,
-        beforeSend: function() {
-
-            loading(true);
-
-        },
+        beforeSend: cargaSistema(true),
         success:function(respuesta){
             
             console.log("respuesta", respuesta);
 
-            loading(false);
+            cargaSistema(false);
 
             if(respuesta === "dashboard"){
 
@@ -192,6 +190,7 @@ $(document).on("click","#reenviar",function(){
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success:function(respuesta){
             console.log(respuesta);
             if(respuesta === "invalido"){
@@ -205,6 +204,7 @@ $(document).on("click","#reenviar",function(){
             }else{
                 swal("¡Bien!", "El código se envió exitosamente", "success");
             }
+            cargaSistema(false);
         }
     });
 });

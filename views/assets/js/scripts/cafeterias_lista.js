@@ -177,21 +177,24 @@ function cargarComentarios(pagina) {
     let filtro = `?comentarios=${true}&pagina=${pagina}&cafeteria=${cafeteria}`;
 
     $.ajax({
-        url: url + 'views/ajax/ajax_cafeterias_lista.php' + filtro, // Reemplaza con tu ruta de API o backend
+        url: url + 'views/ajax/ajax_cafeterias_lista.php' + filtro, 
         method: "GET",
         success: function (response) {
             response = JSON.parse(response);
             if (response.comentarios == '') {
-                $(".comentarios").hide();
+                $(".coment-ocultar").hide();
             } else {
                 // Llenar la lista de comentarios con los datos recibidos
                 var comentariosHtml = '';
                 response.comentarios.forEach(function (comentario) {
+                    var fechaSinHora = comentario.fecha_alta.substring(0, 10);
+
                     comentariosHtml += '<li><h3>' + comentario.nombre_usuario + '</h3>';
-                    comentariosHtml += '<p>' + comentario.comentario + '</p></li>';
+                    comentariosHtml += '<p>' + comentario.comentario + '</p>';
+                    comentariosHtml += '<p><small>' + fechaSinHora + '</small></p></li>';
                 });
                 $('#comentariosLista').html(comentariosHtml);
-
+                $("#total_coment").html(response.totalComentarios);
                 // Actualizar controles de paginación
                 actualizarPaginacion(response.totalPaginas, pagina);
             }
@@ -243,7 +246,9 @@ $(document).on("click", "#btn_aceptar_comentario", function () {
                     icon: "success",
                     button: "Aceptar",
                 }).then(function () {
-                    window.location = "";
+                    $("#agregar_comentario").val('');
+                    $(".comentario-area").toggle();
+                    cargarComentarios(1);
                 });
             }else if(respuesta == 'sesion'){
                 swal({

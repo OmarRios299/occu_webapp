@@ -6,8 +6,8 @@ if (isset($action[1])) {
 ?>
 <!-- Encabezado -->
 <div class="titulo-cafeteria">
-    <h1 id="titulo_cafeteria_ver">Nombre de la Cafetería</h1>
-    <p id="descripcion">Una breve descripción de la cafetería y su ambiente acogedor.</p>
+    <h1 id="titulo_cafeteria_ver"></h1>
+    <p id="descripcion"></p>
 </div>
 <div class="container my-4" <?= $hidden ?>>
     <nav aria-label="breadcrumb">
@@ -91,11 +91,11 @@ if (isset($action[1])) {
     <div class="row mt-5 comentarios">
         <div class="col-md-10">
             <h3>Reseñas de Clientes</h3>
-            <div class="d-flex align-items-center">
-                <div class="star-rating">
+            <div class="d-flex align-items-center coment-ocultar">
+                <div class="star-rating coment-ocultar">
                     ★★★★☆
                 </div>
-                <p class="ml-3 mt-3">4.5 de 5 estrellas (300 reseñas)</p>
+                <p class="ml-3 mt-3 coment-ocultar">4.5 de 5 estrellas (<span id="total_coment"></span> reseñas)</p>
             </div>
         </div>
         <div class="col-md-2 mt-3">
@@ -112,7 +112,7 @@ if (isset($action[1])) {
         <div class="col-md-1 mt-5 comentario-area" style="display: none;">
             <button type="button" class="btn btn-icono btn-mas" id="btn_aceptar_comentario"></button>
         </div>
-        <div class="col-md-12">
+        <div class="col-md-12 coment-ocultar">
             <div class="comentarios-container mt-1">
                 <ul id="comentariosLista" class="lista-comentarios">
                     <!-- Los comentarios se cargarán aquí dinámicamente -->
