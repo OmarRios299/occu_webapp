@@ -130,7 +130,7 @@ class CafeteriasListaController{
         $comentariosPorPagina = 5; // Número de comentarios que deseas mostrar por página
     
         // Obtener el total de comentarios
-        $totalComentarios = CafeteriasListaModel::contarTotalComentariosModel();
+        $totalComentarios = CafeteriasListaModel::contarTotalComentariosModel($datos['cafeteria']);
     
         // Calcular el número total de páginas
         $totalPaginas = ceil($totalComentarios / $comentariosPorPagina);
@@ -144,7 +144,8 @@ class CafeteriasListaController{
         // Devolver los comentarios y el total de páginas como respuesta JSON
         return json_encode([
             'comentarios' => $comentarios,
-            'totalPaginas' => $totalPaginas
+            'totalPaginas' => $totalPaginas,
+            'totalComentarios' => $totalComentarios
         ]);
     }
     
@@ -155,9 +156,11 @@ class CafeteriasListaController{
     /* REGISTRAR COMENTARIO */
     
     static public function registrarComentarioController($datos){
-        
+        session_start();
         if (isset($_SESSION['id']) && $_SESSION['id']!='') {
             $datos['id_usuario'] = $_SESSION['id'];
+            date_default_timezone_set("America/Tijuana");
+            $datos['fecha_alta']= date("Y-m-d H:i:s");
             return CafeteriasListaModel::registrarComentarioModel($datos);
         }else{
             return 'sesion';

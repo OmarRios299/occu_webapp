@@ -170,7 +170,9 @@ class CafeteriasListaModel extends Conexion {
         INNER JOIN admin_usuarios ON cafeterias_comentarios.id_usuario = admin_usuarios.id 
         WHERE cafeterias_comentarios.estado = 0
         AND cafeterias_comentarios.id_cafeteria = :id
-        LIMIT :offset, :limite");
+        ORDER BY cafeterias_comentarios.fecha_alta DESC
+        LIMIT :offset, :limite
+        ");
 
         $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->bindParam(":offset", $offset, PDO::PARAM_INT);
@@ -180,8 +182,9 @@ class CafeteriasListaModel extends Conexion {
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
-    static public function contarTotalComentariosModel() {
-        $stmt = Conexion::conectar()->prepare("SELECT COUNT(*) AS total FROM cafeterias_comentarios WHERE estado = 0"); // Asegúrate de agregar las condiciones necesarias
+    static public function contarTotalComentariosModel($cafeteria) {
+        $stmt = Conexion::conectar()->prepare("SELECT COUNT(*) AS total FROM cafeterias_comentarios WHERE estado = 0 AND id_cafeteria = :id"); // Asegúrate de agregar las condiciones necesarias
+        $stmt->bindParam("id", $cafeteria, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC)['total'];
     }
@@ -216,11 +219,12 @@ class CafeteriasListaModel extends Conexion {
     
     static public function registrarComentarioModel($datos){
     
-        $stmt = Conexion::conectar()->prepare("INSERT INTO cafeterias_comentarios (comentario, id_usuario, id_cafeteria) VALUES (:comentario, :id_usuario, :id_cafeteria)");
+        $stmt = Conexion::conectar()->prepare("INSERT INTO cafeterias_comentarios (comentario, id_usuario, id_cafeteria, fecha_alta) VALUES (:comentario, :id_usuario, :id_cafeteria, :fecha_alta)");
     
         $stmt->bindParam(':id_cafeteria', $datos['id_cafeteria'], PDO::PARAM_INT);
         $stmt->bindParam(':id_usuario', $datos['id_usuario'], PDO::PARAM_INT);
         $stmt->bindParam(':comentario', $datos['comentario'], PDO::PARAM_STR);
+        $stmt->bindParam(':fecha_alta', $datos['fecha_alta'], PDO::PARAM_STR);
     
         if($stmt->execute()){
             return 'success';

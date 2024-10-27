@@ -115,7 +115,8 @@ if (!isset($action[1])) {
                   <!-- Form -->
                   <form id="formularioVerificacion" onsubmit="return false;">
                      <div class="alert alert-primary" role="alert">
-                        Hemos enviado un código de verificación a tu correo electronico.
+                        Hemos enviado un código de verificación a tu correo electronico. <br>
+                        <span style="color:orange">En unos minutos llegará tu código</span>
                      </div>
                      <div class="form-group">
                         <input class="form-control" id="usuarioVerificacion" name="" placeholder="Correo" type="text" required>
