@@ -6,8 +6,8 @@ if (isset($action[1])) {
 ?>
 <!-- Encabezado -->
 <div class="titulo-cafeteria">
-    <h1 id="titulo_cafeteria_ver">Nombre de la Cafetería</h1>
-    <p id="descripcion">Una breve descripción de la cafetería y su ambiente acogedor.</p>
+    <h1 id="titulo_cafeteria_ver"></h1>
+    <p id="descripcion"></p>
 </div>
 <div class="container my-4" <?= $hidden ?>>
     <nav aria-label="breadcrumb">
