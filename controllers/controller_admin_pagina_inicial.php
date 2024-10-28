@@ -35,8 +35,8 @@ class AdminPaginaInicialController{
 
             if($usuario['imagen']!=""&&file_exists("../../".$usuario['imagen'])&&$usuario['imagen']!="views/assets/img/usuario_default.png") 
                 unlink("../../".$usuario['imagen']);
-            $nombre_imagen = "imagen_usuario_".$datos['id'];
-            $datos['imagen'] = GeneralController::subirImagen($datos['imagen_subir'],"admin_usuarios",$nombre_imagen);
+            $nombre_imagen = "imagen";
+            $datos['imagen'] = GeneralController::subirImagen($datos['imagen_subir'],"pagina_inicio",$nombre_imagen);
             AdminPaginaInicialModel::editarImagenModel($datos);
 
         }
