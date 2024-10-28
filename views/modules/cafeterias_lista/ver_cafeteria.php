@@ -138,12 +138,7 @@ if (isset($action[1])) {
             <div class="modal-body">
                 <div id="carouselExampleIntervalModal" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner carousel_imageness" id="">
-                        <div class="carousel-item carousel-item-modal active" data-bs-interval="100000">
-                            <img src="<?= $url ?>/views/assets/img/cafeterias_imagenes/1_imagen2.jpg" class="d-block w-100 img-fluid" alt="...">
-                        </div>
-                        <div class="carousel-item carousel-item-modal" data-bs-interval="2000">
-                            <img src="<?= $url ?>/views/assets/img/cafeterias_imagenes/1_imagen1.jpg" class="d-block w-100 img-fluid" alt="...">
-                        </div>
+                        
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIntervalModal" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
