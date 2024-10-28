@@ -1,2 +1,4 @@
 .env
 error_log
+controller_phpMailer.php
+assets/img
