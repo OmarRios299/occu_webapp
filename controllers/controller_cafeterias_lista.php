@@ -177,14 +177,14 @@ class CafeteriasListaController{
         $data ='';
         foreach (CafeteriasListaModel::obtenerServiciosModel() as $servicio){
             $data .='
-                    <div class="col-md">
-                        <div class="form-check">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                '.$servicio['nombre'].'
-                            </label>
-                            <input class="form-check-input seleccionar_servicio" type="checkbox" value="'.$servicio['id'].'">
-                        </div>
+                <div class="col-6 col-md-4 col-lg-3 mb-2">
+                    <div class="form-check">
+                        <input class="form-check-input seleccionar_servicio" type="checkbox" value="'.$servicio['id'].'">
+                        <label class="form-check-label" for="flexCheckDefault">
+                            '.$servicio['nombre'].'
+                        </label>
                     </div>
+                </div>
             ';
         }
 

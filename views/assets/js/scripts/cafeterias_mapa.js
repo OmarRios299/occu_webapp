@@ -36,6 +36,7 @@ function cargarMapaCafeterias(){
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success: function(respuesta) {
             respuesta = JSON.parse(respuesta);
 
@@ -105,6 +106,7 @@ function cargarMapaCafeterias(){
             setTimeout(function() {
                 google.maps.event.trigger(mapa_ubicaciones_cafeterias, 'resize');
             }, 10);
+            cargaSistema(false);
         }
     });
 }

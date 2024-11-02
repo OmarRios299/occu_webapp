@@ -182,12 +182,13 @@ $(document).on("submit", "#form_agregar_pais", function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success: function (respuesta) {
             console.log(respuesta);
             if (respuesta == 'success') {
                 $("#id_pais").val() ? alertaUpdate() : alertaInsert();
             }
-
+            cargaSistema(false);
         }
     });
 });
@@ -205,12 +206,14 @@ function cargarMetricosPaises() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success:function(respuesta){
             respuesta=JSON.parse(respuesta)
             console.log(respuesta);
             $("#total_cafeterias").html(respuesta.contadores.total_cafeterias);
             $("#total_ciudades").html(respuesta.contadores.total_ciudades);
             cargarGraficaDiasOTs(respuesta.data);
+            cargaSistema(false);
         }
     });
 }
@@ -292,6 +295,7 @@ $(document).on("submit", "#form_agregar_ciudad", function () {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success: function (respuesta) {
             console.log(respuesta);
             if (respuesta == 'success') {
@@ -299,6 +303,7 @@ $(document).on("submit", "#form_agregar_ciudad", function () {
             } else {
 
             }
+            cargaSistema(false);
         }
     });
 });

@@ -43,6 +43,7 @@ $(document).on("submit",".form_agregar_servicios",function(){
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success:function(respuesta){
             console.log(respuesta);
             if (respuesta=='error') {
@@ -52,6 +53,7 @@ $(document).on("submit",".form_agregar_servicios",function(){
             } else {
                 (id_servicio!='')? alertaUpdate() : alertaInsert();
             }
+            cargaSistema(false);
         }
     });
 });

@@ -83,12 +83,14 @@ function cargarMetricosDashboard() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success: function (respuesta) {
             respuesta = JSON.parse(respuesta)
             console.log(respuesta);
             $("#total_cafeterias").html(respuesta.contadores.total_cafeterias);
             $("#total_ciudades").html(respuesta.contadores.total_ciudades);
             cargarGraficaDiasOTs(respuesta.data);
+            cargaSistema(false);
         }
     });
 }

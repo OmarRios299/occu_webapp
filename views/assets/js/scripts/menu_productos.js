@@ -47,6 +47,7 @@ $(document).on("submit",".form_agregar_producto",function(){
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success:function(respuesta){
             console.log(respuesta);
             if (respuesta=='error') {
@@ -56,6 +57,7 @@ $(document).on("submit",".form_agregar_producto",function(){
             } else {
                 (id_producto!='')? alertaUpdate() : alertaInsert();
             }
+            cargaSistema(false);
         }
     });
 });

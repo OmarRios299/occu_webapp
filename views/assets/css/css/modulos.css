@@ -236,7 +236,7 @@
 
 /* - - - - - - - - estilos para el filtro y estrallas */
 
-.filtros_cafeterias .star-rating {
+.star-rating {
     direction: rtl;
     /* De derecha a izquierda para mejor UX */
     font-size: 1.5rem;
@@ -245,12 +245,21 @@
     display: flex;
 }
 
-.filtros_cafeterias .star-rating input {
+.borde {
+    border: 3px solid #007bff; /* Cambia el color y grosor del borde según lo desees */
+    padding: 15px;
+    border-radius: 10px;
+    margin-top: 15px; 
+    width: 100%;
+  }
+  
+
+.star-rating input {
     display: none;
     /* Ocultar los inputs */
 }
 
-.filtros_cafeterias .star-rating label {
+.star-rating label {
     cursor: pointer;
     color: #ccc;
     /* Color de las estrellas no seleccionadas */
@@ -259,7 +268,7 @@
 
 }
 
-.filtros_cafeterias .star-rating input:checked~label {
+.star-rating input:checked~label {
     color: #ffc107;
     /* Color de las estrellas seleccionadas */
 }

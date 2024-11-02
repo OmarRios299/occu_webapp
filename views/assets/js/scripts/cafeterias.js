@@ -382,6 +382,7 @@ $(document).on("submit","#form_subir_imagenes",function(){
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success:function(respuesta){
             //console.log(respuesta);
             if (respuesta=='success') {
@@ -396,6 +397,7 @@ $(document).on("submit","#form_subir_imagenes",function(){
             } else {
                 
             }
+            cargaSistema(false);
         }
     });
 
@@ -420,6 +422,7 @@ function cargarServicios() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success:function(respuesta){
             //console.log(respuesta);
             respuesta = JSON.parse(respuesta);
@@ -428,6 +431,7 @@ function cargarServicios() {
             } else {
                 $("#servicios").html(respuesta);
             }
+            cargaSistema(false);
         }
     });
 }
@@ -452,6 +456,7 @@ $(document).on("submit","#form_servicios",function(){
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success:function(respuesta){
             console.log(respuesta);
             if (respuesta=='error') {
@@ -459,6 +464,7 @@ $(document).on("submit","#form_servicios",function(){
             } else {
                 alertaUpdate();
             }
+            cargaSistema(false);
         }
     });
 });

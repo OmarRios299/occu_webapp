@@ -837,10 +837,12 @@ function cargarServiciosFiltro() {
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success: function (respuesta) {
             respuesta = JSON.parse(respuesta);
             // console.log(respuesta);
-            $("#caja_servicios").html(respuesta);
+            $(".caja_servicios").html(respuesta);
+            cargaSistema(false);
         }
     });
 }

@@ -41,6 +41,7 @@ $(document).on("submit","#modal_agregar_imagen",function(){
         cache: false,
         contentType: false,
         processData: false,
+        beforeSend: cargaSistema(true),
         success:function(respuesta){
             console.log(respuesta);
             if (respuesta=='error') {
@@ -48,6 +49,7 @@ $(document).on("submit","#modal_agregar_imagen",function(){
             } else {
                 (id_imagen != "") ? alertaUpdate() : alertaInsert();
             }
+            cargaSistema(false);
         }
     });
 });
