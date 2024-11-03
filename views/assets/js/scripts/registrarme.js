@@ -1,4 +1,4 @@
-$(document).on("click", "#btn_siguiente1, #btn_regresar1", function () {
+$(document).on("click", ".btn_siguiente1, #btn_regresar1", function () {
     $("#caja_nivel").toggle();
     $("#caja_nombre").toggle();
 });
@@ -55,6 +55,17 @@ $(document).on("change", ".registroValidarCampo", function () {
 
 /*=====  End of VALIDAR CAMPO  ======*/
 
+$(document).on("click",".btn_siguiente1",function(){
+    let nivel = $(this).attr('nivel');
+    let imagen = $(this).attr('imagen');
+    $("#select_nivel").val(nivel);
+    if (nivel=='Cliente') {
+        nivel = 'Amante del café'
+    }
+    $(".nivel_seleccionado").html(nivel);
+    $(".nivel_imagen").attr('src',imagen);
+});
+
 $(document).on("submit", "#form_registrarme", function () {
     let id_usuario = $("#id_usuario").val();
     let contrasena = $("#contrasena_usuario_registrar").val();
@@ -72,7 +83,12 @@ $(document).on("submit", "#form_registrarme", function () {
         let apellido = $("#apellido_usuario_registrar").val();
         let email = $("#correo_usuario_registrar").val();
         //let celular = $("#telefono_usuario_registrar").val();
-        let nivel = $("#select_nivel option:selected").val();
+        let nivel = $("#select_nivel").val();
+
+        if (!nombre || !apellido) {
+            swal("¡Alerta!", "Es necesario llenar todos los campos.", "warning");
+            return '';
+        }
 
         var datos = new FormData();
 

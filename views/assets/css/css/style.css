@@ -208,6 +208,11 @@ a:hover {
     box-shadow: 0 0 0 0.2rem rgba(58, 137, 160, 0.25);
 }
 
+.fondo-oscuro {
+    background-color: rgba(0, 0, 0, 0.6);
+    /* Fondo oscuro semi-transparente */
+    z-index: 1;
+  }
 /* ---------------------------------------
 @@@@ seccion ---> estructura  
 @@@@ seccion ---> navbar  

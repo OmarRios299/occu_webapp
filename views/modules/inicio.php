@@ -62,11 +62,6 @@
     }
   }
 
-  .fondo {
-    background-color: rgba(0, 0, 0, 0.6);
-    /* Fondo oscuro semi-transparente */
-    z-index: 1;
-  }
 </style>
 <div id="myCarousel" class="carousel slide mb-1" data-bs-ride="carousel">
   <div class="carousel-inner">
@@ -117,7 +112,7 @@
   ?>
   <div class="col" onclick="window.location.href='<?= $item['enlace'] ?>';">
       <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('<?= $url . $item['imagen'] ?>');">
-        <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1 fondo">
+        <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1 fondo-oscuro">
           <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><?= $item['descripcion'] ?></h3>
           <ul class="d-flex list-unstyled mt-auto">
             <li class="me-auto">

@@ -378,15 +378,15 @@ function filtro_pantalla_grande() {
         $(this).attr("open", $(this).attr("open") === 'si' ? 'no' : 'si');
     });
     
-    $(document).on("click", "#buscar_filtro", function () {
-        $("#filtro-input").toggle();
-        $(".div_servicios").hide();
-        $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
-        $(".check_servicios").prop('checked', false);
-        $('#filtros_div').hide();
-    });
-}
 
+}
+$(document).on("click", "#buscar_filtro", function () {
+    $("#filtro-input").toggle();
+    $(".div_servicios").hide();
+    $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
+    $(".check_servicios").prop('checked', false);
+    $('#filtros_div').hide();
+});
 // Función para gestionar la activación y desactivación de los eventos
 function checkScreenSize(e) {
     if (e.matches) {
