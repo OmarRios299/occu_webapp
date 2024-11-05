@@ -312,110 +312,114 @@ $(document).on('click', '#copiar_correo', function (event) {
     copyToClipboard(correo, 'copy-feedback-email'); // Llamar a la función de copiar con el feedback del correo
 });
 
-$(document).on("click", "#buscar_filtro", function () {
-    $("#filtro-input").toggle();
-    $(".div_servicios").hide();
-    $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
-    $(".check_servicios").prop('checked', false);
-    $('#filtros_div').hide();
-});
-
-$(document).on("change", ".check_servicios", function () {
-    if ($(this).prop('checked')) {
-        $(".div_servicios").show();
-        $("#filtro-input").hide();
-        $(".cambiar-clase").removeClass('col-md-5').addClass('col-md-6');
-    } else {
-        $(".div_servicios").hide();
-        $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
-    }
-});
-
-$(document).on("change", ".check_servicios", function () {
-    if ($(this).prop('checked')) {
-        $(".div_servicios").show();
-        $("#filtro-input").hide();
-        $(".cambiar-clase").removeClass('col-md-5').addClass('col-md-6');
-    } else {
-        $(".div_servicios").hide();
-        $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
-    }
-    cargarServiciosFiltro();
-});
-
-$(document).on("submit", "#aplicar_filtros", function () {
-    cargarListaCafeterias(1, filtro = '');
-});
-
-$(document).on("change", ".seleccionar_servicio", function () {
-    cargarListaCafeterias(1, filtro = '');
-    
-});
-
-$(document).on("input", "input[name='horario_filtro']:checked", function () {
-    cargarListaCafeterias(1, '');
-});
-
-$(document).on("change",".select_ciudades_filtro",function(){
-    $("#ciudades_filtro").val($(this).val());
-    cargarListaCafeterias(1, filtro = '');
-});
-
-// Usando matchMedia para comprobar el tamaño de pantalla
-const mediaQuery = window.matchMedia("(min-width: 765px)");
-
-// Verifica si la condición se cumple de entrada
-checkScreenSize(mediaQuery);
-
-// Detecta cambios en el tamaño de pantalla y aplica la función
-mediaQuery.addEventListener("change", checkScreenSize);
-
-
-function filtro_pantalla_grande() {
-    // Añadir eventos solo si la pantalla es mayor a 991px
-    $(document).on("click", "#abrir_filtros", function () {
-        $('#filtros_div').toggle();
-        $(this).attr("open", $(this).attr("open") === 'si' ? 'no' : 'si');
-    });
-    
-
-}
-$(document).on("click", "#buscar_filtro", function () {
-    $("#filtro-input").toggle();
-    $(".div_servicios").hide();
-    $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
-    $(".check_servicios").prop('checked', false);
-    $('#filtros_div').hide();
-});
-// Función para gestionar la activación y desactivación de los eventos
-function checkScreenSize(e) {
-    if (e.matches) {
-        // Si la pantalla es mayor a 991px, ejecutar la función
-        var offcanvasElement = document.getElementById("offcanvasBottom");
-        var bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement); // Obtener la instancia actual
-        if (bsOffcanvas) {
-          bsOffcanvas.hide();
+$(document).ready(function(){
+    if (moduloActual=='cafeterias_lista') {
+        $(document).on("click", "#buscar_filtro", function () {
+            $("#filtro-input").toggle();
+            $(".div_servicios").hide();
+            $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
+            $(".check_servicios").prop('checked', false);
+            $('#filtros_div').hide();
+        });
+        
+        $(document).on("change", ".check_servicios", function () {
+            if ($(this).prop('checked')) {
+                $(".div_servicios").show();
+                $("#filtro-input").hide();
+                $(".cambiar-clase").removeClass('col-md-5').addClass('col-md-6');
+            } else {
+                $(".div_servicios").hide();
+                $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
+            }
+        });
+        
+        $(document).on("change", ".check_servicios", function () {
+            if ($(this).prop('checked')) {
+                $(".div_servicios").show();
+                $("#filtro-input").hide();
+                $(".cambiar-clase").removeClass('col-md-5').addClass('col-md-6');
+            } else {
+                $(".div_servicios").hide();
+                $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
+            }
+            cargarServiciosFiltro();
+        });
+        
+        $(document).on("submit", "#aplicar_filtros", function () {
+            cargarListaCafeterias(1, filtro = '');
+        });
+        
+        $(document).on("change", ".seleccionar_servicio", function () {
+            cargarListaCafeterias(1, filtro = '');
+            
+        });
+        
+        $(document).on("input", "input[name='horario_filtro']:checked", function () {
+            cargarListaCafeterias(1, '');
+        });
+        
+        $(document).on("change",".select_ciudades_filtro",function(){
+            $("#ciudades_filtro").val($(this).val());
+            cargarListaCafeterias(1, filtro = '');
+        });
+        
+        // Usando matchMedia para comprobar el tamaño de pantalla
+        const mediaQuery = window.matchMedia("(min-width: 765px)");
+        
+        // Verifica si la condición se cumple de entrada
+        checkScreenSize(mediaQuery);
+        
+        // Detecta cambios en el tamaño de pantalla y aplica la función
+        mediaQuery.addEventListener("change", checkScreenSize);
+        
+        
+        function filtro_pantalla_grande() {
+            // Añadir eventos solo si la pantalla es mayor a 991px
+            $(document).on("click", "#abrir_filtros", function () {
+                $('#filtros_div').toggle();
+                $(this).attr("open", $(this).attr("open") === 'si' ? 'no' : 'si');
+            });
+            
+        
         }
-        $(document).off("click", ".menu_offcanvas");
-        filtro_pantalla_grande();
-    } else {
-        // Si la pantalla es menor o igual a 991px, remover los eventos
-        $("#filtros_div").hide();
-        $(document).off("click", "#abrir_filtros");
-        $(document).off("click", "#buscar_filtro");
-        //$(document).off("change", "#check_servicios");
-        $(document).off("submit", "#aplicar_filtros");
-        filtro_pantalla_chico();
+        $(document).on("click", "#buscar_filtro", function () {
+            $("#filtro-input").toggle();
+            $(".div_servicios").hide();
+            $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
+            $(".check_servicios").prop('checked', false);
+            $('#filtros_div').hide();
+        });
+        // Función para gestionar la activación y desactivación de los eventos
+        function checkScreenSize(e) {
+            if (e.matches) {
+                // Si la pantalla es mayor a 991px, ejecutar la función
+                var offcanvasElement = document.getElementById("offcanvasBottom");
+                var bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement); // Obtener la instancia actual
+                if (bsOffcanvas) {
+                  bsOffcanvas.hide();
+                }
+                $(document).off("click", ".menu_offcanvas");
+                filtro_pantalla_grande();
+            } else {
+                // Si la pantalla es menor o igual a 991px, remover los eventos
+                $("#filtros_div").hide();
+                $(document).off("click", "#abrir_filtros");
+                $(document).off("click", "#buscar_filtro");
+                //$(document).off("change", "#check_servicios");
+                $(document).off("submit", "#aplicar_filtros");
+                filtro_pantalla_chico();
+            }
+        }
+        
+        function filtro_pantalla_chico() {
+          $(document).on("click", ".menu_offcanvas", function() {
+                var offcanvasElement = document.getElementById("offcanvasBottom");
+                var bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
+                bsOffcanvas.show();
+            });  
+        }
+        
     }
-}
-
-function filtro_pantalla_chico() {
-  $(document).on("click", ".menu_offcanvas", function() {
-        var offcanvasElement = document.getElementById("offcanvasBottom");
-        var bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
-        bsOffcanvas.show();
-    });  
-}
-
+});
 
   

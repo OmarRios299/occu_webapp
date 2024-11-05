@@ -26,6 +26,7 @@ require_once "controllers/controller_cafeterias_servicios.php";
 //Menu
 require_once "controllers/controller_menu_categorias.php";
 require_once "controllers/controller_menu_productos.php";
+require_once "controllers/controller_menu_admin.php";
 
 //Dashboard
 require_once "controllers/controller_dashboard.php";
@@ -50,6 +51,7 @@ require_once "models/model_cafeterias_servicios.php";
 //Menu
 require_once "models/model_menu_categorias.php";
 require_once "models/model_menu_productos.php";
+require_once "models/model_menu_admin.php";
 
 //Dashboard
 require_once "models/model_dashboard.php";
