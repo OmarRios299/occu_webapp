@@ -68,21 +68,27 @@ if (isset($action[1])) {
                 </div>
             </div>
         </div>
+        <style>
+            
+        </style>
         <div class="col-md-12 mt-3">
             <h3 class="">Sevicios</h3>
-            <div class="servicios">
-                <div class="position-relative">
-                    <button class="prev" onclick="scrollCarousel(-1)">&#10094;</button>
-                    <div class="custom-carousel" id="carousel_servicios">
-                        <!-- <div class="custom-carousel-item">
-                            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('<?= $url ?>/views/assets/img/unsplash-photo-1.jpg');">
-                                <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                                    <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Título 1</h3>
+            <div id="splide" class="splide">
+                <div class="splide__track">
+                    <ul class="splide__list" id="carousel_servicios">
+                        <!-- <li class="splide__slide">
+                            <div class="card" style="border-radius: 15px;">
+                                <img src="https://via.placeholder.com/300x200" class="card-img-top" alt="Kiokay Sushi" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                                <div class="card-body" style="user-select: none;">
+                                    <h5 class="card-title">Kiokay Sushi</h5>
+                                    <p class="card-text">
+                                        <i class="bi bi-clock"></i> 45 min &bull;
+                                        <i class="bi bi-bicycle"></i> $28.90
+                                    </p>
                                 </div>
                             </div>
-                        </div> -->
-                    </div>
-                    <button class="next" onclick="scrollCarousel(1)">&#10095;</button>
+                        </li> -->
+                    </ul>
                 </div>
             </div>
         </div>
@@ -138,7 +144,7 @@ if (isset($action[1])) {
             <div class="modal-body">
                 <div id="carouselExampleIntervalModal" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner carousel_imageness" id="">
-                        
+
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIntervalModal" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>

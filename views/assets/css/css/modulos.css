@@ -177,55 +177,11 @@
     overflow: hidden;
 }
 
-.card {
-    border-radius: 10%;
-}
-
-.servicios .custom-carousel {
-    display:flex;
-    transition: transform 0.5s ease-in-out;
-    will-change: transform;
-    overflow: hidden;
-}
-
-.servicios .custom-carousel-item {
-    min-width: 200px;
-    max-width: 280px;
-    margin-right: 10px;
-    flex-shrink: 0;
-}
-
-.servicios .custom-carousel-item img {
-    width: 100%;
-    border-radius: 10px;
-}
 
 .card-cover {
     background-repeat: no-repeat;
     background-position: center center;
     background-size: cover;
-}
-
-.servicios .prev,
-.next {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
-    border: none;
-    font-size: 2rem;
-    padding: 10px;
-    cursor: pointer;
-    z-index: 1;
-}
-
-.servicios .prev {
-    left: 10px;
-}
-
-.servicios .next {
-    right: 10px;
 }
 
 .titulo-oscuro {

@@ -207,7 +207,7 @@
                     <input class="form-check-input position-absolute top-50 end-0 me-3 fs-5 check_servicios" type="checkbox" name="" id="listGroupRadioGrid3">
                     <label class="list-group-item py-3 pe-5" for="listGroupRadioGrid3">
                         <strong class="fw-semibold">Buscar por servicios</strong>
-                        <span class="d-block small opacity-75">No verás las cafeterías que esten cerradas</span>
+                        <span class="d-block small opacity-75">Busca por servicios que ofrecen</span>
                     </label>
                 </div>
 

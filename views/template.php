@@ -63,7 +63,8 @@ $v = "1.0.6";
     <!-- Incluir Font Awesome (iconos) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-
+    <!-- Splide.js (para los carouseles) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
 
 </head>
 
@@ -222,6 +223,8 @@ $v = "1.0.6";
     <!-- Dashboard -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/dashboard.js?v='<?php echo $v; ?>'"></script>
 
+    <!-- Splide.js (para los carouseles) -->
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
 </body>
 
 </html>

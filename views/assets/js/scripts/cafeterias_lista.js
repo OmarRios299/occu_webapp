@@ -120,7 +120,21 @@ function CargarVerCafeteria() {
                 $("#aux_validacion").val(respuesta.data.id);
                 $("#titulo_cafeteria_ver").html(respuesta.data.nombre);
                 $(".carousel_imagenes").html(respuesta.imagenes);
-                $("#carousel_servicios").html(respuesta.servicios);
+                $('#carousel_servicios').append(respuesta.servicios);
+                    new Splide('#splide', {
+                        type   : 'loop',
+                        perPage: 3,
+                        perMove: 1,
+                        gap    : '1rem',
+                        breakpoints: {
+                            768: {
+                                perPage: 2,
+                            },
+                            480: {
+                                perPage: 1,
+                            },
+                        },
+                    }).mount();
                 $("#info1").html('<b>Dirección: </b>' + respuesta.data.direccion);
                 $("#info2").html('<b>Teléfono: </b><a id="copiar_num" href="#">' + respuesta.data.telefono + '</a>');
                 $("#info3").html('<b>Correo: </b><a id="copiar_correo" href="#">' + respuesta.data.correo + '</a>');
@@ -143,36 +157,6 @@ function CargarVerCafeteria() {
 $(document).on("click", ".ver_img_modal", function () {
     $("#carouselModal").modal("show")
 });
-
-const carousel = document.getElementById('carousel_servicios');
-let isTransitioning = false;
-
-function scrollCarousel(direction) {
-    if (isTransitioning) return;
-    isTransitioning = true;
-
-    const itemWidth = document.querySelector('.custom-carousel-item').clientWidth + 10; // Incluye el margen
-
-    // Desplazamos el carrusel
-    carousel.style.transition = 'transform 0.5s ease-in-out';
-    carousel.style.transform = `translateX(${direction * -itemWidth}px)`;
-
-    setTimeout(() => {
-        carousel.style.transition = 'none';
-
-        if (direction === 1) {
-            // Mueve el primer elemento al final
-            carousel.appendChild(carousel.firstElementChild);
-        } else {
-            // Mueve el último elemento al inicio
-            carousel.insertBefore(carousel.lastElementChild, carousel.firstElementChild);
-        }
-
-        // Resetea la posición del carrusel
-        carousel.style.transform = 'translateX(0)';
-        isTransitioning = false;
-    }, 500); // Duración de la transición
-}
 
 function cargarComentarios(pagina) {
     let cafeteria = $("#id_cafeteria").attr('idCafeteria');
@@ -422,4 +406,19 @@ $(document).ready(function(){
     }
 });
 
-  
+$(document).ready(function () {
+    new Splide('#splide', {
+        type   : 'loop',
+        perPage: 3,
+        perMove: 1,
+        gap    : '1rem',
+        breakpoints: {
+            768: {
+                perPage: 2,
+            },
+            480: {
+                perPage: 1,
+            },
+        },
+    }).mount();
+});
