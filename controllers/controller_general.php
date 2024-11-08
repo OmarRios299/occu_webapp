@@ -476,6 +476,47 @@ class GeneralController
 	}
 	
 	/* OBTENER MODULOS PERMITIDOS POR NIVEL */
+
+	
+	/* OBTENER SUBCATEGORIAS */
+	
+	static public function obtenerSubcategoriasController(){
+		return GeneralModel::obtenerSubcategoriasModel();
+	}
+	
+	/* OBTENER SUBCATEGORIAS */
 	
 	
+	/* OBTENER CATEGORIAS */
+
+	static public function obtenerCategoriasController(){
+		return GeneralModel::obtenerCategoriasModel();
+	}
+	
+	/* OBTENER CATEGORIAS */
+
+
+	/* OBTENER SUBCATEGORIAS POR CATEGORIAS */
+
+	static public function obtenerSubcategoriasFiltroController($datos){
+
+		$subcategorias =[];
+
+		$subcategorias[] = array(
+			"id" => "",
+			"nombre" => "Todas las subcategorías",
+		);
+		
+		
+		foreach (GeneralModel::obtenerSubcategoriasFiltroModel($datos['categoria']) as $subcate) {
+			$subcategorias[] = array(
+				"id" => $subcate['id'],
+				"nombre" => $subcate['nombre']
+			);
+		}
+
+		echo json_encode(['subcategorias'=>$subcategorias]);
+	}
+	
+	/* OBTENER CATEGORIAS POR CATEGORIAS */
 }

@@ -13,7 +13,8 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
     if(isset($_GET['productos'])){
 
         $datos = array(
-            'categoria' => $_GET['categoria'],
+            'id_subcategoria' => $_GET['id_subcategoria'],
+            'id_categoria' => $_GET['id_categoria'],
             'estatus' => $_GET['estatus']
         );
         $controller = "obtenerProductosController";
@@ -24,7 +25,7 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         $datos = array(
             "id"             => isset($_POST['id_producto']) ? $_POST['id_producto'] : false,
             "nombre"                => $_POST['nombre'],
-            "id_categoria"                => $_POST['id_categoria'],
+            "id_subcategoria"                => $_POST['id_subcategoria'],
             "imagen_subir"          => isset($_FILES["imagen_producto"]) ? $_FILES['imagen_producto'] : false,
         );
         $controller = "agregarProductosController";

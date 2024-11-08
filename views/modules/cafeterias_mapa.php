@@ -110,7 +110,7 @@
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label>Ciudad</label>
-                                            <select class="form-control select_ciudades_filtro" id_pais='<?= $_SESSION['ciudad'] ?>'>
+                                            <select class="form-control select_ciudades_filtro" id="select_ciudad_2" id_pais='<?= $_SESSION['ciudad'] ?>'>
                                                 <option value="" selected disabled>Selecciona una ciudad</option>
                                                 <option value="">Todas</option>
                                                 <?php foreach (GeneralController::obtenerCiudadesController() as $ciudad) { 
@@ -162,7 +162,7 @@
                 <div class="position-relative">
                     <div class="form-group">
                         <label>Ciudad</label>
-                        <select class="form-control select_ciudades_filtro" id_pais='<?= $_SESSION['ciudad'] ?>'>
+                        <select class="form-control select_ciudades_filtro" id="select_ciudad_1" id_pais='<?= $_SESSION['ciudad'] ?>'>
                             <option value="" selected disabled>Selecciona una ciudad</option>
                             <option value="">Todas</option>
                             <?php foreach (GeneralController::obtenerCiudadesController() as $ciudad) { 

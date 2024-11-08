@@ -11,13 +11,13 @@ static public function obtenerCategoriasController(){
     foreach(MenuCategoriasModel::obtenerCategoriasModel() as $categoria){
         $checked = ($categoria['estado']==0) ? "checked" : "";
         $imagen='<img src="'.$url .''. $categoria['imagen'].'" style="width:80px;">';
-        $botones = '<button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="cafeterias_menu_categorias" idRegistro="'.$categoria['id'].'"></button>    
+        $botones = '<button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="menu_categorias" idRegistro="'.$categoria['id'].'"></button>    
                     <button class="btn btn-icono btn-editar btn_editar_categoria" imagen="'.$url .''. $categoria['imagen'].'" idRegistro="'.$categoria['id'].'" nombre="'.$categoria['nombre'].'"></button>';
         $estado = '<div class="form-check form-switch">
                 <input type="checkbox"
                 class="form-check-input cambioEstado"
                 id="switch'.$categoria['id'].'"
-                tabla="cafeterias_menu_categorias"
+                tabla="menu_categorias"
                 idRegistro="'.$categoria['id'].'"
                 '.$checked.'>
                 <label class="custom-control-label" for="switch'.$categoria['id'].'"></label>
@@ -28,6 +28,7 @@ static public function obtenerCategoriasController(){
             $estado,
             $imagen,
             $categoria['nombre'],
+            $categoria['total_subcategorias'],
             $categoria['total_productos'],
             $categoria['usuario_alta'],
             $categoria['fecha_alta']
@@ -47,8 +48,8 @@ static public function agregarCategoriasController($datos){
     $datos['fecha_alta'] = date("Y-m-d H:i:s");
 
     $validacion_nombre = ($datos['id']) ? 
-    GeneralModel::validarCampoEditarModel($datos['nombre'],"nombre","cafeterias_menu_categorias",$datos['id'])
-    : GeneralModel::validarCampoModel($datos['nombre'],"nombre","cafeterias_menu_categorias");
+    GeneralModel::validarCampoEditarModel($datos['nombre'],"nombre","menu_categorias",$datos['id'])
+    : GeneralModel::validarCampoModel($datos['nombre'],"nombre","menu_categorias");
 
     //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
     if($validacion_nombre) return "error_validacion_nombre";

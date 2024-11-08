@@ -16,34 +16,44 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label>Categoría:</label>
-                    <select class="form-control select2 filtro" id="categoria_filtro">
-                        <option value="" selected>Todos</option>
-                        <?php foreach (MenuProductosModel::obtenerCategoriasModel() as $categoria) { ?>
+                    <select class="form-control select2 filtro select_categoria" id="categoria_filtro">
+                        <option value="" selected>Todas</option>
+                        <?php foreach (MenuProductosController::obtenercategoriasController() as $categoria) { ?>
                             <option value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
                         <?php } ?>
                     </select>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label>Subategoría:</label>
+                    <select class="form-control select2 filtro select_subcategoria" id="subcategoria_filtro">
+                        <option value="" selected>Todas</option>
+                        <?php foreach (MenuProductosController::obtenerSubcategoriasController() as $subcategoria) { ?>
+                            <option value="<?= $subcategoria['id'] ?>"><?= $subcategoria['nombre'] ?></option>
+                        <?php } ?>
                     </select>
                 </div>
             </div>
-            <div class="col-md-6">
-                <div class="form-group text-center">
+            <div class="col-md-2">
+                <div class="form-group">
                     <label>Estatus:</label>
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <div class="form-check">
                                 <input class="form-check-input" checked type="radio" name="estatus" value="Todos">
                                 <label class="form-check-label">Todos</label>
                             </div>
 
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="estatus" value="Activas">
                                 <label class="form-check-label">Activos</label>
                             </div>
 
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-12">
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="estatus" value="Inactivas">
                                 <label class="form-check-label">Inactivos</label>
@@ -72,6 +82,7 @@
                     <th>Estado</th>
                     <th>Imagen</th>
                     <th>Nombre</th>
+                    <th>Subcategoría</th>
                     <th>Categoría</th>
                     <th>Usuario de alta</th>
                     <th>Fecha de alta</th>
@@ -98,17 +109,17 @@
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Nombre:</label>
-                                <input type="text" class="form-control input_productos validarCampo" tabla='cafeterias_menu_productos' columna='nombre' mensaje='Este producto ya se encuentra registrada' id="nombre_producto">
+                                <input type="text" class="form-control input_productos validarCampo" tabla='menu_productos' columna='nombre' mensaje='Este producto ya se encuentra registrada' id="nombre_producto">
                                 <div class="invalid-feedback" style="display: none;"></div>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Categoría:</label>
-                                <select class="form-control input_productos" id="select_categoria">
+                                <select class="form-control input_productos" id="select_subcategoria">
                                     <option value="" disabled selected>Selecciona una opción</option>
-                                    <?php foreach (MenuProductosModel::obtenerCategoriasModel() as $categoria) { ?>
-                                        <option value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
+                                    <?php foreach (MenuProductosController::obtenerSubcategoriasController() as $subcategoria) { ?>
+                                        <option value="<?= $subcategoria['id'] ?>"><?= $subcategoria['categoria'] .' - ' .$subcategoria['nombre'] ?></option>
                                     <?php } ?>
                                 </select>
                             </div>

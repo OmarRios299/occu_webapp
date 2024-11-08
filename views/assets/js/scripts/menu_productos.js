@@ -6,9 +6,10 @@ $(document).ready(function(){
 
 function cargarTablaProductos(){
     let estatus = $('input[name="estatus"]:checked').val();
-    let categoria = $("#categoria_filtro option:selected").val();
+    let id_subcategoria = $("#subcategoria_filtro option:selected").val();
+    let id_categoria = $("#categoria_filtro option:selected").val();
 
-    let filtro = `?productos=${true}&categoria=${categoria}&estatus=${estatus}`;
+    let filtro = `?productos=${true}&id_subcategoria=${id_subcategoria}&id_categoria=${id_categoria}&estatus=${estatus}`;
 
     if ($.fn.DataTable.isDataTable($("#tabla_productos"))) {
         $("#tabla_productos").DataTable().destroy();
@@ -37,7 +38,7 @@ $(document).on("submit",".form_agregar_producto",function(){
     datos.append("agregar_producto", true);
     if(id_producto) datos.append("id_producto", id_producto);
     datos.append('nombre',$("#nombre_producto").val());
-    datos.append("id_categoria", $("#select_categoria option:selected").val());
+    datos.append("id_subcategoria", $("#select_subcategoria option:selected").val());
     datos.append('imagen_producto',$("#imagen_producto")[0].files[0]);
     
     $.ajax({
@@ -66,7 +67,7 @@ $(document).on("click",".btn_editar_producto",function(){
     $(".imagen_editar").attr('src', $(this).attr("imagen"));
     $("#nombre_producto").val($(this).attr("nombre"));
     $("#id_producto").val($(this).attr("idRegistro"));
-    $("#select_categoria").val($(this).attr("idRegistro"));
+    $("#select_subcategoria").val($(this).attr("subcategoria"));
     $("#nombre_producto").removeAttr('validarCampo')
     .attr('validarCampoEditar', true)
     .attr('idRegistro', $(this).attr("idRegistro"));

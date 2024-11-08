@@ -846,3 +846,35 @@ function cargarServiciosFiltro() {
         }
     });
 }
+
+// Filtrar las subcategorias según la categoria seleccionada
+$(document).on("change", ".select_categoria", function() {
+    select_subcategoria();
+});
+
+function select_subcategoria() {
+    let categoria = $(".select_categoria option:selected").val();
+
+    if ($('.select_subcategoria').data('select2')) {
+        $('.select_subcategoria').select2('destroy').empty();
+    }
+
+    let filtro = `?select_subcategoria=${true}&categoria=${categoria}`;
+    
+    $.ajax({
+        url: url + 'views/ajax/ajax_general.php' + filtro,
+        type: "post",
+        dataType: 'json',
+        success: function(response) {
+            let subcategorias = response.subcategorias;
+            $(".select_subcategoria").select2({
+                data: $.map(subcategorias, function(item) {
+                    return {
+                        id: item.id, 
+                        text: item.nombre,
+                    };
+                })
+            });
+        }
+    });
+}

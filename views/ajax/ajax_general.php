@@ -106,6 +106,13 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 		);
 		$funcion = "obtenerEstadosPorPaisController";
 
+	}else if(isset($_GET['select_subcategoria'])){
+	
+		$datos = array(
+			"categoria"=>$_GET['categoria'],
+		);
+		$funcion = "obtenerSubcategoriasFiltroController";
+
 	}else{
 		$datos = false;
 	}

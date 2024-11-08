@@ -407,6 +407,7 @@ $(document).ready(function(){
 });
 
 $(document).ready(function () {
+if (moduloActual=='cafeterias_lista' || moduloActual=='cafeterias_mapa') {
     new Splide('#splide', {
         type   : 'loop',
         perPage: 3,
@@ -421,4 +422,5 @@ $(document).ready(function () {
             },
         },
     }).mount();
+}
 });

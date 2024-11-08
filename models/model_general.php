@@ -352,5 +352,60 @@ class GeneralModel extends Conexion{
 	
 	/* OBTENER MODULOS DE SISTEMA */
 
+	/* BUSCAR SUBCATEGORIAS */
+
+	static public function obtenerSubcategoriasModel(){
+
+		$stmt = Conexion::conectar()->prepare("SELECT menu_subcategorias.* FROM menu_subcategorias WHERE menu_subcategorias.estado=0");
+		
+		$stmt -> execute();
 	
+		return $stmt -> fetchAll();
+	
+		$stmt = null;
+	
+	}
+	
+	/* BUSCAR SUBCATEGORIAS */
+
+
+	/* BUSCAR CATEGORIAS */
+
+	static public function obtenerCategoriasModel(){
+
+		$stmt = Conexion::conectar()->prepare("SELECT menu_categorias.* FROM menu_categorias WHERE menu_categorias.estado=0");
+		
+		$stmt -> execute();
+	
+		return $stmt -> fetchAll();
+	
+		$stmt = null;
+	
+	}
+	
+	/* BUSCAR CATEGORIAS */
+
+
+	/* BUSCAR SUBCATEGORIAS */
+
+	static public function obtenerSubcategoriasFiltroModel($categoria){
+		$subcategoria = '';
+		if ($categoria!='') {
+			$subcategoria = "AND menu_subcategorias.id_categoria='$categoria'";
+		}
+
+		$stmt = Conexion::conectar()->prepare("SELECT menu_subcategorias.* 
+		FROM menu_subcategorias 
+		WHERE menu_subcategorias.estado=0 
+		$subcategoria");
+		
+		$stmt -> execute();
+	
+		return $stmt -> fetchAll();
+	
+		$stmt = null;
+	
+	}
+	
+	/* BUSCAR SUBCATEGORIAS */
 }

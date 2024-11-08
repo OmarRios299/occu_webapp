@@ -11,13 +11,15 @@ static public function obtenerProductosController($datos){
     foreach(MenuProductosModel::obtenerProductosModel($datos) as $producto){
         $checked = ($producto['estado']==0) ? "checked" : "";
         $imagen='<img src="'.$url .''. $producto['imagen'].'" style="width:80px;">';
-        $botones = '<button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="cafeterias_menu_productos" idRegistro="'.$producto['id'].'"></button>    
-                    <button class="btn btn-icono btn-editar btn_editar_producto" imagen="'.$url .''. $producto['imagen'].'" idRegistro="'.$producto['id'].'" nombre="'.$producto['nombre'].'" categoria="'.$producto['id_categoria'].'"></button>';
+        $botones = '<button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="menu_productos" idRegistro="'.$producto['id'].'"></button>    
+                    <button class="btn btn-icono btn-editar btn_editar_producto" imagen="'.$url .''. $producto['imagen'].'" 
+                    idRegistro="'.$producto['id'].'" nombre="'.$producto['nombre'].'" 
+                    subcategoria="'.$producto['id_subcategoria'].'"></button>';
         $estado = '<div class="form-check form-switch">
                 <input type="checkbox"
                 class="form-check-input cambioEstado"
                 id="switch'.$producto['id'].'"
-                tabla="cafeterias_menu_productos"
+                tabla="menu_productos"
                 idRegistro="'.$producto['id'].'"
                 '.$checked.'>
                 <label class="custom-control-label" for="switch'.$producto['id'].'"></label>
@@ -28,6 +30,7 @@ static public function obtenerProductosController($datos){
             $estado,
             $imagen,
             $producto['nombre'],
+            $producto['subcategoria'],
             $producto['categoria'],
             $producto['usuario_alta'],
             $producto['fecha_alta']
@@ -49,6 +52,15 @@ static public function obtenerCategoriasController(){
 /* OBTENER CATEGORIAS */
 
 
+/* OBTENER SUBCATEGORIAS */
+
+static public function obtenerSubcategoriasController(){
+    return MenuProductosModel::obtenerSubcategoriasModel();
+}
+
+/* OBTENER SUBCATEGORIAS */
+
+
 /* AGREGAR PRODUCTOS */
 
 static public function agregarProductosController($datos){
@@ -56,8 +68,8 @@ static public function agregarProductosController($datos){
     $datos['fecha_alta'] = date("Y-m-d H:i:s");
 
     $validacion_nombre = ($datos['id']) ? 
-    GeneralModel::validarCampoEditarModel($datos['nombre'],"nombre","cafeterias_menu_productos",$datos['id'])
-    : GeneralModel::validarCampoModel($datos['nombre'],"nombre","cafeterias_menu_productos");
+    GeneralModel::validarCampoEditarModel($datos['nombre'],"nombre","menu_productos",$datos['id'])
+    : GeneralModel::validarCampoModel($datos['nombre'],"nombre","menu_productos");
 
     //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
     if($validacion_nombre) return "error_validacion_nombre";

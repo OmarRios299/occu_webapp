@@ -21,7 +21,7 @@ function cargarMapaCafeterias(){
     });
     
     let horario = $('input[name="horario_filtro"]:checked').val();
-    let ciudad = $("#ciudades_filtro").val();
+    let ciudad = ($("#select_ciudad_1 option:selected").val()!='') ? $("#select_ciudad_1 option:selected").val() : $("#select_ciudad_2 option:selected").val();
     
     var datos = new FormData();
     datos.append("obtenerCafeterias", true);
@@ -44,8 +44,10 @@ function cargarMapaCafeterias(){
             clearMarkers();
 
             // Verificar si el atributo 'coordenadas' existe y es válido
-            let coordenadasAttr = $("#ciudades_filtro").attr('coordenadas');
-            //console.log(coordenadasAttr);
+            let coordenadasAttr = ($("#ciudades_filtro").attr('coordenadas')) ? $("#ciudades_filtro").attr('coordenadas') : '';
+            coordenadasAttr = (coordenadasAttr=='')?$('#select_ciudad_1').find('option:selected').attr('coordenadas'):coordenadasAttr;
+            coordenadasAttr = (coordenadasAttr=='')?$('#select_ciudad_2').find('option:selected').attr('coordenadas'):coordenadasAttr;
+            
             let polygonCoordinates = coordenadasAttr ? JSON.parse(coordenadasAttr) : [];
 
             const center = polygonCoordinates.length > 0 ? getGeographicCentroid(polygonCoordinates) : { lat: 29.384, lng: -107.006 };

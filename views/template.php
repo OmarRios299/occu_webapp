@@ -23,7 +23,7 @@ if (!isset($_SESSION['iniciarSesion']) && isset($_COOKIE['token_session'])) {
 
 $template = new TemplateController();
 $url = $template->obtenerUrlController();
-$v = "1.0.6";
+$v = "1.0.7";
 
 ?>
 <!DOCTYPE html>
@@ -218,6 +218,7 @@ $v = "1.0.6";
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_servicios.js?v='<?php echo $v; ?>'"></script>
     <!-- Menu -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/menu_categorias.js?v='<?php echo $v; ?>'"></script>
+    <script src="<?php echo $url; ?>views/assets/js/scripts/menu_subcategorias.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/menu_productos.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/menu_admin.js?v='<?php echo $v; ?>'"></script>
     <!-- Dashboard -->

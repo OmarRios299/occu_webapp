@@ -12,22 +12,21 @@ class MenuCategoriasModel extends Conexion
     {
 
         $stmt = Conexion::conectar()->prepare("SELECT
-        cafeterias_menu_categorias.*,
-        CONCAT(
-            admin_usuarios.nombre,
-            ' ',
-            admin_usuarios.apellido
-        ) AS usuario_alta,
-            COUNT(cafeterias_menu_productos.id) AS total_productos
+        menu_categorias.*,
+        CONCAT(admin_usuarios.nombre,' ',admin_usuarios.apellido) AS usuario_alta,
+        COUNT(menu_productos.id) AS total_productos,
+        COUNT(menu_subcategorias.id) AS total_subcategorias
         FROM
-            cafeterias_menu_categorias
-        LEFT JOIN cafeterias_menu_productos ON cafeterias_menu_categorias.id = cafeterias_menu_productos.id_categoria
-        INNER JOIN admin_usuarios ON cafeterias_menu_categorias.id_alta = admin_usuarios.id
-        WHERE cafeterias_menu_categorias.estado !=2
+            menu_categorias
+        LEFT JOIN menu_subcategorias ON menu_categorias.id = menu_subcategorias.id_categoria
+        LEFT JOIN menu_productos ON menu_subcategorias.id = menu_productos.id_subcategoria
+        INNER JOIN admin_usuarios ON menu_categorias.id_alta = admin_usuarios.id
+        WHERE
+            menu_categorias.estado != 2
         GROUP BY
-            cafeterias_menu_categorias.id
+            menu_categorias.id
         ORDER BY
-            cafeterias_menu_categorias.id;
+            menu_categorias.id;
         ");
 
         //$stmt->bindParam(':', ,PDO::PARAM_STR);
@@ -49,7 +48,7 @@ class MenuCategoriasModel extends Conexion
     {
 
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("INSERT INTO cafeterias_menu_categorias(nombre, imagen, id_alta, fecha_alta) 
+        $stmt = $conexion->prepare("INSERT INTO menu_categorias(nombre, imagen, id_alta, fecha_alta) 
         VALUES (:nombre, 'views/assets/img/cafeteria_default.png', :id_alta, :fecha_alta)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
@@ -72,7 +71,7 @@ class MenuCategoriasModel extends Conexion
     
     static public function editarImagenModel($datos){
     
-        $stmt = Conexion::conectar()->prepare("UPDATE cafeterias_menu_categorias SET imagen=:imagen WHERE id = :id");
+        $stmt = Conexion::conectar()->prepare("UPDATE menu_categorias SET imagen=:imagen WHERE id = :id");
     
         $stmt->bindParam(":id", $datos['id'], PDO::PARAM_INT);
         $stmt->bindParam(":imagen", $datos['imagen'], PDO::PARAM_STR);
@@ -94,7 +93,7 @@ class MenuCategoriasModel extends Conexion
     
     static public function buscarCategoriaModel($id){
     
-        $stmt = Conexion::conectar()->prepare("SELECT cafeterias_menu_categorias.* FROM cafeterias_menu_categorias WHERE cafeterias_menu_categorias.id=:id");
+        $stmt = Conexion::conectar()->prepare("SELECT menu_categorias.* FROM menu_categorias WHERE menu_categorias.id=:id");
     
         $stmt->bindParam(':id', $id,PDO::PARAM_INT);
     
@@ -113,7 +112,7 @@ class MenuCategoriasModel extends Conexion
     
     static public function editarCategoriaModel($datos){
     
-        $stmt = Conexion::conectar()->prepare("UPDATE cafeterias_menu_categorias SET nombre=:nombre WHERE id = :id");
+        $stmt = Conexion::conectar()->prepare("UPDATE menu_categorias SET nombre=:nombre WHERE id = :id");
     
         $stmt->bindParam(":id", $datos['id'], PDO::PARAM_INT);
         $stmt->bindParam(":nombre", $datos['nombre'], PDO::PARAM_STR);
