@@ -19,8 +19,8 @@ class RegistrarmeController{
         $datos['fecha_alta']= date("Y-m-d H:i:s");
 
         $datos['pin'] = rand(100000, 999999); // Generar un PIN de 6 dígitos
-        //RegistrarmeModel::insertarUsuarioModel($datos);
-        //MailController::enviarCorreoRegistro($datos);
+        RegistrarmeModel::insertarUsuarioModel($datos);
+        MailController::enviarCorreoRegistro($datos);
 
        return "success"; 
    }

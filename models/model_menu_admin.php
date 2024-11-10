@@ -8,16 +8,9 @@ class AdminMenuModel extends Conexion {
     
     /* OBTENER CATEGORIAS DE MENU */
     
-    static public function obtenerCategoriasMenuModel(){
+    static public function obtenerCategoriasModel(){
     
-        $stmt = Conexion::conectar()->prepare("SELECT 
-        cafeterias_menu_categorias.*,
-        COUNT(cafeterias_menu_productos.id) AS total_productos
-        FROM cafeterias_menu_productos
-        INNER JOIN cafeterias_menu_categorias ON cafeterias_menu_productos.id_categoria = cafeterias_menu_categorias.id
-        WHERE cafeterias_menu_categorias.estado=0
-        AND cafeterias_menu_productos.estado=0
-        GROUP BY cafeterias_menu_categorias.id");
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM menu_categorias WHERE estado=0;");
     
         $stmt -> execute();
     
@@ -29,5 +22,38 @@ class AdminMenuModel extends Conexion {
     
     /* OBTENER CATEGORIAS DE MENU */
     
-
+    
+    /* OBTENER SUBCATEGORIAS */
+    
+    static public function obtenerSubcategoriasModel(){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM menu_subcategorias WHERE estado=0");
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* OBTENER SUBCATEGORIAS */
+    
+    
+    /* OBTENER PRODUCTOS */
+    
+    static public function obtenerProductosModel(){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM menu_productos WHERE estado=0");
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* OBTENER PRODUCTOS */
+    
 }

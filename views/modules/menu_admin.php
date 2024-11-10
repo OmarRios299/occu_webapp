@@ -1,103 +1,156 @@
-
 <style>
-
-/* Estilo del menú de navegación superior */
-.nav-menu {
-  display: flex;
-  justify-content: center;
-  background-color: #ffffff;
-  border-bottom: 2px solid #ddd;
-  padding: 10px 0;
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-}
-
-.nav-menu ul {
-  list-style: none;
-  display: flex;
-  padding: 0;
-  margin: 0;
-}
-
-.nav-menu li {
-  margin: 0 10px;
-}
-
-.menu-link {
-  text-decoration: none;
-  color: #333;
-  padding: 5px 10px;
-  font-weight: bold;
-}
-
-.menu-link.active,
-.menu-link:hover {
-  color: #ff956b;
-  border-bottom: 2px solid #ff956b;
-}
-
-/* Diseño para dispositivos móviles */
-@media (max-width: 768px) {
+  /* Estilo del menú de navegación superior */
   .nav-menu {
-    overflow-x: scroll;
-    white-space: nowrap;
-    padding: 10px;
+    display: flex;
+    justify-content: center;
+    background-color: #ffffff;
+    border-bottom: 2px solid #ddd;
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    overflow-x: auto;
+    /* Asegurarse de que el contenido sea desplazable */
+    scrollbar-width: thin;
+    /* Para navegadores como Firefox */
   }
 
+  /* Estilo del contenedor de lista */
   .nav-menu ul {
-    display: inline-flex;
+    list-style: none;
+    display: flex;
+    padding: 0;
+    margin: 0;
+    width: max-content;
+    /* Asegurarse de que el ul tenga un ancho suficiente */
   }
-}
 
-/* Ocultar todas las categorías por defecto en dispositivos móviles */
-.category {
-  display: none;
-}
+  .nav-menu li {
+    margin: 0 10px;
+  }
 
-/* Mostrar la categoría activa */
-.category.active {
-  display: block;
-}
+  /* Enlaces del menú */
+  .menu-link {
+    text-decoration: none;
+    color: #333;
+    padding: 5px 10px;
+    font-weight: bold;
+  }
+
+  .menu-link.active,
+  .menu-link:hover {
+    color: #ff956b;
+    border-bottom: 2px solid #ff956b;
+  }
+
+  /* Diseño para dispositivos móviles */
+  @media (max-width: 768px) {
+    .nav-menu {
+      justify-content: flex-start !important;
+      /* Para asegurarse de que empieza desde la izquierda */
+      padding: 10px;
+      overflow-x: auto;
+      /* Permitir desplazamiento horizontal si no caben todas las opciones */
+      white-space: nowrap;
+      /* Mantener los elementos en una sola línea */
+      -webkit-overflow-scrolling: touch;
+      /* Para desplazamiento suave en dispositivos táctiles */
+    }
+
+    .nav-menu ul {
+      display: inline-flex;
+      width: max-content;
+      /* Para evitar que el ul se colapse si hay muchas opciones */
+    }
+  }
+
+  /* Ocultar todas las categorías por defecto en dispositivos móviles */
+  .category {
+    display: none;
+  }
+
+  /* Mostrar la categoría activa */
+  .category.active {
+    display: block;
+  }
 
 
+
+
+
+  .product-list {
+    width: 100%;
+    max-width: 600px;
+    /* Ajusta el ancho máximo según tus necesidades */
+    margin: 0 auto;
+    /* Centrar la lista */
+    padding: 20px;
+    background-color: #f9f9f9;
+    /* Color de fondo */
+    border-radius: 10px;
+    /* Bordes redondeados para darle un toque moderno */
+  }
+
+  .product-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #ffffff;
+    /* Fondo blanco para cada elemento */
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    /* Sombra para darle profundidad */
+  }
+
+  .product-image {
+    width: 50px;
+    /* Ajusta el tamaño de la imagen */
+    height: 50px;
+    border-radius: 50%;
+    /* Hacer la imagen redonda */
+    object-fit: cover;
+    /* Ajustar la imagen sin perder la proporción */
+    margin-right: 15px;
+  }
+
+  .product-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+
+  .product-name {
+    font-size: 1em;
+    color: #333;
+    flex-grow: 1;
+    /* Ocupa el espacio disponible */
+  }
+
+  .product-price {
+    font-size: 1em;
+    font-weight: bold;
+    color: #333;
+  }
 </style>
-<!-- Menú de Navegación -->
-<div class="nav-menu">
-  <ul>
-    <li><a href="#populares" class="menu-link active">Populares</a></li>
-    <li><a href="#tacos" class="menu-link">Tacos</a></li>
-    <li><a href="#tortas" class="menu-link">Tortas</a></li>
-    <li><a href="#platos-fuertes" class="menu-link">Platos Fuertes</a></li>
-    <li><a href="#antojitos" class="menu-link">Antojitos</a></li>
-  </ul>
-</div>
+<?php
+$menu = AdminMenuController::obtenerMenuController();
+?>
 
-<!-- Secciones de Categorías -->
-<div class="cafe-menu">
-  <div id="populares" class="category">
-    <h2>Populares</h2>
-    <!-- Productos de Populares aquí -->
+<div class="menu-cafeterias ">
+  <!-- Menú de Navegación -->
+  <div class="nav-menu">
+    <ul>
+      <?php echo $menu['categorias'] ?>
+    </ul>
   </div>
+  <div class="product-list">
+    <!-- Secciones de Categorías -->
+    <div class="cafe-menu">
+      <?php echo $menu['subcategorias'] ?>
 
-  <div id="tacos" class="category">
-    <h2>Tacos</h2>
-    <!-- Productos de Tacos aquí -->
-  </div>
-
-  <div id="tortas" class="category">
-    <h2>Tortas</h2>
-    <!-- Productos de Tortas aquí -->
-  </div>
-
-  <div id="platos-fuertes" class="category">
-    <h2>Platos Fuertes</h2>
-    <!-- Productos de Platos Fuertes aquí -->
-  </div>
-
-  <div id="antojitos" class="category">
-    <h2>Antojitos</h2>
-    <!-- Productos de Antojitos aquí -->
+    </div>
   </div>
 </div>
-
