@@ -28,6 +28,7 @@ require_once "controllers/controller_menu_categorias.php";
 require_once "controllers/controller_menu_subcategorias.php";
 require_once "controllers/controller_menu_productos.php";
 require_once "controllers/controller_menu_admin.php";
+require_once "controllers/controller_menu_propietarios.php";
 
 //Dashboard
 require_once "controllers/controller_dashboard.php";
@@ -54,6 +55,7 @@ require_once "models/model_menu_categorias.php";
 require_once "models/model_menu_subcategorias.php";
 require_once "models/model_menu_productos.php";
 require_once "models/model_menu_admin.php";
+require_once "models/model_menu_propietarios.php";
 
 //Dashboard
 require_once "models/model_dashboard.php";
