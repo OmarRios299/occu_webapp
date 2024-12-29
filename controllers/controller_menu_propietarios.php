@@ -15,7 +15,7 @@ class MenuPropietariosController{
             ';
             
             // verificar si la cafeteria ya cuenta con registros de subcategorias para la informacion que se mostrará
-            $subcategorias = MenuPropietariosModel::obtenerSubcategoriasModel($categoria['id']);
+            $subcategorias = MenuPropietariosModel::obtenerSubcategoriasModel($categoria['id'],$id_cafeteria);
 
             foreach($subcategorias as $subcategoria){
                 $checked = '';
@@ -60,5 +60,68 @@ class MenuPropietariosController{
     
     /* INSERTAR REGISTRO DE SUBCATEGORIAS */
     
-    
+
+    /* OBTENER CATEGORIAS MENU */
+
+    static public function obtenerMenuController(){
+        $url = TemplateController::obtenerUrlController();
+        $categorias = '<li><a href="todos"class="menu-link active">Todos</a></li>';
+
+        // todo: ver si hacer una funcion general
+        foreach (AdminMenuModel::obtenerCategoriasModel() as $categoria) {
+            $categorias .= '<li><a href="' . $categoria['id'] . '" class="menu-link">' . $categoria['nombre'] . '</a></li>';
+        }
+
+        
+        
+
+        $subcategorias = '';
+
+        // todo: ver si hacer una funcion general
+        foreach (AdminMenuModel::obtenerSubcategoriasModel() as $subcategoria) {
+
+            $productos = '';
+            $hidden = '';
+            $hidden = ($subcategoria['id_categoria']==1 ||
+                        $subcategoria['id_categoria']==2||
+                        $subcategoria['id_categoria']==3||
+                        $subcategoria['id_categoria']==4) 
+                        ? '' : 'hidden';
+            
+            // todo: ver si hacer una funcion general
+            foreach (AdminMenuModel::obtenerProductosModel() as $producto) {
+                if ($producto['id_subcategoria'] == $subcategoria['id']) {
+                    $productos .= '<div class="product-item">
+                                        <img src="' . $url . $producto['imagen'] . '" alt="Americano" class="product-image">
+                                        <div class="product-info">
+                                            <span class="product-name">' . $producto['nombre'] . '</span>
+                                            <span class="product-price"></span>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-icono btn-categorias btn_editar_tamanos" '.$hidden.'></button>
+                                                    <button type="button" class="btn btn-icono btn-comentario" '.$hidden.'></button>
+                                                    <input class="form-check-input check_subcategoria mt-3" type="checkbox" id="" estado="" idRegistro="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>';
+                }
+            }
+            
+            $subcategorias .= '<div class="' . $subcategoria['id_categoria'] . ' category active">
+                                    <h2>' . $subcategoria['nombre'] . '</h2>
+                                    ' . $productos . '
+                                    <hr>
+                                </div>';
+        }
+        return array(
+            'subcategorias' => $subcategorias,
+            'categorias' => $categorias
+        );
+    }
+
+    /* OBTENER CATEGORIAS MENU */
 }

@@ -129,17 +129,17 @@ $v = "1.0.7";
         } else if ($moduloActual == "inicio") {
             echo '<div id="pagina-inicial">';
             echo '<div class="contenido">';
-            include "modules/sections/sidebar.php";
+            include "modules/sections/navbar_inicio.php";
             echo '<div>';
         } else if ($moduloActual == "login" || $moduloActual == "registrarme") {
             echo '<div id="sistema">';
             echo '<div class="content-login">';
-            include "modules/sections/sidebar.php";
+            include "modules/sections/navbar_inicio.php";
             echo '<div>';
         }  else {
             echo '<div id="sistema">';
             echo '<div class="contenido">';
-            include "modules/sections/sidebar.php";
+            include "modules/sections/navbar_inicio.php";
             echo '<div class="modulos">';
         }
 
@@ -166,7 +166,7 @@ $v = "1.0.7";
         echo '</div></div></div><div class="overlay"></div>';
     } else {
         echo '<div class="contenido">';
-        include "modules/sections/sidebar.php";
+        include "modules/sections/navbar_inicio.php";
         echo '<div class="modulos">';
         include "modules/inicio.php";
         echo '</div></div></div><div class="overlay"></div>';

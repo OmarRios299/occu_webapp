@@ -51,7 +51,6 @@ static public function agregarCategoriasController($datos){
     GeneralModel::validarCampoEditarModel($datos['nombre'],"nombre","menu_categorias",$datos['id'])
     : GeneralModel::validarCampoModel($datos['nombre'],"nombre","menu_categorias");
 
-    //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
     if($validacion_nombre) return "error_validacion_nombre";
 
     if (!$datos['id']) {

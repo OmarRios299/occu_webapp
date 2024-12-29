@@ -1,5 +1,6 @@
 <?php 
 require_once '../../controllers/controller_menu_propietarios.php';
+require_once '../../controllers/controller_template.php';
 require_once '../../models/model_menu_propietarios.php';
 require_once '../../models/model_general.php';
 

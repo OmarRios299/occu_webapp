@@ -47,3 +47,7 @@ $(document).on("click",".check_subcategoria",function(){
         },
     });
 });
+
+$(document).on("click",".btn_editar_tamanos",function(){
+    $("#modal_bebidas").modal('show');
+});

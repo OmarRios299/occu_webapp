@@ -29,7 +29,7 @@ class MenuPropietariosModel extends Conexion {
     
     /* OBTENER SUBCATEGORIAS POR CATEGORIA */
     
-    static public function obtenerSubcategoriasModel($categoria){
+    static public function obtenerSubcategoriasModel($categoria, $id_cafeteria){
     
         $stmt = Conexion::conectar()->prepare("SELECT
         menu_subcategorias.id,
@@ -43,9 +43,11 @@ class MenuPropietariosModel extends Conexion {
         WHERE
             menu_subcategorias.estado = 0
             AND menu_subcategorias.id_categoria = :categoria;
+            AND cafeterias_menu_subcategorias.id_cafeteria = :id_cafeteria
         ");
     
         $stmt->bindParam(':categoria', $categoria,PDO::PARAM_INT);
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria,PDO::PARAM_INT);
     
         $stmt -> execute();
     
@@ -56,6 +58,35 @@ class MenuPropietariosModel extends Conexion {
     }
     
     /* OBTENER SUBCATEGORIAS POR CATEGORIA */
+
+
+    /* OBTENER PRODUCTOS */
+
+    static public function obtenerProductosModel(){
+
+        $stmt = Conexion::conectar()->prepare("SELECT
+        menu_productos.id,
+        menu_productos.nombre,
+        COALESCE(cafeterias_menu_productos.estado, 'No') AS estado,
+        COALESCE(cafeterias_menu_productos.id, 'No') AS id_registro
+        FROM
+            menu_productos
+        LEFT JOIN 
+            cafeterias_menu_productos ON cafeterias_menu_productos.id_producto = menu_productos.id
+        WHERE
+            menu_productos.estado = 0
+        AND cafeterias_menu_productos.id_cafeteria = :id_cafeteria
+        ");
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* OBTENER PRODUCTOS */
     
     
     /* INSERTAR SUBCATEGORIA A CAFETERIA */

@@ -28,7 +28,6 @@
                                 <?php foreach ($area['modulos'] as $modulo) { ?>
                                     <li><a class="dropdown-item item-color nav-item" item='<?= $area['id']; ?>' href="<?= $url . $modulo['ruta']; ?>"><span><?= $modulo['nombre']; ?></span></a></li>
                                 <?php } ?>
-
                             </ul>
                         </li>
                 <?php
@@ -74,6 +73,5 @@
                 </div>
             </div>
         </div>
-
     </div>
 </nav>
