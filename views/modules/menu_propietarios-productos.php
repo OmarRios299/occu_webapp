@@ -29,18 +29,19 @@ $menu = MenuPropietariosController::obtenerMenuController();
                     <div class="container">
                         <p>Registra las medidas que manejas en tus bebidas.</p>
                         <div class="row">
+                            <input type="hidden" id="id_producto">
                             <!-- Opción 4oz -->
-                            <div class="col-md-6 d-flex align-items-center mb-3">
+                            <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso">
                                 <div class="me-2">
                                     <img src="<?= $url ?>/views/assets/css/img/vasos/vaso-mediano.png" alt="Vaso 4oz" style="height: 30px; width: 28px;">
                                 </div>
                                 <input type="text" class="form-control me-2" style="width: 60px;" value="4 oz" readonly>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control precio_vaso" placeholder="0.00" disabled id="precio_4oz">
+                                    <input type="number" class="form-control precio_vaso" placeholder="0.00">
                                 </div>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input switch_vasos" type="checkbox">
+                                    <input class="form-check-input switch_vasos" id_tamano="1" type="checkbox">
                                 </div>
                             </div>
                             <!-- Opción 6oz -->
@@ -54,7 +55,7 @@ $menu = MenuPropietariosController::obtenerMenuController();
                                     <input type="number" class="form-control" placeholder="0.00" disabled>
                                 </div>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input switch_vasos" type="checkbox">
+                                    <input class="form-check-input switch_vasos" id_tamano="2" type="checkbox">
                                 </div>
                             </div>
                             <!-- Opción 12oz -->
@@ -68,7 +69,7 @@ $menu = MenuPropietariosController::obtenerMenuController();
                                     <input type="number" class="form-control" placeholder="0.00" disabled>
                                 </div>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input switch_vasos" type="checkbox">
+                                    <input class="form-check-input switch_vasos" id_tamano="3" type="checkbox">
                                 </div>
                             </div>
                             <!-- Opción 16oz -->
@@ -82,7 +83,7 @@ $menu = MenuPropietariosController::obtenerMenuController();
                                     <input type="number" class="form-control" placeholder="0.00" disabled>
                                 </div>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input switch_vasos" type="checkbox">
+                                    <input class="form-check-input switch_vasos" id_tamano="4" type="checkbox">
                                 </div>
                             </div>
                             <!-- Opción 20oz -->
@@ -96,7 +97,7 @@ $menu = MenuPropietariosController::obtenerMenuController();
                                     <input type="number" class="form-control" placeholder="0.00" disabled>
                                 </div>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input switch_vasos" type="checkbox">
+                                    <input class="form-check-input switch_vasos" id_tamano="5" type="checkbox">
                                 </div>
                             </div>
                             <!-- Opción 24oz -->
@@ -110,7 +111,7 @@ $menu = MenuPropietariosController::obtenerMenuController();
                                     <input type="number" class="form-control" placeholder="0.00" disabled>
                                 </div>
                                 <div class="form-check form-switch">
-                                    <input class="form-check-input switch_vasos" type="checkbox">
+                                    <input class="form-check-input switch_vasos" id_tamano="6" type="checkbox">
                                 </div>
                             </div>
                             <!-- Botón Continuar -->
