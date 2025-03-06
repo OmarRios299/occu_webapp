@@ -76,6 +76,7 @@ class MenuPropietariosModel extends Conexion {
             menu_productos
         LEFT JOIN cafeterias_menu_productos ON cafeterias_menu_productos.id_producto = menu_productos.id
             AND cafeterias_menu_productos.id_propietario = :id_propietario
+            AND id_tamano = 0
         WHERE menu_productos.estado = 0
         AND menu_productos.id_subcategoria = :subcategoria
         ");
@@ -305,5 +306,28 @@ class MenuPropietariosModel extends Conexion {
     
     
     /* ACTUALIZAR/AGREGAR PRODUCTOS */
+    
+    
+    /* BUSCAR PRODUCTO */
+    
+    static public function buscarProductoModel($datos){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM cafeterias_menu_productos              
+        WHERE id_producto = :id_producto 
+        AND id_propietario = :id_propietario
+        AND id_tamano != 0");
+    
+        $stmt->bindParam(":id_producto", $datos['id_producto'], PDO::PARAM_INT);
+        $stmt->bindParam(":id_propietario", $datos['id_propietario'], PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* BUSCAR PRODUCTO */
     
 }

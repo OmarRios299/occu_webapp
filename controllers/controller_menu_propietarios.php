@@ -158,4 +158,14 @@ class MenuPropietariosController{
     }
 
     /* OBTENER PROCDUTOS MENU */
+
+        
+    /* BUSCAR REGISTRO DE PRODUCTOS */
+
+    static public function buscarProductoController($datos){
+        $datos['id_propietario'] = $_SESSION['id'];
+        return json_encode(MenuPropietariosModel::buscarProductoModel($datos));
+    }
+    
+    /* BUSCAR REGISTRO DE PRODUCTOS */
 }

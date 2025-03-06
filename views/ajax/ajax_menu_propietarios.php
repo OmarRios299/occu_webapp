@@ -41,6 +41,13 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = "activarTamanoController";
 
+    }else if(isset($_GET['buscarProducto'])){
+
+        $datos = array(
+            "id_producto"               => $_GET['id_producto'],
+        );
+        $controller = "buscarProductoController";
+
     }else{
 
         $datos = false;

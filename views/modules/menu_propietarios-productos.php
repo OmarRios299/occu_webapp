@@ -31,7 +31,7 @@ $menu = MenuPropietariosController::obtenerMenuController();
                         <div class="row">
                             <input type="hidden" id="id_producto">
                             <!-- Opción 4oz -->
-                            <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso">
+                            <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso" id="tamano_1">
                                 <div class="me-2">
                                     <img src="<?= $url ?>/views/assets/css/img/vasos/vaso-mediano.png" alt="Vaso 4oz" style="height: 30px; width: 28px;">
                                 </div>
@@ -45,70 +45,70 @@ $menu = MenuPropietariosController::obtenerMenuController();
                                 </div>
                             </div>
                             <!-- Opción 6oz -->
-                            <div class="col-md-6 d-flex align-items-center mb-3">
+                            <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso"  id="tamano_2">
                                 <div class="me-2">
                                     <img src="<?= $url ?>/views/assets/css/img/vasos/vaso-mediano.png" alt="Vaso 4oz" style="height: 40px; width: 35px;">
                                 </div>
                                 <input type="text" class="form-control me-2" style="width: 60px;" value="6 oz" readonly>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control" placeholder="0.00" disabled>
+                                    <input type="number" class="form-control precio_vaso" placeholder="0.00">
                                 </div>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input switch_vasos" id_tamano="2" type="checkbox">
                                 </div>
                             </div>
                             <!-- Opción 12oz -->
-                            <div class="col-md-6 d-flex align-items-center mb-3">
+                            <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso" id="tamano_3">
                                 <div class="me-2">
                                     <img src="<?= $url ?>/views/assets/css/img/vasos/vaso-mediano.png" alt="Vaso 12oz" style="height: 45px; width: 36px;">
                                 </div>
                                 <input type="text" class="form-control me-2" style="width: 60px;" value="12 oz" readonly>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control" placeholder="0.00" disabled>
+                                    <input type="number" class="form-control precio_vaso" placeholder="0.00">
                                 </div>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input switch_vasos" id_tamano="3" type="checkbox">
                                 </div>
                             </div>
                             <!-- Opción 16oz -->
-                            <div class="col-md-6 d-flex align-items-center mb-3">
+                            <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso" id="tamano_4">
                                 <div class="me-2">
                                     <img src="<?= $url ?>/views/assets/css/img/vasos/vaso-mediano.png" alt="Vaso 16oz" style="height: 55px; width: 40px;">
                                 </div>
                                 <input type="text" class="form-control me-2" style="width: 60px;" value="16 oz" readonly>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control" placeholder="0.00" disabled>
+                                    <input type="number" class="form-control precio_vaso" placeholder="0.00">
                                 </div>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input switch_vasos" id_tamano="4" type="checkbox">
                                 </div>
                             </div>
                             <!-- Opción 20oz -->
-                            <div class="col-md-6 d-flex align-items-center mb-3">
+                            <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso" id="tamano_5">
                                 <div class="me-2">
                                     <img src="<?= $url ?>/views/assets/css/img/vasos/vaso-mediano.png" alt="Vaso 20oz" style="height: 65px; width: 45px;">
                                 </div>
                                 <input type="text" class="form-control me-2" style="width: 60px;" value="20 oz" readonly>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control" placeholder="0.00" disabled>
+                                    <input type="number" class="form-control precio_vaso" placeholder="0.00">
                                 </div>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input switch_vasos" id_tamano="5" type="checkbox">
                                 </div>
                             </div>
                             <!-- Opción 24oz -->
-                            <div class="col-md-6 d-flex align-items-center mb-3">
+                            <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso" id="tamano_6">
                                 <div class="me-2">
                                     <img src="<?= $url ?>/views/assets/css/img/vasos/vaso-xgrande.png" alt="Vaso 24oz" style="height: 70px; width: 50px;">
                                 </div>
                                 <input type="text" class="form-control me-2" style="width: 60px;" value="24 oz" readonly>
                                 <div class="input-group">
                                     <span class="input-group-text">$</span>
-                                    <input type="number" class="form-control" placeholder="0.00" disabled>
+                                    <input type="number" class="form-control precio_vaso" placeholder="0.00">
                                 </div>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input switch_vasos" id_tamano="6" type="checkbox">
