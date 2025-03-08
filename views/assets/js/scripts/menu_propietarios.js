@@ -85,6 +85,7 @@ $(document).on("click", ".btn_editar_tamanos", function () {
         method: 'POST',
         cache: false,
         contentType: false,
+        beforeSend: cargaSistema(true),
         success: function (respuesta) {
             respuesta = JSON.parse(respuesta);
 
@@ -104,6 +105,7 @@ $(document).on("click", ".btn_editar_tamanos", function () {
                 // Habilitar o deshabilitar el input del precio según el estado del switch
                 precioInput.prop("disabled", isChecked);
             });
+            cargaSistema(false);
         }
     });
 

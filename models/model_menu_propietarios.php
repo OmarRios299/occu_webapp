@@ -27,6 +27,63 @@ class MenuPropietariosModel extends Conexion {
     /* OBTENER CATEGORIAS */
 
     
+    /* OBTENER CATEGORIAS POR PROPIETARIO */
+    
+    static public function obtenerCategoriasPropietarioModelModel($id_propietario){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT DISTINCT
+            menu_categorias.*
+        FROM
+            menu_categorias
+        INNER JOIN menu_subcategorias ON menu_subcategorias.id_categoria = menu_categorias.id
+        INNER JOIN cafeterias_menu_subcategorias ON cafeterias_menu_subcategorias.id_subcategoria = menu_subcategorias.id
+        WHERE
+            cafeterias_menu_subcategorias.id_propietario = :propietario AND cafeterias_menu_subcategorias.estado = 1");
+    
+        $stmt->bindParam(':propietario', $id_propietario,PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* OBTENER CATEGORIAS POR PROPIETARIO */
+
+
+    /* OBTENER SUBCATEGORIAS */
+
+    static public function obtenerSubcategoriasPropietarioModel($id_propietario, $estado=false){
+        $filtro='';
+        if ($estado) {
+            $filtro = ' AND cafeterias_menu_subcategorias.estado=1';
+        }
+        $stmt = Conexion::conectar()->prepare("SELECT 
+        menu_subcategorias.*
+        FROM
+            menu_subcategorias
+        INNER JOIN 
+            cafeterias_menu_subcategorias 
+            ON cafeterias_menu_subcategorias.id_subcategoria = menu_subcategorias.id
+            AND cafeterias_menu_subcategorias.id_propietario = :propietario
+        WHERE
+            menu_subcategorias.estado = 0 $filtro");
+
+        $stmt->bindParam(':propietario', $id_propietario,PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* OBTENER SUBCATEGORIAS */
+
+    
     /* OBTENER SUBCATEGORIAS POR CATEGORIA */
     
     static public function obtenerSubcategoriasModel($categoria, $id_propietario){
@@ -64,7 +121,12 @@ class MenuPropietariosModel extends Conexion {
 
     /* OBTENER PRODUCTOS */
 
-    static public function obtenerProductosModel($subcategoria, $id_propietario){
+    static public function obtenerProductosModel($subcategoria, $id_propietario, $estado=false){
+
+        $filtro='';
+        if ($estado) {
+            $filtro = ' AND cafeterias_menu_productos.estado=1';
+        }
 
         $stmt = Conexion::conectar()->prepare("SELECT
         menu_productos.id,
@@ -79,6 +141,7 @@ class MenuPropietariosModel extends Conexion {
             AND id_tamano = 0
         WHERE menu_productos.estado = 0
         AND menu_productos.id_subcategoria = :subcategoria
+        $filtro
         ");
 
         $stmt->bindParam(':subcategoria', $subcategoria,PDO::PARAM_INT);

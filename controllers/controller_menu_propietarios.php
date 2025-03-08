@@ -101,14 +101,14 @@ class MenuPropietariosController{
         $categorias = '<li><a href="todos"class="menu-link active">Todos</a></li>';
 
         // todo: ver si hacer una funcion general
-        foreach (AdminMenuModel::obtenerCategoriasModel() as $categoria) {
+        foreach (MenuPropietariosModel::obtenerCategoriasPropietarioModelModel($id_propietario) as $categoria) {
             $categorias .= '<li><a href="' . $categoria['id'] . '" class="menu-link">' . $categoria['nombre'] . '</a></li>';
         }
 
         $subcategorias = '';
 
         // todo: ver si hacer una funcion general
-        foreach (AdminMenuModel::obtenerSubcategoriasModel() as $subcategoria) {
+        foreach (MenuPropietariosModel::obtenerSubcategoriasPropietarioModel($id_propietario, 'activas') as $subcategoria) {
 
             $productos_data = '';
             $hidden = '';
@@ -168,4 +168,72 @@ class MenuPropietariosController{
     }
     
     /* BUSCAR REGISTRO DE PRODUCTOS */
+
+    /* OBTENER MENU POR PROPIETARIO */
+
+    static public function obtenerMenuPropietarioController(){
+        $id_propietario = $_SESSION['id'];
+        
+        $url = TemplateController::obtenerUrlController();
+        $categorias = '<li><a href="todos"class="menu-link active">Todos</a></li>';
+
+        // todo: ver si hacer una funcion general
+        foreach (MenuPropietariosModel::obtenerCategoriasPropietarioModelModel($id_propietario) as $categoria) {
+            $categorias .= '<li><a href="' . $categoria['id'] . '" class="menu-link">' . $categoria['nombre'] . '</a></li>';
+        }
+
+        $subcategorias = '';
+
+        // todo: ver si hacer una funcion general
+        foreach (MenuPropietariosModel::obtenerSubcategoriasPropietarioModel($id_propietario, 'activas') as $subcategoria) {
+
+            $productos_data = '';
+            $hidden = '';
+            $hidden = ($subcategoria['id_categoria']==1 ||
+                        $subcategoria['id_categoria']==2||
+                        $subcategoria['id_categoria']==3||
+                        $subcategoria['id_categoria']==4) 
+                        ? '' : 'hidden';
+                        
+            $productos = MenuPropietariosModel::obtenerProductosModel($subcategoria['id'],$id_propietario, 'activos');
+
+            foreach ($productos as $producto) {
+                $checked = '';
+                if ($producto['estado']==1) {
+                    $checked = 'checked';
+                }
+                    $productos_data .= '<div class="product-item">
+                                        <img src="' . $url . $producto['imagen'] . '" alt="" class="product-image">
+                                        <div class="product-info">
+                                            <span class="product-name">' . $producto['nombre'] . '</span>
+                                            <span class="product-price"></span>
+                                        </div>
+                                        <div class="form-check form-switch">
+                                            <div class="row align-items-center">
+                                                <div class="col">
+                                                    <button type="button" class="btn btn-icono btn-categorias btn_editar_tamanos" idProducto="'.$producto['id'].'" '.$hidden.'></button>
+                                                    <button type="button" class="btn btn-icono btn-comentario" '.$hidden.'></button>
+                                                    <input class="form-check-input check_productos mt-3" type="checkbox" id="'.$producto['id'].'" estado="'.$producto['estado'].'" idRegistro="'.$producto['id_registro'].'" '.$checked.'>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>';
+                
+            }
+            
+            $subcategorias .= '<div class="' . $subcategoria['id_categoria'] . ' category active">
+                                    <h2>' . $subcategoria['nombre'] . '</h2>
+                                    ' . $productos_data . '
+                                    <hr>
+                                </div>';
+        }
+        return array(
+            'subcategorias' => $subcategorias,
+            'categorias' => $categorias
+        );
+    }
+    
+    /* OBTENER MENU POR PROPIETARIO */
+        
 }

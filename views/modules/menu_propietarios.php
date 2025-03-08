@@ -1,5 +1,5 @@
 <?php
-$menu = AdminMenuController::obtenerMenuController();
+$menu = MenuPropietariosController::obtenerMenuPropietarioController();
 ?>
 
 <div class="menu-cafeterias ">
@@ -17,3 +17,5 @@ $menu = AdminMenuController::obtenerMenuController();
     </div>
   </div>
 </div>
+
+<?php include "menu_propietarios/modal_tamano_bebidas.php"; ?>
