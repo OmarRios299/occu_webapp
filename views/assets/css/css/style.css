@@ -1309,6 +1309,11 @@ dl, ol, ul {
     border-color: var(--color-amarillo)!important;
     background-color: var(--color-amarillo)!important;
 }
+.btn-menu {
+    color: var(--color-azul-marino)!important;
+    border-color: var(--color-claro-azul)!important;
+    background-color: var(--color-claro-azul)!important;
+}
 /* @@@@ - [Botones] Con borde - @@@@ */
 .btn-aceptar.con-borde {
     color: var(--color-azul)!important;
@@ -1559,6 +1564,10 @@ dl, ol, ul {
 .btn-servicios.btn-icono {
     background-image: url(../img/iconos/botones/icono-servicios.svg);
 }
+.btn-menu.con-icono::before, 
+.btn-menu.btn-icono {
+    background-image: url(../img/iconos/botones/icono-menu.svg);
+}
 
 /* ---------------------------------------
 @@@@ estilos personalizados ---> botones en tablas
@@ -1692,6 +1701,11 @@ dl, ol, ul {
     margin-right: -5rem;
     content: 'Servicios';
     background-color: var(--color-amarillo);
+}
+.table .btn-menu.btn-icono::before {
+    margin-right: -3.7rem;
+    content: 'Menú';
+    background-color: var(--color-claro-azul);
 }
 /* ---------------------------------------
 @@@@ estilos personalizados ---> titulos con botones

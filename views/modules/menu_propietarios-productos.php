@@ -1,5 +1,5 @@
 <?php
-$menu = MenuPropietariosController::obtenerMenuController();
+$menu = MenuPropietariosController::obtenerMenuPropietarioController(false);
 ?>
 
 <div class="menu-cafeterias ">
