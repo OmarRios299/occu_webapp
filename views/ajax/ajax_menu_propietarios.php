@@ -48,6 +48,13 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = "buscarProductoController";
 
+    }else if(isset($_GET['actualizarMenu'])){
+
+        $datos = array(
+            "actualizar"               => $_GET['actualizarMenu'],
+        );
+        $controller = "actualizarMenuController";
+
     }else{
 
         $datos = false;

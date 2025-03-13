@@ -27,6 +27,29 @@ class MenuPropietariosModel extends Conexion {
     /* OBTENER CATEGORIAS */
 
     
+    /* CONTAR CAFETERIAS POR PROPIETARIO */
+    
+    static public function cafeteriasPropietarioModel($id_propietario){
+        $stmt = Conexion::conectar()->prepare("SELECT COUNT(id) AS sucursales FROM cafeterias 
+        WHERE estado !=2
+        AND id_usuario=:usuario");
+        $stmt->bindParam(':usuario', $id_propietario, PDO::PARAM_INT);
+        
+        $stmt->execute();
+        
+        // Obtener solo el número de sucursales
+        $result = $stmt->fetch();
+        
+        // Retornar solo el valor de "sucursales"
+        return $result['sucursales'];
+        
+        $stmt = null;
+    }    
+    
+    /* CONTAR CAFETERIAS POR PROPIETARIO */
+    
+
+    
     /* OBTENER CATEGORIAS POR PROPIETARIO */
     
     static public function obtenerCategoriasPropietarioModelModel($id_propietario){
@@ -279,7 +302,6 @@ class MenuPropietariosModel extends Conexion {
     
     /* BUSCAR TAMANOS POR BEBIDA */
     
-    // todo: queda pediente (leer nota)
     static public function buscarTamanoBebidaController(){
         $stmt = Conexion::conectar()->prepare("SELECT
         COALESCE(cafeterias_menu_productos.estado, 'No') AS estado,
@@ -392,5 +414,103 @@ class MenuPropietariosModel extends Conexion {
     }
     
     /* BUSCAR PRODUCTO */
+    
+    
+    /* ELIMINAR REGISTROS DE MENU SUCURSALES */
+    
+    static public function eliminarMenuSucursalModel($id_propietario){
+    
+        $stmt = Conexion::conectar()->prepare("DELETE cafeterias_menu_sucursales 
+        FROM cafeterias_menu_sucursales
+        INNER JOIN cafeterias ON cafeterias.id = cafeterias_menu_sucursales.id_cafeteria
+        WHERE cafeterias.id_usuario = :usuario;
+        ");
+
+        $stmt->bindParam(":usuario", $id_propietario, PDO::PARAM_INT);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+    
+        $stmt = null;
+    
+    }
+    
+    /* ELIMINAR REGISTROS DE MENU SUCURSALES */
+
+    
+    /* BUSCAR MENU PROPIETARIO */
+    
+    static public function buscarMenuPropietarioModel($id_propietario){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM cafeterias_menu_productos WHERE id_propietario=:propietario");
+    
+        $stmt->bindParam(':propietario', $id_propietario,PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+    
+    /* BUSCAR MENU PROPIETARIO */
+
+    
+    /* INSERTAR ACTUALIZACION DE MENU POR SUCURSAL */
+    
+    static public function actualizarMenuSucursalModel($datos,$cafeteria){
+    
+        $stmt = Conexion::conectar()->prepare("INSERT INTO cafeterias_menu_sucursales (id_producto, id_tamano, id_cafeteria, precio, estado) 
+        VALUES (:id_producto, :id_tamano, :id_cafeteria, :precio, :estado)");
+    
+        $stmt->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
+        $stmt->bindParam(':id_tamano', $datos['id_tamano'], PDO::PARAM_INT);
+        $stmt->bindParam(':id_cafeteria', $cafeteria, PDO::PARAM_INT);
+        $stmt->bindParam(':precio', $datos['precio'], PDO::PARAM_STR);
+        $stmt->bindParam(':estado', $datos['estado'], PDO::PARAM_INT);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+        $stmt = null;
+    }
+    
+    /* INSERTAR ACTUALIZACION DE MENU POR SUCURSAL */
+    
+
+    
+    /* ACTUALIZAR PRECIOS DE MENU POR SUCURSAL */
+    
+    static public function actualizarPrecioSucursaleModel($datos, $cafeteria){
+    
+        $stmt = Conexion::conectar()->prepare("UPDATE cafeterias_menu_sucursales SET precio = :precio 
+        WHERE id_producto = :id_producto
+        AND id_tamano = :id_tamano
+        AND id_cafeteria = :id_cafeteria");
+    
+        $stmt->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
+        $stmt->bindParam(':id_tamano', $datos['id_tamano'], PDO::PARAM_INT);
+        $stmt->bindParam(':id_cafeteria', $cafeteria, PDO::PARAM_INT);
+        $stmt->bindParam(':precio', $datos['precio'], PDO::PARAM_STR);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+    
+        $stmt = null;
+    
+    }
+    
+    /* ACTUALIZAR PRECIOS DE MENU POR SUCURSAL */
+    
+    
     
 }

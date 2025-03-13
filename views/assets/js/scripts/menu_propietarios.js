@@ -137,3 +137,22 @@ $(document).on("change", ".switch_vasos", function () {
 
     });
 });
+
+$(document).on("click","#actualizarMenu, #actualizarPrecios",function(){
+    let actualizar = $(this).attr("actualizar");
+
+    let filtro = `?actualizarMenu=${actualizar}`;
+
+    $.ajax({
+        url: url + 'views/ajax/ajax_menu_propietarios.php' + filtro,
+        method: 'POST',
+        cache: false,
+        contentType: false,
+        beforeSend: cargaSistema(true),
+        success: function (respuesta) {
+            console.log("Respuesta del servidor:", respuesta);
+            cargaSistema(false);
+        },
+
+    });
+});

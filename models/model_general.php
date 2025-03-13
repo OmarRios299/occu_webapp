@@ -408,4 +408,24 @@ class GeneralModel extends Conexion{
 	}
 	
 	/* BUSCAR SUBCATEGORIAS */
+
+
+	/* VERIFICAR CAFETERIA */
+
+	static public function verificarCafeteriaModel($id_cafeteria,$propietario){
+
+		$stmt = Conexion::conectar()->prepare("SELECT * FROM cafeterias WHERE id=:id AND id_usuario=:propietario");
+	
+		$stmt->bindParam(':id', $id_cafeteria,PDO::PARAM_INT);
+		$stmt->bindParam(':propietario', $propietario,PDO::PARAM_INT);
+	
+		$stmt -> execute();
+	
+		return $stmt -> fetch();
+	
+		$stmt = null;
+	
+	}
+	
+	/* VERIFICAR CAFETERIA */
 }

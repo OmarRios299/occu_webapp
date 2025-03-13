@@ -519,4 +519,14 @@ class GeneralController
 	}
 	
 	/* OBTENER CATEGORIAS POR CATEGORIAS */
+
+	
+	/* VERIFICAR CAFETERIA */
+	
+	static public function verificarCafeteriaContoller($id_cafeteria,$id_propietario){
+		return GeneralModel::verificarCafeteriaModel($id_cafeteria,$id_propietario);
+	}
+	
+	/* VERIFICAR CAFETERIA */
+	
 }
