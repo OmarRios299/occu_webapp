@@ -1,3 +1,4 @@
+<input type="hidden" id="cafeteria" value="<?=isset($action[1])? $action[1] : '';?>">
 <div class="modal fade" id="modal_bebidas" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

@@ -73,9 +73,15 @@ class MenuPropietariosController{
     /* INSERTAR REGISTRO DE PRODUCTOS */
 
     static public function agregarProductoController($datos){
+        if ($datos['cafeteria']!=='false') {
+            $cafeteria = GeneralController::verificarCafeteriaContoller($datos['cafeteria'], $_SESSION['id']);
+            if (!$cafeteria) {
+                return 'error';
+            }
+        }        
         if ($datos['id_registro']!='No') {
             $datos['estado'] = ($datos['estado']==1) ? 0 : 1;
-            MenuPropietariosModel::cambiarEstadoProductoModel($datos);
+            MenuPropietariosModel::cambiarEstadoProductoModel($datos,$datos['cafeteria']);
         }else{
            // $datos['id_usuario'] = $_SESSION['id'];
             //$cafeterias = MenuPropietariosModel::buscarCafeteriasUsuarioModel($datos['id_usuario']);
@@ -87,19 +93,26 @@ class MenuPropietariosController{
     /* INSERTAR REGISTRO DE PRODUCTOS */
 
     
-    /* INSERTAR REGISTRO DE PRODUCTOS */
+    /* ACTIVA TAMANO DE PRODUCTOS */
 
     static public function activarTamanoController($datos){
+        var_dump($datos);
         $datos['id_propietario'] = $_SESSION['id'];
-
+        if ($datos['cafeteria']!=='false') {
+            $cafeteria = GeneralController::verificarCafeteriaContoller($datos['cafeteria'], $_SESSION['id']);
+            if (!$cafeteria) {
+                return 'error';
+            }
+        }
+        
         if ($datos['accion']=='desactivar') {
-            MenuPropietariosModel::desactivarProductoModel($datos);
+            MenuPropietariosModel::desactivarProductoModel($datos, $datos['cafeteria']);
         }else{
-            MenuPropietariosModel::actualizarProductoModel($datos);
+            MenuPropietariosModel::actualizarProductoModel($datos, $datos['cafeteria']);
         }
     }
     
-    /* INSERTAR REGISTRO DE PRODUCTOS */
+    /* ACTIVA TAMANO DE PRODUCTOS */
 
 
         
@@ -107,7 +120,14 @@ class MenuPropietariosController{
 
     static public function buscarProductoController($datos){
         $datos['id_propietario'] = $_SESSION['id'];
-        return json_encode(MenuPropietariosModel::buscarProductoModel($datos));
+        if ($datos['cafeteria']!=='false') {
+            $cafeteria = GeneralController::verificarCafeteriaContoller($datos['cafeteria'], $_SESSION['id']);
+            if (!$cafeteria) {
+                return json_encode(['error' => 'Cafetería no válida']);
+            }
+        }
+        
+        return json_encode(MenuPropietariosModel::buscarProductoModel($datos, $datos['cafeteria']));
     }
     
     /* BUSCAR REGISTRO DE PRODUCTOS */
@@ -115,9 +135,9 @@ class MenuPropietariosController{
 
     /* OBTENER MENU POR PROPIETARIO */
 
-    static public function obtenerMenuPropietarioController($productosActivos){
+    static public function obtenerMenuPropietarioController($productosActivos, $cafeterias=false){
         $id_propietario = $_SESSION['id'];
-        
+
         $url = TemplateController::obtenerUrlController();
         $categorias = '<li><a href="todos"class="menu-link active">Todos</a></li>';
 
@@ -137,7 +157,7 @@ class MenuPropietariosController{
                         $subcategoria['id_categoria']==4) 
                         ? '' : 'hidden';
                         
-            $productos = MenuPropietariosModel::obtenerProductosModel($subcategoria['id'],$id_propietario, $productosActivos);
+            $productos = MenuPropietariosModel::obtenerProductosModel($subcategoria['id'],$id_propietario, $productosActivos,$cafeterias);
 
             foreach ($productos as $producto) {
                 $checked = '';

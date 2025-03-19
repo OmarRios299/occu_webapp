@@ -7,13 +7,13 @@ use chillerlan\QRCode\QROptions;
 
 class QRCodeGenerator
 {
-    public static function generateQRCode($id_propietario)
+    public static function generateQRCode($id_cafeteria)
     {
         try {
             $url = TemplateController::obtenerUrlController();
 
             // Generar el enlace completo
-            $fullUrl = trim($url . 'menu_propietarios/' . $id_propietario);
+            $fullUrl = trim($url . 'menu_sucursal/' . $id_cafeteria);
 
             // Validar y limpiar la URL
             $fullUrl = filter_var($fullUrl, FILTER_SANITIZE_URL);
@@ -48,7 +48,7 @@ class QRCodeGenerator
                 mkdir($outputPath, 0777, true);
             }
 
-            $fileName = $outputPath . '/qr_' . $id_propietario . '.png';
+            $fileName = $outputPath . '/qr_' . $id_cafeteria . '.png';
 
             // Guardar el archivo en la ruta correcta
             if (file_put_contents($fileName, $qrImage) === false) {

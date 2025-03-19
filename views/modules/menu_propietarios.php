@@ -2,9 +2,9 @@
 include "menu_propietarios/modal_tamano_bebidas.php";
 if ($action[0] == 'menu_propietarios' && !isset($action[1])) {
   $menu = MenuPropietariosController::obtenerMenuPropietarioController(true);
-  $hidden = (MenuPropietariosController::cafeteriasPropietarioController()>1) ? '' : 'display:none';
+  $hidden = (MenuPropietariosController::cafeteriasPropietarioController() > 1) ? '' : 'display:none';
 ?>
-  <div class="text-end" style="<?=$hidden?>">
+  <div class="text-end" style="<?= $hidden ?>">
     <div class="dropdown">
       <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
         Actualizar menú
@@ -34,7 +34,7 @@ if ($action[0] == 'menu_propietarios' && !isset($action[1])) {
 } else if ($action[0] == 'menu_propietarios' && isset($action[1])) {
   $cafeteria = GeneralController::verificarCafeteriaContoller($action[1], $_SESSION['id']);
   if ($cafeteria) {
-    $menu = MenuPropietariosController::obtenerMenuPropietarioController(true);
+    $menu = MenuPropietariosController::obtenerMenuPropietarioController(true, $cafeteria['id']);
   ?>
     <div class="P ">
       <!-- Menú de Navegación -->

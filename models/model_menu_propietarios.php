@@ -144,23 +144,32 @@ class MenuPropietariosModel extends Conexion {
 
     /* OBTENER PRODUCTOS */
 
-    static public function obtenerProductosModel($subcategoria, $id_propietario, $estado=false){
+    static public function obtenerProductosModel($subcategoria, $id_propietario, $estado=false, $cafeteria=false){
+
+        $tabla='cafeterias_menu_productos';
+        $campo ="id_propietario";
+        $id = $id_propietario;
+        if ($cafeteria) {
+            $tabla = 'cafeterias_menu_sucursales';
+            $campo ="id_cafeteria";
+            $id = $cafeteria;
+        }
 
         $filtro='';
         if ($estado) {
-            $filtro = ' AND cafeterias_menu_productos.estado=1';
+            $filtro = ' AND '.$tabla.'.estado=1';
         }
 
         $stmt = Conexion::conectar()->prepare("SELECT
         menu_productos.id,
         menu_productos.nombre,
-        COALESCE(cafeterias_menu_productos.estado, 'No') AS estado,
-        COALESCE(cafeterias_menu_productos.id, 'No') AS id_registro,
+        COALESCE($tabla.estado, 'No') AS estado,
+        COALESCE($tabla.id, 'No') AS id_registro,
         menu_productos.imagen
         FROM
             menu_productos
-        LEFT JOIN cafeterias_menu_productos ON cafeterias_menu_productos.id_producto = menu_productos.id
-            AND cafeterias_menu_productos.id_propietario = :id_propietario
+        LEFT JOIN $tabla ON $tabla.id_producto = menu_productos.id
+            AND $tabla.$campo = :id
             AND id_tamano = 0
         WHERE menu_productos.estado = 0
         AND menu_productos.id_subcategoria = :subcategoria
@@ -168,7 +177,7 @@ class MenuPropietariosModel extends Conexion {
         ");
 
         $stmt->bindParam(':subcategoria', $subcategoria,PDO::PARAM_INT);
-        $stmt->bindParam(':id_propietario', $id_propietario,PDO::PARAM_INT);
+        $stmt->bindParam(':id', $id,PDO::PARAM_INT);
 
         $stmt -> execute();
     
@@ -244,9 +253,14 @@ class MenuPropietariosModel extends Conexion {
     
     /* CAMBIAR ESTADO PRODUCTOS */
 
-    static public function cambiarEstadoProductoModel($datos){
+    static public function cambiarEstadoProductoModel($datos, $cafeteria=false){
+
+        $tabla='cafeterias_menu_productos';
+        if ($cafeteria!=='false') {
+            $tabla = 'cafeterias_menu_sucursales';
+        }
     
-        $stmt = Conexion::conectar()->prepare("UPDATE cafeterias_menu_productos SET estado = :estado WHERE id = :id");
+        $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET estado = :estado WHERE id = :id");
     
         $stmt->bindParam(":id", $datos['id_registro'], PDO::PARAM_INT);
         $stmt->bindParam(":estado", $datos['estado'], PDO::PARAM_INT);
@@ -327,16 +341,25 @@ class MenuPropietariosModel extends Conexion {
 
     /* DESACTIVAR PRODUCTOS */
 
-    static public function desactivarProductoModel($datos){
+    static public function desactivarProductoModel($datos, $cafeteria=false){
 
-        $stmt = Conexion::conectar()->prepare("UPDATE cafeterias_menu_productos SET estado = 0 
+        $tabla='cafeterias_menu_productos';
+        $campo ="id_propietario";
+        $id = $datos['id_propietario'];
+        if ($cafeteria!=='false') {
+            $tabla = 'cafeterias_menu_sucursales';
+            $campo ="id_cafeteria";
+            $id = $cafeteria;
+        }
+
+        $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET estado = 0 
         WHERE id_producto = :id_producto 
         AND id_tamano = :id_tamano 
-        AND id_propietario = :id_propietario");
+        AND $campo = :id");
     
         $stmt->bindParam(":id_producto", $datos['id_producto'], PDO::PARAM_INT);
         $stmt->bindParam(":id_tamano", $datos['id_tamano'], PDO::PARAM_INT);
-        $stmt->bindParam(":id_propietario", $datos['id_propietario'], PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     
         if($stmt->execute()){
             return 'success';
@@ -353,17 +376,26 @@ class MenuPropietariosModel extends Conexion {
     
     /* ACTUALIZAR/AGREGAR PRODUCTOS */
 
-    static public function actualizarProductoModel($datos) {
+    static public function actualizarProductoModel($datos, $cafeteria) {
+        $tabla='cafeterias_menu_productos';
+        $campo ="id_propietario";
+        $id = $datos['id_propietario'];
+        if ($cafeteria!=='false') {
+            $tabla = 'cafeterias_menu_sucursales';
+            $campo ="id_cafeteria";
+            $id = $cafeteria;
+        }
+
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("UPDATE cafeterias_menu_productos 
+        $stmt = $conexion->prepare("UPDATE $tabla 
             SET estado = 1, precio = :precio
             WHERE id_producto = :id_producto 
             AND id_tamano = :id_tamano 
-            AND id_propietario = :id_propietario");
+            AND $campo = :id");
     
         $stmt->bindParam(":id_producto", $datos['id_producto'], PDO::PARAM_INT);
         $stmt->bindParam(":id_tamano", $datos['id_tamano'], PDO::PARAM_INT);
-        $stmt->bindParam(":id_propietario", $datos['id_propietario'], PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
         $stmt->bindParam(":precio", $datos['precio'], PDO::PARAM_STR);
         
         $stmt->execute();
@@ -395,15 +427,23 @@ class MenuPropietariosModel extends Conexion {
     
     /* BUSCAR PRODUCTO */
     
-    static public function buscarProductoModel($datos){
+    static public function buscarProductoModel($datos, $cafeteria=false){
+        $tabla='cafeterias_menu_productos';
+        $campo ="id_propietario";
+        $id = $datos['id_propietario'];
+        if ($cafeteria!=='false') {
+            $tabla = 'cafeterias_menu_sucursales';
+            $campo ="id_cafeteria";
+            $id = $cafeteria;
+        }
     
-        $stmt = Conexion::conectar()->prepare("SELECT * FROM cafeterias_menu_productos              
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla              
         WHERE id_producto = :id_producto 
-        AND id_propietario = :id_propietario
+        AND $campo = :id
         AND id_tamano != 0");
     
         $stmt->bindParam(":id_producto", $datos['id_producto'], PDO::PARAM_INT);
-        $stmt->bindParam(":id_propietario", $datos['id_propietario'], PDO::PARAM_INT);
+        $stmt->bindParam(":id", $id, PDO::PARAM_INT);
     
         $stmt -> execute();
     

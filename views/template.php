@@ -96,6 +96,7 @@ $v = "1.0.7";
                 "cafeterias_lista",
                 "cafeterias_mapa",
                 "registrarme",
+                "ver_menu",
                 "salir"
             ];
 

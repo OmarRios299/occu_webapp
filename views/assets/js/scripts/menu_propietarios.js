@@ -51,12 +51,14 @@ $(document).on("click",".check_subcategoria",function(){
 $(document).on("click",".check_productos",function(){
     let estado = $(this).attr("estado");
     let id_registro = $(this).attr("idRegistro");
+    let cafeteria = $("#cafeteria").val();
     var datos = new FormData();
     
     datos.append("agregar_producto", true);
     datos.append("id_producto", $(this).attr("id"));
     (estado) ? datos.append("estado", estado): false;
     (id_registro) ? datos.append("id_registro", id_registro) : false;
+    datos.append("cafeteria", (cafeteria) ? cafeteria : false);
 
     $.ajax({
         url:url+'views/ajax/ajax_menu_propietarios.php',
@@ -76,9 +78,10 @@ $(document).on("click", ".btn_editar_tamanos", function () {
     $(".switch_vasos").prop("checked", false);
 
     let id_producto = $(this).attr('idProducto');
+    let cafeteria = $("#cafeteria").val();
     $("#id_producto").val(id_producto);
 
-    let filtro = `?buscarProducto=${true}&id_producto=${id_producto}`;
+    let filtro = `?buscarProducto=${true}&id_producto=${id_producto}&cafeteria=${(cafeteria) ? cafeteria : false}`;
 
     $.ajax({
         url: url + 'views/ajax/ajax_menu_propietarios.php' + filtro,
@@ -117,6 +120,7 @@ $(document).on("change", ".switch_vasos", function () {
     // Esto para deshabilitar o habilitar el input de precio al mover el switsh del tamano
     let precioInput = $(this).closest('.opcion_vaso').find('.precio_vaso');
     precioInput.prop("disabled", $(this).prop("checked"));
+    let cafeteria = $("#cafeteria").val();
 
     // Activar o desactivar vaso
     let id_producto = $("#id_producto").val();
@@ -124,7 +128,7 @@ $(document).on("change", ".switch_vasos", function () {
     let precio = $(this).closest('.opcion_vaso').find('.precio_vaso').val();
 
     let accion = $(this).prop("checked") ? "activar" : "desactivar";
-    let filtro = `?switch_vasos=${accion}&id_producto=${id_producto}&id_tamano=${id_tamano}&precio=${precio}`;
+    let filtro = `?switch_vasos=${accion}&id_producto=${id_producto}&id_tamano=${id_tamano}&precio=${precio}&cafeteria=${(cafeteria) ? cafeteria : false}`;
 
     $.ajax({
         url: url + 'views/ajax/ajax_menu_propietarios.php' + filtro,

@@ -11,6 +11,7 @@ require_once "controllers/controller_general.php";
 require_once "controllers/controller_login.php";
 require_once "controllers/controller_registrarme.php";
 require_once "controllers/controller_pagina_inicial.php";
+require_once "controllers/controller_ver_menu.php";
 
 //Administración
 require_once "controllers/controller_admin_usuarios.php";
@@ -38,6 +39,7 @@ require_once "models/model_login.php";
 require_once "models/model_general.php";
 require_once "models/model_registrarme.php";
 require_once "models/model_pagina_inicial.php";
+require_once "models/model_ver_menu.php";
 
 //Administración
 require_once "models/model_admin_usuarios.php";
