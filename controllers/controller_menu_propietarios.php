@@ -141,7 +141,7 @@ class MenuPropietariosController{
         $url = TemplateController::obtenerUrlController();
         $categorias = '<li><a href="todos"class="menu-link active">Todos</a></li>';
 
-        foreach (MenuPropietariosModel::obtenerCategoriasPropietarioModelModel($id_propietario) as $categoria) {
+        foreach (MenuPropietariosModel::obtenerCategoriasPropietarioModel($id_propietario) as $categoria) {
             $categorias .= '<li><a href="' . $categoria['id'] . '" class="menu-link">' . $categoria['nombre'] . '</a></li>';
         }
 

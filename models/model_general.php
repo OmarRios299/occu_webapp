@@ -336,6 +336,7 @@ class GeneralModel extends Conexion{
 		FROM
 			admin_niveles_usuario_modulos
 		INNER JOIN permisos_modulos ON admin_niveles_usuario_modulos.id_modulo = permisos_modulos.id
+		AND permisos_modulos.estado=0
 		INNER JOIN admin_niveles_usuario ON admin_niveles_usuario_modulos.id_nivel = admin_niveles_usuario.id
 		INNER JOIN permisos_areas ON permisos_modulos.id_area = permisos_areas.id
 		WHERE admin_niveles_usuario.nombre = :nivel");

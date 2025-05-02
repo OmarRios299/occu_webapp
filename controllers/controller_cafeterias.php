@@ -26,7 +26,7 @@ class CafeteriasController{
                         <button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="cafeterias" idRegistro="'.$cafeteria['id'].'"></button>
                         <button class="btn btn-icono btn-servicios agregar_servicios" idRegistro="'.$cafeteria['id'].'"></button>
                          <a type="button" class="btn btn-icono btn-menu" href="'.$url. 'menu_propietarios/' . $cafeteria['id'].'"></a>
-                         <a type="button" class="btn btn-icono btn-QR" href="'.$url. 'ver_menu/' . $cafeteria['id'].'"></a>';
+                         <a type="button" class="btn btn-icono btn-qr" href="'.$url. 'menu_propietarios-qr/' . $cafeteria['id'].'"></a>';
             $data[]=[
                 ++$i,
                     $botones,

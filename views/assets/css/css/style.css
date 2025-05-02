@@ -1314,6 +1314,11 @@ dl, ol, ul {
     border-color: var(--color-claro-azul)!important;
     background-color: var(--color-claro-azul)!important;
 }
+.btn-qr {
+    color: var(--color-blanco)!important;
+    border-color: var(--color-morado)!important;
+    background-color: var(--color-morado)!important;
+}
 /* @@@@ - [Botones] Con borde - @@@@ */
 .btn-aceptar.con-borde {
     color: var(--color-azul)!important;
@@ -1568,6 +1573,10 @@ dl, ol, ul {
 .btn-menu.btn-icono {
     background-image: url(../img/iconos/botones/icono-menu.svg);
 }
+.btn-qr.con-icono::before, 
+.btn-qr.btn-icono {
+    background-image: url(../img/iconos/botones/icono-qr.svg);
+}
 
 /* ---------------------------------------
 @@@@ estilos personalizados ---> botones en tablas
@@ -1706,6 +1715,11 @@ dl, ol, ul {
     margin-right: -3.7rem;
     content: 'Menú';
     background-color: var(--color-claro-azul);
+}
+.table .btn-qr.btn-icono::before {
+    margin-right: -5.0rem;
+    content: 'Menú QR';
+    background-color: var(--color-morado);
 }
 /* ---------------------------------------
 @@@@ estilos personalizados ---> titulos con botones

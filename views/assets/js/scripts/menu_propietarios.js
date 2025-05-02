@@ -74,6 +74,10 @@ $(document).on("click",".check_productos",function(){
 });
 
 $(document).on("click", ".btn_editar_tamanos", function () {
+    if ($("#input_alerta_menu").length) {
+        swal("¡Alerta!", `Para modificar los tamaños ve a "Mi menú".`, "warning");
+        return;
+    }
     $(".precio_vaso").val(0).prop("disabled",false);
     $(".switch_vasos").prop("checked", false);
 

@@ -64,7 +64,7 @@ if (isset($action[1])) {
                     <p id="copy-feedback-email" style="display:none; color:green;">¡Correo copiado!</p>
                     <p id="info4"><strong>Servicios:</strong></p>
                     <button class="btn btn-custom con-icono btn-ubicacion mt-3 ir_googlemaps">Ir a ubicación</button>
-                    <button class="btn btn-outline-secondary mt-3">Ver menú</button>
+                    <a class="btn btn-outline-secondary mt-3" href="<?=$url?>menu_sucursal/<?= $action[1] ?>">Ver menú</a>
                 </div>
             </div>
         </div>

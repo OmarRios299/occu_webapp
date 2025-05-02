@@ -1,7 +1,7 @@
 <?php
 $menu = MenuPropietariosController::obtenerMenuPropietarioController(false);
 ?>
-
+<input type="hidden" id="input_alerta_menu">
 <div class="menu-cafeterias ">
     <!-- Menú de Navegación -->
     <div class="nav-menu">
@@ -16,4 +16,3 @@ $menu = MenuPropietariosController::obtenerMenuPropietarioController(false);
         </div>
     </div>
 </div>
-<?php include "menu_propietarios/modal_tamano_bebidas.php"; ?>

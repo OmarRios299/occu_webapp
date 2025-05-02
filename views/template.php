@@ -23,7 +23,7 @@ if (!isset($_SESSION['iniciarSesion']) && isset($_COOKIE['token_session'])) {
 
 $template = new TemplateController();
 $url = $template->obtenerUrlController();
-$v = "1.0.7";
+$v = "1.0.8";
 
 ?>
 <!DOCTYPE html>
@@ -91,12 +91,13 @@ $v = "1.0.7";
             // Lista blanca de módulos permitidos sin importar el nivel
             $modulosPermitidos = [
                 "dashboard",
+                "404-menu",
                 "404",
                 "mantenimiento",
                 "cafeterias_lista",
                 "cafeterias_mapa",
                 "registrarme",
-                "ver_menu",
+                "menu_sucursal",
                 "salir"
             ];
 
@@ -151,6 +152,7 @@ $v = "1.0.7";
             "cafeterias_lista",
             "cafeterias_mapa",
             "registrarme",
+            "menu_sucursal",
             "inicio"
         ];
 

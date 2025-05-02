@@ -34,7 +34,7 @@ if ($action[0] == 'menu_propietarios' && !isset($action[1])) {
 } else if ($action[0] == 'menu_propietarios' && isset($action[1])) {
   $cafeteria = GeneralController::verificarCafeteriaContoller($action[1], $_SESSION['id']);
   if ($cafeteria) {
-    $menu = MenuPropietariosController::obtenerMenuPropietarioController(true, $cafeteria['id']);
+    $menu = MenuPropietariosController::obtenerMenuPropietarioController(false, $cafeteria['id']);
   ?>
     <div class="P ">
       <!-- Menú de Navegación -->

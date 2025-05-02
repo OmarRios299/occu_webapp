@@ -52,7 +52,7 @@ class MenuPropietariosModel extends Conexion {
     
     /* OBTENER CATEGORIAS POR PROPIETARIO */
     
-    static public function obtenerCategoriasPropietarioModelModel($id_propietario){
+    static public function obtenerCategoriasPropietarioModel($id_propietario){
     
         $stmt = Conexion::conectar()->prepare("SELECT DISTINCT
             menu_categorias.*
@@ -149,15 +149,18 @@ class MenuPropietariosModel extends Conexion {
         $tabla='cafeterias_menu_productos';
         $campo ="id_propietario";
         $id = $id_propietario;
+        $condicion='';
         if ($cafeteria) {
             $tabla = 'cafeterias_menu_sucursales';
             $campo ="id_cafeteria";
             $id = $cafeteria;
+            $condicion=' AND '.$tabla.'.estado !=2';
         }
 
-        $filtro='';
+        $filtro=' AND '.$tabla.'.estado !=2';
         if ($estado) {
             $filtro = ' AND '.$tabla.'.estado=1';
+            $condicion=' AND '.$tabla.'.estado =1';
         }
 
         $stmt = Conexion::conectar()->prepare("SELECT
@@ -171,9 +174,10 @@ class MenuPropietariosModel extends Conexion {
         LEFT JOIN $tabla ON $tabla.id_producto = menu_productos.id
             AND $tabla.$campo = :id
             AND id_tamano = 0
+            $filtro
         WHERE menu_productos.estado = 0
         AND menu_productos.id_subcategoria = :subcategoria
-        $filtro
+        $condicion
         ");
 
         $stmt->bindParam(':subcategoria', $subcategoria,PDO::PARAM_INT);
@@ -192,7 +196,7 @@ class MenuPropietariosModel extends Conexion {
     
     /* INSERTAR SUBCATEGORIA A CAFETERIA */
     
-    static public function  agregarSubcategoriaModel($datos){
+    static public function agregarSubcategoriaModel($datos){
     
         $stmt = Conexion::conectar()->prepare("INSERT INTO cafeterias_menu_subcategorias (id_subcategoria, id_propietario, estado) VALUES (:id_subcategoria, :id_propietario, 1)");
     
