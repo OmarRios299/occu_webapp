@@ -12,6 +12,7 @@
                         <p>Registra las medidas que manejas en tus bebidas.</p>
                         <div class="row">
                             <input type="hidden" id="id_producto">
+                            <input type="hidden" id="campo_tabla">
                             <!-- Opción 4oz -->
                             <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso" id="tamano_1">
                                 <div class="me-2">

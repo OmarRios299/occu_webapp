@@ -1,6 +1,6 @@
 <div class="titulo-boton">
     <h1 class="titulo-modulo">Subcategorías</h1>
-    <button type="button" class="btn con-icono btn-agregar" id="btn_agregar_subcategoria">Agregar categoría</button>
+    <button type="button" class="btn con-icono btn-agregar" id="btn_agregar_subcategoria">Agregar subcategoría</button>
 </div>
 
 <h6 class="subtitulo mt-3">Tabla de categorías</h6>
@@ -44,7 +44,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label>Subcategoría:</label>
+                                <label>Categoría:</label>
                                 <select class="form-control input_subcategorias" id="select_categoria">
                                     <option value="" disabled>Selecciona una opción</option>
                                     <?php foreach(GeneralController::obtenerCategoriasController() as $item){ ?>

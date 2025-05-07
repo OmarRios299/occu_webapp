@@ -9,21 +9,21 @@ class CafeteriasModel extends Conexion {
     static public function obtenerCafeteriasModel($datos){
         $entidad ='';
         $ciudad='';
-        $estatus = 'WHERE cafeterias.estado != 2';
+        $estatus = ' WHERE cafeterias.estado != 2';
         $usuario = '';
         if ($datos['entidad']!='') {
-            $entidad = 'AND ciudades.id_entidad_federativa = :entidad';
+            $entidad = ' AND ciudades.id_entidad_federativa = :entidad';
         }
         if ($datos['ciudad']!='') {
-            $ciudad = 'AND cafeterias.id_ciudad = :ciudad';
+            $ciudad = ' AND cafeterias.id_ciudad = :ciudad';
         }
         if ($datos['estatus']=='Activas') {
-            $estatus = 'WHERE cafeterias.estado = 0';
+            $estatus = ' WHERE cafeterias.estado = 0';
         }else if($datos['estatus']=='Inactivas'){
-            $estatus = 'WHERE cafeterias.estado = 1';
+            $estatus = ' WHERE cafeterias.estado = 1';
         }
         if (isset($datos['usuario']) && $datos['usuario']!='') {
-            $usuario = 'AND cafeterias.id_usuario = :usuario';
+            $usuario = ' AND cafeterias.id_usuario = :usuario';
         }
 
         $stmt = Conexion::conectar()->prepare("SELECT
@@ -86,7 +86,7 @@ class CafeteriasModel extends Conexion {
         FROM
             cafeterias
         INNER JOIN admin_usuarios ON admin_usuarios.id = cafeterias.id_usuario
-        INNER JOIN ciudades ON admin_usuarios.id_ciudad = ciudades.id
+        INNER JOIN ciudades ON cafeterias.id_ciudad = ciudades.id
         INNER JOIN entidades_federativas ON ciudades.id_entidad_federativa = entidades_federativas.id
         INNER JOIN paises ON paises.id = entidades_federativas.id_pais
         WHERE cafeterias.estado !=2 AND cafeterias.id = :id");

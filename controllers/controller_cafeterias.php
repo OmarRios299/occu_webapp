@@ -137,7 +137,10 @@ class CafeteriasController{
 
         }
  
-        return "success"; 
+        return json_encode([
+            "success"=>true,
+            "id_cafeteria"=>$datos['id']
+        ]); 
     }
     
     /* REGISTRAR CAFETERIA */

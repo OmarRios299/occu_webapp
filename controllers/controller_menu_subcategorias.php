@@ -37,7 +37,7 @@ static public function obtenerSubcategoriasController(){
 /* OBTENER CATEGORIAS  */
 
 
-/* AGREGAR CATEGORIAS */
+/* AGREGAR SUBCATEGORIAS */
 
 static public function agregarSubcategoriaController($datos){
 
@@ -62,7 +62,7 @@ static public function agregarSubcategoriaController($datos){
     return "success"; 
 }
 
-/* AGREGAR CATEGORIAS */
+/* AGREGAR SUBCATEGORIAS */
 
 
 }

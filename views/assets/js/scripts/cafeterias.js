@@ -272,14 +272,24 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
             } else if (respuesta == "error_validacion_nombre") {
                 $("#correo_usuario_registrar").addClass('is-invalid').next().show();
                 swal("¡Error!", "Por favor verifica el nombre de cafetería.", "error");
-            } else if (respuesta == "success") {
-                if (id_cafeteria != "") {
-                    alertaUpdate();
-                } else {
-                    window.location.href = url + 'cafeterias/agregar/' + id_cafeteria + 'imagenes/';
-                }
             } else {
-                swal("¡Error!", "Ha ocurrido un error.", "error");
+                respuesta = JSON.parse(respuesta);
+                if (respuesta.success == true) {
+                    if (id_cafeteria != "") {
+                        alertaUpdate();
+                    }else{
+                        swal({
+                            title: "¡Bien!",
+                            text: "Se guardó el registro exitosamente.",
+                            icon: "success",
+                            button: "Aceptar",
+                         }).then(function() {
+                             window.location.href = url + 'cafeterias/agregar/' + respuesta.id_cafeteria + '/imagenes/';
+                         });
+                    }
+                } else {
+                    swal("¡Error!", "Ha ocurrido un error.", "error");
+                }
             }
             cargaSistema(false);
         }

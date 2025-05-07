@@ -60,8 +60,11 @@ class LoginModel extends Conexion{
 	static public function ingresoTokenModel($token_sesion){
  
 		$stmt = Conexion::conectar()->prepare("SELECT 
-        * 
+        admin_usuarios.*,
+        entidades_federativas.id_pais
         FROM admin_usuarios
+        INNER JOIN ciudades ON ciudades.id = admin_usuarios.id_ciudad
+        INNER JOIN entidades_federativas ON entidades_federativas.id = ciudades.id_entidad_federativa
         WHERE admin_usuarios.token_sesion = :token_sesion
         AND admin_usuarios.token_sesion != ''
         AND admin_usuarios.token_sesion != 0

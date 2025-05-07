@@ -46,10 +46,10 @@ $(document).on("submit",".form_agregar_subcategoria",function(){
         beforeSend: cargaSistema(true),
         success:function(respuesta){
             console.log(respuesta);
-            if (respuesta!='success') {
-                swal("¡Error!", "Ha ocurrido un error", "error");
-            }else if(respuesta=='error_validacion_nombre'){
+            if (respuesta=='error_validacion_nombre'){
                 swal("¡Error!", "La subcategoría ya está registrada", "error");
+            }else if (respuesta!='success') {
+                swal("¡Error!", "Ha ocurrido un error", "error");
             } else {
                 (id!='')? alertaUpdate() : alertaInsert();
             }
