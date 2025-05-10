@@ -127,7 +127,7 @@ if ($action[0] == 'menu_propietarios' && !isset($action[1])) {
             <div class="col-md-3">
               <div class="form-group">
                 <label>Nombre:</label>
-                <input type="text" class="form-control input_productos validarCampo" tabla='menu_productos' columna='nombre' mensaje='Este producto ya se encuentra registrada' id="nombre_producto">
+                <input type="text" class="form-control input_productos" tabla='menu_productos' columna='nombre' mensaje='Este producto ya se encuentra registrada' id="nombre_producto">
                 <div class="invalid-feedback" style="display: none;"></div>
               </div>
             </div>

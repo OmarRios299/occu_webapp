@@ -37,7 +37,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Nombre:</label>
-                                <input type="text" class="form-control input_subcategorias validarCampo" tabla='cafeterias_menu_subcategorias_extra' columna='nombre' mensaje='Esta subcategoría ya se encuentra registrada' id="nombre_subcategoria">
+                                <input type="text" class="form-control input_subcategorias" tabla='cafeterias_menu_subcategorias_extra' columna='nombre' mensaje='Esta subcategoría ya se encuentra registrada' id="nombre_subcategoria">
                                 <div class="invalid-feedback" style="display: none;"></div>
                             </div>
                         </div>

@@ -1,13 +1,38 @@
-<?php 
+<?php
 
 require_once "conexion.php";
 
-class VerMenuModel extends Conexion {
+class VerMenuModel extends Conexion
+{
+
+
+    /* BUSCAR CAFETERÍA */
+
+    static public function buscarCafeteriaModel($cafeteria)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT
+            cafeterias.*
+        FROM
+            cafeterias
+        WHERE id = :cafeteria");
+
+        $stmt->bindParam(':cafeteria', $cafeteria, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetch();
+
+        $stmt = null;
+    }
+
+    /* BUSCAR CAFETERÍA */
+
 
     /* OBTENER CATEGORIAS */
-    
-    static public function obtenerCategoriasModel($cafeteria){
-    
+
+    static public function obtenerCategoriasModel($cafeteria)
+    {
+
         $stmt = Conexion::conectar()->prepare("SELECT DISTINCT
             menu_categorias.*
         FROM
@@ -18,25 +43,54 @@ class VerMenuModel extends Conexion {
         WHERE cafeterias.id = :cafeteria 
         AND cafeterias.estado=0
         AND cafeterias_menu_subcategorias.estado = 1");
-    
-        $stmt->bindParam(':cafeteria', $cafeteria,PDO::PARAM_INT);
-    
-        $stmt -> execute();
-    
-        return $stmt -> fetchAll();
-    
-        $stmt = null;
-    
+
+        $stmt->bindParam(':cafeteria', $cafeteria, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $categorias = $stmt->fetchAll();
+
+        $categorias = array_merge(
+            $categorias,
+            self::obtenerCategoriasExtraModel($cafeteria)
+        );
+        return $categorias;
     }
-    
+
+    static public function obtenerCategoriasExtraModel($cafeteria)
+    {
+
+        $stmt = Conexion::conectar()->prepare("SELECT DISTINCT
+            menu_categorias.*
+        FROM
+            menu_categorias
+        INNER JOIN cafeterias_menu_subcategorias_extra ON cafeterias_menu_subcategorias_extra.id_categoria = menu_categorias.id
+        INNER JOIN cafeterias ON cafeterias.id_usuario = cafeterias_menu_subcategorias_extra.id_propietario
+        WHERE cafeterias.id = :cafeteria 
+        AND cafeterias.estado=0
+        AND cafeterias_menu_subcategorias_extra.estado = 1");
+
+        $stmt->bindParam(':cafeteria', $cafeteria, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+
+        $stmt = null;
+    }
+
     /* OBTENER CATEGORIAS */
+
 
     /* OBTENER SUBCATEGORIAS */
 
-    static public function obtenerSubcategoriasModel($cafeteria){
+    static public function  obtenerSubcategoriasModel($cafeteria)
+    {
 
         $stmt = Conexion::conectar()->prepare("SELECT 
-        menu_subcategorias.*
+        menu_subcategorias.*,
+        cafeterias_menu_subcategorias.id_propietario,
+        'No' AS extra
         FROM
             menu_subcategorias
         INNER JOIN 
@@ -47,28 +101,50 @@ class VerMenuModel extends Conexion {
         AND cafeterias.estado=0
         AND cafeterias_menu_subcategorias.estado=1");
 
-        $stmt->bindParam(':cafeteria', $cafeteria,PDO::PARAM_INT);
-    
-        $stmt -> execute();
-    
-        return $stmt -> fetchAll();
-    
-        $stmt = null;
-    
+        $stmt->bindParam(':cafeteria', $cafeteria, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $subcategorias = $stmt->fetchAll();
+
+        $subcategorias = array_merge(
+            $subcategorias,
+            self::obtenerSubcategoriasExtraModel($subcategorias[0]['id_propietario'])
+        );
+        return $subcategorias;
     }
-    
+
+
+    static public function obtenerSubcategoriasExtraModel($id_propietario)
+    {
+        $sql = "SELECT 
+                    cafeterias_menu_subcategorias_extra.*,
+                    'Si' AS extra
+                FROM cafeterias_menu_subcategorias_extra
+                INNER JOIN menu_categorias ON menu_categorias.id = cafeterias_menu_subcategorias_extra.id_categoria
+                WHERE cafeterias_menu_subcategorias_extra.id_propietario = :id_propietario
+                 AND cafeterias_menu_subcategorias_extra.estado = 1";
+
+
+        $stmt = Conexion::conectar()->prepare($sql);
+        $stmt->bindParam(':id_propietario', $id_propietario, PDO::PARAM_INT);
+
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
+
     /* OBTENER SUBCATEGORIAS */
 
 
     /* OBTENER PRODUCTOS */
 
-    static public function obtenerProductosModel($subcategoria, $cafeteria){
+    static public function obtenerProductosModel($subcategoria, $cafeteria)
+    {
 
         $stmt = Conexion::conectar()->prepare("SELECT
         menu_productos.id,
         menu_productos.nombre,
         COALESCE(cafeterias_menu_sucursales.estado, 'No') AS estado,
-        COALESCE(cafeterias_menu_sucursales.id, 'No') AS id_registro,
         menu_productos.imagen
         FROM
             menu_productos
@@ -80,18 +156,53 @@ class VerMenuModel extends Conexion {
         AND cafeterias_menu_sucursales.estado = 1
         ");
 
-        $stmt->bindParam(':subcategoria', $subcategoria,PDO::PARAM_INT);
-        $stmt->bindParam(':id', $cafeteria,PDO::PARAM_INT);
+        $stmt->bindParam(':subcategoria', $subcategoria, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $cafeteria, PDO::PARAM_INT);
 
-        $stmt -> execute();
-    
-        return $stmt -> fetchAll();
-    
-        $stmt = null;
-    
+        $stmt->execute();
+        $productos = $stmt->fetchAll();
+
+        $productos = array_merge(
+            $productos,
+            self::obtenerProductosExtraModel($subcategoria, $cafeteria)
+        );
+        return $productos;
     }
-    
+
+    static public function obtenerProductosExtraModel($subcategoria, $idCafeteria, $subcategoriaExtra = false)
+    {
+        $filtro = "  AND cafeterias_menu_productos_extra.id_subcategoria = :subcategoria";
+
+        if ($subcategoriaExtra) {
+            $filtro = "  AND cafeterias_menu_productos_extra.id_subcategoria_extra = :subcategoria";
+        }
+
+        $cafeteria = self::buscarCafeteriaModel($idCafeteria);
+
+        $stmt = Conexion::conectar()->prepare("SELECT
+        cafeterias_menu_productos_extra.id,
+        cafeterias_menu_productos_extra.nombre,
+        COALESCE(cafeterias_menu_sucursales.estado, 'No') AS estado,
+        cafeterias_menu_productos_extra.imagen
+        FROM
+            cafeterias_menu_sucursales
+        INNER JOIN cafeterias_menu_productos_extra ON cafeterias_menu_sucursales.id_producto_extra = cafeterias_menu_productos_extra.id
+            AND cafeterias_menu_productos_extra.id_propietario = :id
+            AND cafeterias_menu_productos_extra.estado != 2
+        WHERE cafeterias_menu_sucursales.estado = 1
+        AND cafeterias_menu_sucursales.id_tamano = 0
+        $filtro
+        ");
+
+        $stmt->bindParam(':subcategoria', $subcategoria, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $cafeteria['id_usuario'], PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+
+        $stmt = null;
+    }
+
     /* OBTENER PRODUCTOS */
 }
-
-?>
