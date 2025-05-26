@@ -16,7 +16,8 @@ if(isset($_POST['registrar_usuario'])){
         "apellido"              => $_POST['apellido'],
         "correo"                => $_POST['correo'],
         "contrasena"            => $_POST['contrasena'],
-        "nivel"                 => $_POST['nivel']
+        "nivel"                 => $_POST['nivel'],
+        "ciudad"                => $_POST['ciudad'],
     );
     $controller = "registrarUsuarioController";
 

@@ -44,7 +44,7 @@ if (!isset($action[1])) {
                <div class="col">
                   <div class="h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('<?= $url ?>views/assets/img/utilidades/registro/fondo_crema4.jpg');">
                      <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1 text-center">
-                        <h1 class="pt-3 mt-1 mb-4 display-5 fw-bold">¿Qué tipo de perfíl te identifica?</h1>
+                        <h1 class="pt-3 mt-1 mb-4 display-5 fw-bold">¿Qué tipo de perfil te identifica?</h1>
                      </div>
                   </div>
                </div>
@@ -70,7 +70,7 @@ if (!isset($action[1])) {
                   </div>
                </div>
 
-               <div class="col-12 col-md-6 col-lg-4 mb-4 rounded-7 btn_siguiente1" nivel='Barista' imagen='<?= $url ?>views/assets/img/utilidades/registro/barra1.jpg'>
+               <div class="col-12 col-md-6 col-lg-4 mb-4 rounded-7 btn_siguiente1_barista" nivel='Barista' imagen='<?= $url ?>views/assets/img/utilidades/registro/barra1.jpg'>
                   <div class="card h-100">
                      <img src='<?= $url ?>views/assets/img/utilidades/registro/barra1.jpg' class="card-img-top imagen-arriba" alt="">
                      <div class="card-body">
@@ -96,7 +96,7 @@ if (!isset($action[1])) {
             </div>
          </div>
       </div>
-      <div class="row" id="caja_nombre" style="display: none;">
+      <div class="row mb-5" id="caja_nombre" style="display: none;">
          <div class="col-md-12">
             <div class="h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('<?= $url ?>views/assets/img/utilidades/registro/fondo_crema4.jpg');">
                <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1 text-center">
@@ -125,9 +125,54 @@ if (!isset($action[1])) {
                               <input type="text" class="form-control input_usuario" id="apellido_usuario_registrar">
                            </div>
                         </div>
-                        <div class="col-md-12 text-center mt-3">
+                        <!-- <div class="col-md-12 text-center mt-3">
                            <button type="button" class="btn btn-primary" id="btn_regresar1">Regresar</button>
                            <button type="button" class="btn btn-primary" id="btn_siguiente2">Siguente</button>
+                        </div> -->
+                     </div>
+                     <div class="row">
+                        <div class="col-md-12">
+                           <div class="form-group">
+                              <label>Ciudad:</label>
+                              <select class="form-control select2 input_usuario" id="ciudad_usuario_registrar">
+                                 <option value="" disabled>Selecciona una ciudad</option>
+                                 <?php foreach (GeneralController::obtenerCiudadesController() as $ciudad) { ?>
+                                    <option value="<?= $ciudad['id'] ?>"><?= $ciudad['nombre'] ?></option>
+                                 <?php } ?>
+                              </select>
+                           </div>
+                        </div>
+                        <div class="col-md-12">
+                           <div class="form-group mt-1">
+                              <label>Correo Electrónico:</label>
+                              <input type="email" class="form-control input_usuario registroValidarCampo" id="correo_usuario_registrar" columna='correo_electronico' tabla='admin_usuarios' mensaje='Este correo ya se encuentra registrado' required>
+                              <div class="invalid-feedback" style="display: none;"></div>
+                           </div>
+                        </div>
+                        <div class="col-md-6">
+                           <div class="form-group mt-1">
+                              <div class="row">
+                                 <label>Contraseña:</label>
+                              </div>
+                           </div>
+                           <div class="input-group mb-3 rounded-3" style="background-color: #fcece6;">
+                              <span class="input-group-text" id="togglePassword">
+                                 <i class="fa fa-eye" aria-hidden="true"></i>
+                              </span>
+                              <input type="password" class="form-control input_usuario" id="contrasena_usuario_registrar" required>
+
+                           </div>
+                        </div>
+
+                        <div class="col-md-6">
+                           <div class="form-group mt-1">
+                              <label for="">Confirmar contraseña:</label>
+                              <input class="form-control input_usuario" type="password" id="confirmar_contrasena_usuario_registrar" required>
+                           </div>
+                        </div>
+                        <div class="col-md-12 text-center mt-3">
+                           <button type="button" class="btn btn-primary" id="btn_regresar1">Regresar</button>
+                           <button type="submit" class="btn btn-success" id="btn_siguiente3">Registrarme</button>
                         </div>
                      </div>
                   </div>
@@ -135,7 +180,7 @@ if (!isset($action[1])) {
             </div>
          </div>
       </div>
-      <div id="caja_correo" style="display: none;">
+      <!-- <div id="caja_correo" style="display: none;">
          <div class="col-md-12">
             <div class="h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('<?= $url ?>views/assets/img/utilidades/registro/fondo_crema4.jpg');">
                <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1 text-center">
@@ -195,7 +240,7 @@ if (!isset($action[1])) {
          </div>
 
 
-      </div>
+      </div> -->
    </form>
 <?php
 } else if ($action[1] == 'verificacion') {

@@ -23,7 +23,7 @@ if (!isset($_SESSION['iniciarSesion']) && isset($_COOKIE['token_session'])) {
 
 $template = new TemplateController();
 $url = $template->obtenerUrlController();
-$v = "1.0.8";
+$v = "1.0.9";
 
 ?>
 <!DOCTYPE html>
@@ -77,8 +77,14 @@ $v = "1.0.8";
     <?php
     if (isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok') {
         // Determina si la página actual es "cafeterias_mapa" y estructura el layout en consecuencia
-        if ($moduloActual == "cafeterias_mapa") {
+        if($_SESSION['nivel']=='Barista'  || $_SESSION['nivel']=='Cliente'){
+            include "modules/sections/navbar_movil.php";
+            echo '<div id="sistema">';
+            echo '<div class="content_sin_sesion">';
+            echo '<div class="modulos">';
+        }else if ($moduloActual == "cafeterias_mapa") {
             echo '<div style="width: 100%; margin: 0; height:100vh;"><div>';
+            include "modules/sections/navbar.php";
         } else {
             echo '<div id="sistema">';
             echo '<div class="contenido">';
@@ -90,7 +96,6 @@ $v = "1.0.8";
         if (isset($action[0])) {
             // Lista blanca de módulos permitidos sin importar el nivel
             $modulosPermitidos = [
-                "dashboard",
                 "404-menu",
                 "404",
                 "mantenimiento",
@@ -119,7 +124,7 @@ $v = "1.0.8";
             }
         } else {
             echo '<div class="modulo-dashboard">';
-            include "modules/dashboard.php";
+            include 'modules/dashboards/dashboard_'.$_SESSION['nivel'].'.php';
             echo '</div>';
         }
 
@@ -127,20 +132,15 @@ $v = "1.0.8";
     } else if (isset($action[0])) {
         // Layout para las páginas públicas o sin sesión iniciada
         if ($moduloActual == "cafeterias_mapa") {
-            echo '<div style="width: 100%; margin: 0; height:100vh;"><div>';
+            include "modules/sections/navbar_inicio.php";
         } else if ($moduloActual == "inicio") {
             echo '<div id="pagina-inicial">';
             echo '<div class="contenido">';
             include "modules/sections/navbar_inicio.php";
             echo '<div>';
-        } else if ($moduloActual == "login" || $moduloActual == "registrarme") {
+        } else {
             echo '<div id="sistema">';
-            echo '<div class="content-login">';
-            include "modules/sections/navbar_inicio.php";
-            echo '<div>';
-        }  else {
-            echo '<div id="sistema">';
-            echo '<div class="contenido">';
+            echo '<div class="content_sin_sesion">';
             include "modules/sections/navbar_inicio.php";
             echo '<div class="modulos">';
         }

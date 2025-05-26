@@ -2211,12 +2211,33 @@ a.fc-daygrid-event {
 /* ---------------------------------------
 @@@@ media-queries
 --------------------------------------- */
-@media (max-width:1216px) {}
+#sistema .content_sin_sesion {
+        height: 100vh !important; 
+    }
+@media (max-width:1216px) {
+    #sistema .content_sin_sesion {
+        padding: 0px;
+        margin-top: 0px !important;
+        margin-bottom: 0px;
+    }
+    #sistema > .content_sin_sesion {
+        flex: none;
+        width: 100%;
+        margin: 0px auto auto auto;
+        /* padding: 15px; */
+        transition: all 0.25s;
+    }
+}
 @media (min-width:992px) {
     /* @@@@ - [Estructura] - @@@@ */
+#sistema .content_sin_sesion {
+    padding: 25px;
+    margin-top: 10px !important;
+    margin-bottom: 25px;
+}
     #sistema {
         display: flex;
-        height: 100vh;
+        height: 100vh !important;
     }
     .content-login {
         margin-top: 50px !important;
@@ -2231,6 +2252,13 @@ a.fc-daygrid-event {
         width: 100%;
     }
     #sistema > .contenido {
+        flex: none;
+        width: calc( 100% - 230px);
+        margin: 50px auto auto auto;
+        /* padding: 15px; */
+        transition: all 0.25s;
+    }
+    #sistema > .content_sin_sesion {
         flex: none;
         width: calc( 100% - 230px);
         margin: 80px auto auto auto;
@@ -2533,4 +2561,105 @@ color: #ffffff;
     
     
     
+}
+
+  /* Transición para ocultar/mostrar navbar */
+  .hide-on-scroll {
+    transition: transform 0.3s ease;
+  }
+  .hide-on-scroll.hidden {
+    transform: translateY(-100%);
+  }
+
+  /* Navbar de desktop */
+  .desktop-nav .nav-btn {
+    margin-right: 1rem;
+  }
+
+  /* Logo navbar (móvil) */
+  .mobile-logo-nav {
+    height: 60px;
+    background-color: #ff755c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1040;
+  }
+  .mobile-logo-nav img {
+    max-height: 40px;
+  }
+
+  /* Mobile bottom nav */
+  .mobile-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #ff755c;
+    color: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.15);
+    z-index: 1030;
+    overflow-x: auto;
+  }
+  .mobile-bottom-nav .nav-item {
+    flex: 1 0 auto;
+    text-decoration: none;
+    color: white;
+    font-size: 11px;
+    text-align: center;
+    padding: 8px 0;
+    min-width: 70px;
+  }
+  .mobile-bottom-nav .nav-item i {
+    font-size: 18px;
+  }
+  .bottom-nav-inner::-webkit-scrollbar { display: none; }
+  .bottom-nav-inner { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Botones del navbar desktop */
+  .nav-btn {
+    background: transparent;
+    border: none;
+    padding: .375rem .75rem;
+    font-size: .9rem;
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    border-radius: .25rem;
+  }
+  .nav-btn:hover {
+    background: rgba(255,255,255,0.1);
+  }
+
+  /* 1) Asegurarnos de que nav-btn no subraye y siempre sea blanco donde lo usemos */
+.nav-btn {
+  color: white !important;
+  text-decoration: none !important;
+}
+.nav-btn:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+
+/* 3) Forzar que los nav-btn dentro del offcanvas sigan siendo blancos */
+.offcanvas-collapse .nav-btn {
+  color: white !important;
+}
+.offcanvas-collapse .nav-btn:hover {
+  background: rgba(255,255,255,0.1) !important;
+}
+
+.offcanvas-collapse .nav-btn {
+  color: #333 !important;
+}
+.offcanvas-collapse .nav-btn:hover {
+  background: rgba(0,0,0,0.05) !important;
+}
+
+.nav-btn.active,
+.dropdown-toggle.active,
+.dropdown-item.active {
+  background: rgba(255,255,255,0.2);
+  /* ó border-bottom: 2px solid white; */
 }

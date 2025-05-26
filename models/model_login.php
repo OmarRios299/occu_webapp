@@ -10,6 +10,11 @@ class LoginModel extends Conexion{
 
 		$stmt = Conexion::conectar()->prepare("SELECT
         admin_usuarios.*,
+        CONCAT(
+            admin_usuarios.nombre,
+            ' ',
+            admin_usuarios.apellido
+        ) AS nombre_usuario,
         paises.id AS id_pais
         FROM
             admin_usuarios
@@ -61,6 +66,11 @@ class LoginModel extends Conexion{
  
 		$stmt = Conexion::conectar()->prepare("SELECT 
         admin_usuarios.*,
+        CONCAT(
+            admin_usuarios.nombre,
+            ' ',
+            admin_usuarios.apellido
+        ) AS nombre_usuario,
         entidades_federativas.id_pais
         FROM admin_usuarios
         INNER JOIN ciudades ON ciudades.id = admin_usuarios.id_ciudad

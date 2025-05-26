@@ -1,7 +1,7 @@
 <style>
   /* GLOBAL STYLES */
   body {
-    padding-top: 3rem;
+    padding-top: 0rem;
     padding-bottom: 3rem;
     color: rgb(var(--bs-tertiary-color-rgb));
   }

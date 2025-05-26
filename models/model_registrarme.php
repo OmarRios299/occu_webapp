@@ -23,7 +23,7 @@ class RegistrarmeModel extends Conexion {
         VALUES (
         :nombre, 
         :apellido, 
-        0,
+        :ciudad,
         :correo_electronico, 
         :contrasena, 
         :nivel, 
@@ -41,6 +41,8 @@ class RegistrarmeModel extends Conexion {
         $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
         $stmt->bindParam(':fecha_alta', $datos['fecha_alta'], PDO::PARAM_STR);
         $stmt->bindParam(':pin', $datos['pin'], PDO::PARAM_STR);
+        $stmt->bindParam(':ciudad', $datos['ciudad'], PDO::PARAM_INT);
+
 
         if($stmt->execute()){
             return $conexion-> lastInsertId();

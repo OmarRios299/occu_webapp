@@ -1,6 +1,6 @@
 <!-- Menu de mapa -->
-<div class="dropdown position-fixed top-0 end-0 mt-3 me-3 bd-mode-toggle">
-    <button class="btn btn-icono btn-lista py-2 dropdown-toggle d-flex align-items-center"
+<div class="dropdown position-fixed end-0 mt-5 me-3 bd-mode-toggle">
+    <!-- <button class="btn btn-icono btn-lista py-2 dropdown-toggle d-flex align-items-center"
         type="button"
         aria-expanded="false"
         data-bs-toggle="dropdown"></button>
@@ -15,8 +15,8 @@
                 Lista de cafeterías
             </a>
         </li>
-    </ul>
-    <button class="btn btn-icono btn-buscar py-2 mt-2 menu_offcanvas" id="btn_filtro_mapa"></button>
+    </ul> -->
+    <button class="btn btn-icono btn-buscar py-2 mt-3 menu_offcanvas" id="btn_filtro_mapa"></button>
 </div>
 
 <div id="map" style="height: 100vh; width: 100%;"></div>

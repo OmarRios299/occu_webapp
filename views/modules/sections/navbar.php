@@ -1,77 +1,66 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-plantilla" aria-label="Main navigation">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="<?=$url?>">OCCU</a>
-        <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+  <div class="container-fluid">
+    <a class="navbar-brand nav-btn" href="<?= $url ?>">OCCU</a>
+    <button class="navbar-toggler p-0 border-0" type="button" id="navbarSideCollapse" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-        <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link nav-item" aria-current="page" item='nav1' id='nav1' href="<?= $url . 'dashboard'; ?>">Dashboard</a>
-                </li>
-                <?php foreach (GeneralController::obtenerModulosNivelController() as $area) {
-                    if ($area['id'] == 0) {
-                        foreach ($area['modulos'] as $modulo) { 
-                        $nombre = ($modulo['nombre']=='Cafeterías') ? 'Mis cafeterías' : $modulo['nombre'];
-                        ?>
-                            <li class="nav-item">
-                                <a class="nav-link nav-item" aria-current="page" item='nav1' id='nav1' href="<?= $url . $modulo['ruta'] ?>"><?= $nombre;?></a>
-                            </li>
-                        <?php }
-                    } else {
-                        ?>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle item-color nav-item" id='<?= $area['id']; ?>' data-bs-toggle="dropdown" aria-expanded="false"><?= $area['nombre']; ?></a>
-                            <ul class="dropdown-menu">
+    <div class="navbar-collapse offcanvas-collapse" id="navbarsExampleDefault">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <!-- <?php if ($_SESSION['nivel'] == 'Administrador') {
+        ?>
+          <li class="nav-item">
+            <a class="nav-btn nav-item me-2" aria-current="page" href="<?= $url . 'dashboard'; ?>">
+              <span style="color:white !important">Dashboard</span>
+            </a>
+          </li>
+        <?php
+        } ?> -->
+        <?php foreach (GeneralController::obtenerModulosNivelController() as $area): ?>
+          <?php if ($area['id'] == 0): ?>
+            <?php foreach ($area['modulos'] as $modulo):
+              $nombre = ($modulo['nombre'] == 'Cafeterías') ? 'Mis cafeterías' : $modulo['nombre'];
+            ?>
+              <li class="nav-item">
+                <a class="nav-btn nav-item me-2" href="<?= $url . $modulo['ruta'] ?>">
+                  <span style="color:white !important"><?= $nombre; ?></span>
+                </a>
+              </li>
+            <?php endforeach; ?>
+          <?php else: ?>
+            <li class="nav-item dropdown">
+              <a
+                class="nav-btn nav-item dropdown-toggle me-2"
+                id="area<?= $area['id']; ?>"
+                data-bs-toggle="dropdown"
+                aria-expanded="false">
+                <span style="color:white !important"><?= $area['nombre']; ?></span>
+              </a>
+              <ul class="dropdown-menu">
+                <?php foreach ($area['modulos'] as $modulo): ?>
+                  <li>
+                    <a
+                      class="nav-btn dropdown-item nav-item"
+                      href="<?= $url . $modulo['ruta']; ?>">
+                      <?= $modulo['nombre']; ?>
+                    </a>
+                  </li>
+                <?php endforeach; ?>
+              </ul>
+            </li>
+          <?php endif; ?>
+        <?php endforeach; ?>
+      </ul>
 
-                                <?php foreach ($area['modulos'] as $modulo) { ?>
-                                    <li><a class="dropdown-item item-color nav-item" item='<?= $area['id']; ?>' href="<?= $url . $modulo['ruta']; ?>"><span><?= $modulo['nombre']; ?></span></a></li>
-                                <?php } ?>
-                            </ul>
-                        </li>
-                <?php
-                    }
-                }; ?>
-                <!-- <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle item-color nav-item" id='nav2' data-bs-toggle="dropdown" aria-expanded="false">Administración</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'admin_usuarios'; ?>"><span>Usuarios</span></a></li>
-                        <li><a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'cafeterias'; ?>"><span>Cafeterías</span></a></li>
-                        <li><a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'cafeterias_servicios'; ?>"><span>Servicios de cafetería</span></a></li>
-                        <li><a class="dropdown-item item-color nav-item" item='nav2' href="<?= $url . 'admin_paises'; ?>"><span>Países</span></a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle item-color nav-item" id='nav5' data-bs-toggle="dropdown" aria-expanded="false">Menú</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . 'menu_categorias'; ?>"><span>Cetegorías de productos</span></a></li>
-                        <li><a class="dropdown-item item-color nav-item" item='nav5' href="<?= $url . 'menu_productos'; ?>"><span>Productos</span></a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle item-color nav-item" id='nav3' data-bs-toggle="dropdown" aria-expanded="false">Cafeterías</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item item-color nav-item" item='nav3' href="<?= $url . 'cafeterias_mapa'; ?>"><span>Ubicaciones</span></a></li>
-                        <li><a class="dropdown-item item-color nav-item" item='nav3' href="<?= $url . 'cafeterias_lista'; ?>"><span>Lista de cafeterías</span></a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle item-color nav-item" id='nav4' data-bs-toggle="dropdown" aria-expanded="false">Catálogo</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item item-color nav-item" item='nav4' href="<?= $url . ''; ?>"><span>Para baristas</span></a></li>
-                        <li><a class="dropdown-item item-color nav-item" item='nav4' href="<?= $url . ''; ?>"><span>Para cafeterías</span></a></li>
-                    </ul>
-                </li> -->
-            </ul>
-            <div class="row">
-                <div class="col-md-8 mt-2">
-                    <p class="letras-blancas">Hola, <i class="bi bi-house"></i><span><?= $_SESSION['nombre_completo']; ?></span></p>
-                </div>
-                <div class="col-md-4">
-                    <a class="btn btn-sesion" href="<?php echo $url ?>salir"> Cerrar sesion </a>
-                </div>
-            </div>
-        </div>
+      <div class="d-flex align-items-center">
+        <p class="letras-blancas mb-0">
+          <i class="fas fa-user me-1"></i>
+          Hola, <?= $_SESSION['nombre_completo']; ?>
+        </p>
+        <a class="btn-sesion ms-3" href="<?= $url ?>salir">
+          Cerrar sesión
+        </a>
+      </div>
     </div>
+  </div>
 </nav>

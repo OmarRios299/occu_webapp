@@ -5,6 +5,17 @@ class RegistrarmeController{
 
        date_default_timezone_set("America/Tijuana");
 
+       if (
+            empty($datos['nombre'])   ||
+            empty($datos['apellido']) ||
+            empty($datos['correo'])   ||
+            empty($datos['contrasena']) ||
+            empty($datos['nivel'])    ||
+            empty($datos['ciudad'])
+            ) {
+                return "error";
+       }
+
        //validamos el correo electrónico
        $validacion_email = GeneralModel::validarCampoModel($datos['correo'],"correo_electronico","admin_usuarios");
 

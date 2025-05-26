@@ -1,7 +1,7 @@
 <?php
 include "menu_propietarios/modal_tamano_bebidas.php";
 if ($action[0] == 'menu_propietarios' && !isset($action[1])) {
-  $menu = MenuPropietariosController::obtenerMenuPropietarioController(true,false,true,true);
+  $menu = MenuPropietariosController::obtenerMenuPropietarioController(true, false, true, true);
   $hidden = (MenuPropietariosController::cafeteriasPropietarioController() > 1) ? '' : 'display:none';
 
   if ($menu['subcategorias'] == "") {
@@ -9,32 +9,34 @@ if ($action[0] == 'menu_propietarios' && !isset($action[1])) {
   } else {
 
 ?>
-    <div class="text-end">
+    <div class="row">
       <!-- <div class="text-end" style="<?= $hidden ?>"> -->
-      <div class="btn-group align-items-center">
-        <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-          🔄 Actualizar menú
-        </button>
-        <ul class="dropdown-menu">
-          <li>
-            <a class="dropdown-item" href="#" id="actualizarMenu" actualizar="menu">
-              ✅ En todas las sucursales
-            </a>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#" id="actualizarPrecios" actualizar="precios">
-              💲 Solo precios
-            </a>
-          </li>
-        </ul>
-
-        <!-- Botón de ayuda -->
-        <button type="button" class="btn btn-secondary ms-1" data-bs-toggle="modal" data-bs-target="#infoModal">
-          ?
-        </button>
+      <div class="col-6 mt-2">
+        <div class="btn-group align-items-center">
+          <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            🔄 Actualizar menú
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <button class="dropdown-item" id="actualizarMenu" actualizar="menu">
+                ✅ En todas las sucursales
+              </button>
+            </li>
+            <li>
+              <button class="dropdown-item" id="actualizarPrecios" actualizar="precios">
+                💲 Solo precios
+              </button>
+            </li>
+          </ul>
+          <!-- Botón de ayuda -->
+          <button type="button" class="btn btn-secondary ms-1" data-bs-toggle="modal" data-bs-target="#infoModal">
+            ?
+          </button>
+        </div>
       </div>
-      <button type="button" class="btn btn-icono btn-mas ms-5" data-bs-toggle="modal" data-bs-target="#addProductoExtraModal"></button>
-
+      <div class="col-6 text-end">
+        <button type="button" class="btn btn-icono btn-mas ms-5" data-bs-toggle="modal" data-bs-target="#addProductoExtraModal"></button>
+      </div>
     </div>
     <div class="menu-cafeterias mt-3">
       <!-- Menú de Navegación -->
@@ -56,7 +58,7 @@ if ($action[0] == 'menu_propietarios' && !isset($action[1])) {
 } else if ($action[0] == 'menu_propietarios' && isset($action[1])) {
   $cafeteria = GeneralController::verificarCafeteriaContoller($action[1], $_SESSION['id']);
   if ($cafeteria) {
-    $menu = MenuPropietariosController::obtenerMenuPropietarioController(false, $cafeteria['id'],true,true);
+    $menu = MenuPropietariosController::obtenerMenuPropietarioController(false, $cafeteria['id'], true, true);
     if ($menu['subcategorias'] == "") {
       include "404-menu.php";
     } else {
@@ -140,7 +142,7 @@ if ($action[0] == 'menu_propietarios' && !isset($action[1])) {
                     <option value="<?= $subcategoria['id'] ?>" campo="id_subcategoria_extra"><?= $subcategoria['categoria'] . ' - ' . $subcategoria['nombre'] ?></option>
                   <?php } ?>
                   <?php foreach (MenuProductosController::obtenerSubcategoriasController() as $subcategoria) { ?>
-                    <option value="<?= $subcategoria['id'] ?>"  campo="id_subcategoria"><?= $subcategoria['categoria'] . ' - ' . $subcategoria['nombre'] ?></option>
+                    <option value="<?= $subcategoria['id'] ?>" campo="id_subcategoria"><?= $subcategoria['categoria'] . ' - ' . $subcategoria['nombre'] ?></option>
                   <?php } ?>
                 </select>
               </div>

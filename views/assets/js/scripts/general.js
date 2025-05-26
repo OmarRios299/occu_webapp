@@ -47,16 +47,30 @@ $(document).ready(function(){
 
 	/* APLICAR CLASES AL ENLACE DEL MODULO ACTUAL */
 	
-	$('.item-color[href="' + url + moduloActual + '"]').css('background-color','#c6cdd3');
-	$('.item-color[href="' + url + moduloActual + '"]').css('color','#000000');
-    
-    if ($('.item-color[href="' + url + moduloActual + '"]').parent().hasClass("parentNav")) {
-        $('.item-color[href="' + url + moduloActual + '"]').parent().addClass("show");
-        $('.item-color[href="' + url + moduloActual + '"]').parent().parent().children().first().css('background-color','rgba(214, 219, 234, 0.38)');
-    }
-	
-	let nav = $('.nav-item[href="' + url + moduloActual + '"]').attr("item");
-	$("#"+nav).addClass('active');
+    $(function(){
+        // 1) Ruta actual sin slash final
+        const currentPath = window.location.pathname.replace(/\/$/, "");
+
+        // 2) Seleccionamos TODOS los links que pueden quedar “active”:
+        //    - desktop (.nav-btn)
+        //    - dropdown (.dropdown-item)
+        //    - móvil bottom (.mobile-bottom-nav .nav-item)
+        $('a.nav-btn, a.dropdown-item, .mobile-bottom-nav .nav-item').each(function(){
+            const linkPath = this.pathname.replace(/\/$/, "");
+
+            if (linkPath === currentPath) {
+            $(this).addClass('active');
+
+            // Si está dentro de un dropdown, lo abrimos y marcamos el toggle
+            const $drop = $(this).closest('.dropdown');
+            if ($drop.length) {
+                $drop.addClass('show');
+                $drop.children('.dropdown-toggle').addClass('active');
+            }
+            }
+        });
+    });
+
 
 	/* End of APLICAR CLASES AL ENLACE DEL MODULO ACTUAL */
 

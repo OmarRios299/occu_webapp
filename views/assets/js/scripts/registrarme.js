@@ -1,3 +1,8 @@
+$(document).on("click",".btn_siguiente1_barista",function(){
+    swal("¡Lo sentimos!", "Aún estamos trabajando en este perfil", "warning");
+});
+
+
 $(document).on("click", ".btn_siguiente1, #btn_regresar1", function () {
     $("#caja_nivel").toggle();
     $("#caja_nombre").toggle();
@@ -84,8 +89,9 @@ $(document).on("submit", "#form_registrarme", function () {
         let email = $("#correo_usuario_registrar").val();
         //let celular = $("#telefono_usuario_registrar").val();
         let nivel = $("#select_nivel").val();
+        let ciudad = $("#ciudad_usuario_registrar").val();
 
-        if (!nombre || !apellido) {
+        if (!nombre || !apellido || !ciudad || !email) {
             swal("¡Alerta!", "Es necesario llenar todos los campos.", "warning");
             return '';
         }
@@ -99,6 +105,7 @@ $(document).on("submit", "#form_registrarme", function () {
         if (contrasena == confirmar_contrasena) datos.append("contrasena", contrasena);
         // datos.append("telefono", celular);
         datos.append("nivel", nivel);
+        datos.append("ciudad", ciudad);
 
         $.ajax({
             url: url + 'views/ajax/ajax_registrarme.php',
