@@ -21,7 +21,7 @@
 <!-- NAV MÓVIL TOP (logo + hide on scroll) -->
 <div id="mobileLogoNav" class="mobile-logo-nav d-flex d-lg-none hide-on-scroll">
   <a href="<?= $url ?>cafeterias_lista">
-    <img src="<?= $url ?>views/assets/img/logo_1.png" alt="Logo">
+    <img src="<?= $url ?>views/assets/img/logo_blanco.png" alt="Logo">
   </a>
 </div>
 

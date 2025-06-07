@@ -2,7 +2,7 @@
 <div class="navbar fixed-top bg-plantilla desktop-nav d-none d-lg-flex justify-content-between align-items-center px-3" style="height: 60px;">
   <div class="d-flex align-items-center">
     <a href="<?= $url ?>inicio" class="nav-btn">
-      <i class="fas fa-home"></i><span class="ms-1">Inicio</span>
+      <span class="ms-1"><img src="<?= $url ?>views/assets/img/logo_blanco.png" alt="Logo" style="width: 70px;"></span>
     </a>
     <a href="<?= $url ?>registrarme" class="nav-btn">
       <i class="fas fa-user"></i><span class="ms-1">Registrarme</span>
@@ -22,7 +22,7 @@
 <!-- NAVBAR MÓVIL (logo) -->
 <div id="mobileLogoNav" class="mobile-logo-nav d-flex d-lg-none hide-on-scroll mt-0">
   <a href="<?= $url ?>inicio">
-    <img src="<?= $url ?>views/assets/img/logo_1.png" alt="Logo">
+    <img src="<?= $url ?>views/assets/img/logo_blanco.png" alt="Logo">
   </a>
 </div>
 

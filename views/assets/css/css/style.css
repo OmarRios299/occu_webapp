@@ -71,10 +71,10 @@ Tipografias del proyecto
 --------------------------------------- */
 :root {
     /* @@@@ Colores del proyecto */
-    --color-sidebar :#ff8f63; 
-    --color-claro-sidebar :#ff956b;
-    --color-oscuro-sidebar :#ff755c; 
-    --principal: #ff956b;
+    --color-sidebar :#f05540; 
+    --color-claro-sidebar :#f16c5b;
+    --color-oscuro-sidebar :#f16c5b; 
+    --principal: #f16c5b;
     --plantilla-claro: #fcece6;
     --secundario: #fedd64;
     --tercero: #3E51A0;
@@ -2579,7 +2579,7 @@ color: #ffffff;
   /* Logo navbar (móvil) */
   .mobile-logo-nav {
     height: 60px;
-    background-color: #ff755c;
+    background-color: var(--color-sidebar);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2594,7 +2594,7 @@ color: #ffffff;
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: #ff755c;
+    background-color: var(--color-sidebar);
     color: white;
     border-top-left-radius: 20px;
     border-top-right-radius: 20px;
