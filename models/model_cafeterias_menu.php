@@ -2,7 +2,7 @@
 
 require_once "conexion.php";
 
-class VerMenuModel extends Conexion
+class CafeteriasMenuModel extends Conexion
 {
 
 

@@ -1,5 +1,5 @@
 <?php
-$menu = VerMenuController::obtenerMenuPropietarioController($action[1]);
+$menu = CafeteriasMenuController::obtenerMenuPropietarioController($action[1]);
 if ($menu['subcategorias']=="") {
     include '404-menu.php';
 }else{

@@ -1,12 +1,12 @@
 <?php
-class VerMenuController
+class CafeteriasMenuController
 {
 
     /* BUSCAR CAFETERÍA */
 
     static public function buscarCafeteriaController($cafeteria)
     {
-        return VerMenuModel::buscarCafeteriaModel($cafeteria);
+        return CafeteriasMenuModel::buscarCafeteriaModel($cafeteria);
     }
 
     /* BUSCAR CAFETERÍA */
@@ -19,14 +19,14 @@ class VerMenuController
         $url = TemplateController::obtenerUrlController();
         $categorias = '<li><a href="todos" class="menu-link active">Todos</a></li>';
 
-        $categoriasLista = VerMenuModel::obtenerCategoriasModel($cafeteria);
+        $categoriasLista = CafeteriasMenuModel::obtenerCategoriasModel($cafeteria);
         $subcategorias = '';
 
         foreach ($categoriasLista as $categoria) {
             $subcategorias_data = '';
 
             // Obtener subcategorías de la categoría actual
-            $subcategoriasLista = VerMenuModel::obtenerSubcategoriasModel($cafeteria);
+            $subcategoriasLista = CafeteriasMenuModel::obtenerSubcategoriasModel($cafeteria);
 
             foreach ($subcategoriasLista as $subcategoria) {
                 if ($subcategoria['id_categoria'] == $categoria['id']) { // Asegurar que pertenece a la categoría actual
@@ -35,7 +35,7 @@ class VerMenuController
 
                     // Obtener productos de la subcategoría
                     if ($subcategoria['extra'] == "No") {
-                        $productos = VerMenuModel::obtenerProductosModel($subcategoria['id'], $cafeteria);
+                        $productos = CafeteriasMenuModel::obtenerProductosModel($subcategoria['id'], $cafeteria);
 
                         foreach ($productos as $producto) {
                             if ($producto['estado'] == 1) { // Solo productos activos
@@ -49,7 +49,7 @@ class VerMenuController
                             }
                         }
                     } else {
-                        $productos = VerMenuModel::obtenerProductosExtraModel($subcategoria['id'], $cafeteria, true);
+                        $productos = CafeteriasMenuModel::obtenerProductosExtraModel($subcategoria['id'], $cafeteria, true);
 
                         foreach ($productos as $producto) {
                             if ($producto['estado'] == 1) { // Solo productos activos
