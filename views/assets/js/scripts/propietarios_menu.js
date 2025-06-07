@@ -10,7 +10,7 @@ function cargarCategorias() {
     datos.append("cargar_categorias", true);
     
     $.ajax({
-        url:url+'views/ajax/ajax_menu_propietarios.php',
+        url:url+'views/ajax/ajax_propietarios_menu.php',
         method:'POST',
         data: datos,
         cache: false,
@@ -36,7 +36,7 @@ $(document).on("click",".check_subcategoria",function(){
     (id_registro) ? datos.append("id_registro", id_registro) : false;
 
     $.ajax({
-        url:url+'views/ajax/ajax_menu_propietarios.php',
+        url:url+'views/ajax/ajax_propietarios_menu.php',
         method:'POST',
         data: datos,
         cache: false,
@@ -59,7 +59,7 @@ $(document).on("click",".check_subcategoria_extra",function(){
     datos.append("id_registro", id_registro);
 
     $.ajax({
-        url:url+'views/ajax/ajax_menu_propietarios.php',
+        url:url+'views/ajax/ajax_propietarios_menu.php',
         method:'POST',
         data: datos,
         cache: false,
@@ -85,7 +85,7 @@ $(document).on("click",".check_productos",function(){
     datos.append("campo", $(this).attr("campo"));
 
     $.ajax({
-        url:url+'views/ajax/ajax_menu_propietarios.php',
+        url:url+'views/ajax/ajax_propietarios_menu.php',
         method:'POST',
         data: datos,
         cache: false,
@@ -114,7 +114,7 @@ $(document).on("click", ".btn_editar_tamanos", function () {
     let filtro = `?buscarProducto=${true}&id_producto=${id_producto}&cafeteria=${(cafeteria) ? cafeteria : false}&campo=${campo}`;
 
     $.ajax({
-        url: url + 'views/ajax/ajax_menu_propietarios.php' + filtro,
+        url: url + 'views/ajax/ajax_propietarios_menu.php' + filtro,
         method: 'POST',
         cache: false,
         contentType: false,
@@ -163,7 +163,7 @@ $(document).on("change", ".switch_vasos", function () {
     let filtro = `?switch_vasos=${accion}&id_producto=${id_producto}&id_tamano=${id_tamano}&precio=${precio}&cafeteria=${(cafeteria) ? cafeteria : false}&campo=${campo}`;
 
     $.ajax({
-        url: url + 'views/ajax/ajax_menu_propietarios.php' + filtro,
+        url: url + 'views/ajax/ajax_propietarios_menu.php' + filtro,
         method: 'POST',
         cache: false,
         contentType: false,
@@ -180,7 +180,7 @@ $(document).on("click","#actualizarMenu, #actualizarPrecios",function(){
     let filtro = `?actualizarMenu=${actualizar}`;
 
     $.ajax({
-        url: url + 'views/ajax/ajax_menu_propietarios.php' + filtro,
+        url: url + 'views/ajax/ajax_propietarios_menu.php' + filtro,
         method: 'POST',
         cache: false,
         contentType: false,
@@ -200,7 +200,7 @@ $(document).on("submit",".form_agregar_subcategoria_extra",function(){
     datos.append("id_categoria", $("#select_categoria").val());
     
     $.ajax({
-        url:url+'views/ajax/ajax_menu_propietarios.php',
+        url:url+'views/ajax/ajax_propietarios_menu.php',
         method:'POST',
         data: datos,
         cache: false,
@@ -238,7 +238,7 @@ $(document).on("submit",".form_add_producto_extra",function(){
     datos.append('imagen_producto',$("#imagen_producto")[0].files[0]);
 
     $.ajax({
-        url:url+'views/ajax/ajax_menu_propietarios.php',
+        url:url+'views/ajax/ajax_propietarios_menu.php',
         method:'POST',
         data: datos,
         cache: false,

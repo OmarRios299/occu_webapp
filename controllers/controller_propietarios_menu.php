@@ -1,5 +1,5 @@
 <?php
-class MenuPropietariosController
+class PropietariosMenuController
 {
 
 
@@ -7,7 +7,7 @@ class MenuPropietariosController
 
     static public function cafeteriasPropietarioController()
     {
-        return MenuPropietariosModel::cafeteriasPropietarioModel($_SESSION['id']);
+        return PropietariosMenuModel::cafeteriasPropietarioModel($_SESSION['id']);
     }
 
     /* CONTAR CAFETERIAS DE PROPIETARIO */
@@ -20,7 +20,7 @@ class MenuPropietariosController
         $id_propietario = $_SESSION['id'];
 
         $data = '';
-        foreach (MenuPropietariosModel::obtenerCategoriasModel() as $categoria) {
+        foreach (PropietariosMenuModel::obtenerCategoriasModel() as $categoria) {
             $data .= '
             <div class="col-md-4">
                 <h6 class=""><b>' . $categoria['nombre'] . '</b></h6>
@@ -28,7 +28,7 @@ class MenuPropietariosController
             ';
 
             // verificar si la cafeteria ya cuenta con registros de subcategorias para la informacion que se mostrará
-            $subcategorias = MenuPropietariosModel::obtenerSubcategoriasModel($categoria['id'], $id_propietario);
+            $subcategorias = PropietariosMenuModel::obtenerSubcategoriasModel($categoria['id'], $id_propietario);
 
             foreach ($subcategorias as $subcategoria) {
                 $checked = '';
@@ -50,7 +50,7 @@ class MenuPropietariosController
             }
 
             // Obtener subcategorias_extra
-            $subcategorias_extra = MenuPropietariosModel::obtenerSubcategoriasExtraModel($categoria['id'], $id_propietario);
+            $subcategorias_extra = PropietariosMenuModel::obtenerSubcategoriasExtraModel($categoria['id'], $id_propietario);
 
             foreach ($subcategorias_extra as $subcategoria) {
                 $checked = '';
@@ -61,7 +61,7 @@ class MenuPropietariosController
                 <div class="form-check form-switch">
                     <div class="row align-items-center">
                         <div class="col-10">
-                            <a class="me-1 eliminarRegistro" style="color:red; cursor:pointer" tabla="cafeterias_menu_subcategorias_extra" idRegistro="' . $subcategoria['id'] . '">x</a>
+                            <a class="me-1 eliminarRegistro" style="color:red; cursor:pointer" tabla="propietarios_menu_subcategorias_extra" idRegistro="' . $subcategoria['id'] . '">x</a>
                             <label class="form-check-label" for="' . $subcategoria['id'] . '">' . $subcategoria['nombre'] . '</label>
                         </div>
                         <div class="col-2">
@@ -86,11 +86,11 @@ class MenuPropietariosController
     {
         if ($datos['id_registro'] != 'No') {
             $datos['estado'] = ($datos['estado'] == 1) ? 0 : 1;
-            MenuPropietariosModel::cambiarEstadoSubcategoriaModel($datos);
+            PropietariosMenuModel::cambiarEstadoSubcategoriaModel($datos);
         } else {
-            //$cafeterias = MenuPropietariosModel::buscarCafeteriasUsuarioModel($datos['id_usuario']);
+            //$cafeterias = PropietariosMenuModel::buscarCafeteriasUsuarioModel($datos['id_usuario']);
             $datos['id_propietario'] = $_SESSION['id'];
-            MenuPropietariosModel::agregarSubcategoriaModel($datos);
+            PropietariosMenuModel::agregarSubcategoriaModel($datos);
         }
     }
 
@@ -103,7 +103,7 @@ class MenuPropietariosController
     {
 
         $datos['estado'] = ($datos['estado'] == 1) ? 0 : 1;
-        MenuPropietariosModel::cambiarEstadoSubcategoriaExtraModel($datos);
+        PropietariosMenuModel::cambiarEstadoSubcategoriaExtraModel($datos);
     }
 
     /* INSERTAR REGISTRO DE SUBCATEGORIAS EXTRA */
@@ -121,12 +121,12 @@ class MenuPropietariosController
         }
         if ($datos['id_registro'] != 'No') {
             $datos['estado'] = ($datos['estado'] == 1) ? 0 : 1;
-            MenuPropietariosModel::cambiarEstadoProductoModel($datos, $datos['cafeteria']);
+            PropietariosMenuModel::cambiarEstadoProductoModel($datos, $datos['cafeteria']);
         } else {
             // $datos['id_usuario'] = $_SESSION['id'];
-            //$cafeterias = MenuPropietariosModel::buscarCafeteriasUsuarioModel($datos['id_usuario']);
+            //$cafeterias = PropietariosMenuModel::buscarCafeteriasUsuarioModel($datos['id_usuario']);
             $datos['id_propietario'] = $_SESSION['id'];
-            MenuPropietariosModel::agregarProductoModel($datos);
+            PropietariosMenuModel::agregarProductoModel($datos);
         }
     }
 
@@ -147,9 +147,9 @@ class MenuPropietariosController
         }
 
         if ($datos['accion'] == 'desactivar') {
-            MenuPropietariosModel::desactivarProductoModel($datos, $datos['cafeteria']);
+            PropietariosMenuModel::desactivarProductoModel($datos, $datos['cafeteria']);
         } else {
-            MenuPropietariosModel::actualizarProductoModel($datos, $datos['cafeteria']);
+            PropietariosMenuModel::actualizarProductoModel($datos, $datos['cafeteria']);
         }
     }
 
@@ -169,7 +169,7 @@ class MenuPropietariosController
             }
         }
 
-        return json_encode(MenuPropietariosModel::buscarProductoModel($datos, $datos['cafeteria'], $datos['campo']));
+        return json_encode(PropietariosMenuModel::buscarProductoModel($datos, $datos['cafeteria'], $datos['campo']));
     }
 
     /* BUSCAR REGISTRO DE PRODUCTOS */
@@ -184,7 +184,7 @@ class MenuPropietariosController
         $url = TemplateController::obtenerUrlController();
         $categorias = '<li><a href="todos"class="menu-link active">Todos</a></li>';
 
-        foreach (MenuPropietariosModel::obtenerCategoriasPropietarioModel($id_propietario, $extras) as $categoria) {
+        foreach (PropietariosMenuModel::obtenerCategoriasPropietarioModel($id_propietario, $extras) as $categoria) {
             $categorias .= '<li><a href="' . $categoria['id'] . '" class="menu-link">' . $categoria['nombre'] . '</a></li>';
         }
 
@@ -195,7 +195,7 @@ class MenuPropietariosController
 
         if ($extras) {
 
-            foreach (MenuPropietariosModel::obtenerSubcategoriasExtraModel(false, $id_propietario, $ExtrasActivas) as $subcategoria) {
+            foreach (PropietariosMenuModel::obtenerSubcategoriasExtraModel(false, $id_propietario, $ExtrasActivas) as $subcategoria) {
 
                 $productos_data = '';
                 $hidden = '';
@@ -205,7 +205,7 @@ class MenuPropietariosController
                     $subcategoria['id_categoria'] == 4)
                     ? '' : 'hidden';
 
-                $productos = MenuPropietariosModel::obtenerProductosExtraModel($subcategoria['id'], $id_propietario, 'id_subcategoria_extra', false, $cafeterias);
+                $productos = PropietariosMenuModel::obtenerProductosExtraModel($subcategoria['id'], $id_propietario, 'id_subcategoria_extra', false, $cafeterias);
 
                 if (!$productos) {
                     $productos_data = '                
@@ -247,7 +247,7 @@ class MenuPropietariosController
         }
 
 
-        foreach (MenuPropietariosModel::obtenerSubcategoriasPropietarioModel($id_propietario, 'activas') as $subcategoria) {
+        foreach (PropietariosMenuModel::obtenerSubcategoriasPropietarioModel($id_propietario, 'activas') as $subcategoria) {
 
             $productos_data = '';
             $hidden = '';
@@ -257,7 +257,7 @@ class MenuPropietariosController
                 $subcategoria['id_categoria'] == 4)
                 ? '' : 'hidden';
 
-            $productos = MenuPropietariosModel::obtenerProductosModel($subcategoria['id'], $id_propietario, $productosActivos, $cafeterias, $extras);
+            $productos = PropietariosMenuModel::obtenerProductosModel($subcategoria['id'], $id_propietario, $productosActivos, $cafeterias, $extras);
             if (!$productos) {
                 $productos_data = '                
                     <div class="product-item">
@@ -318,16 +318,16 @@ class MenuPropietariosController
         $id_propietario = $_SESSION['id'];
 
         if ($datos['actualizar'] == 'precios') {
-            foreach (MenuPropietariosModel::buscarCafeteriasUsuarioModel($id_propietario) as $cafeterias) {
-                foreach (MenuPropietariosModel::buscarMenuPropietarioModel($id_propietario) as $item) {
-                    MenuPropietariosModel::actualizarPrecioSucursaleModel($item, $cafeterias['id']);
+            foreach (PropietariosMenuModel::buscarCafeteriasUsuarioModel($id_propietario) as $cafeterias) {
+                foreach (PropietariosMenuModel::buscarMenuPropietarioModel($id_propietario) as $item) {
+                    PropietariosMenuModel::actualizarPrecioSucursaleModel($item, $cafeterias['id']);
                 }
             }
         } else {
-            MenuPropietariosModel::eliminarMenuSucursalModel($id_propietario);
-            foreach (MenuPropietariosModel::buscarCafeteriasUsuarioModel($id_propietario) as $cafeterias) {
-                foreach (MenuPropietariosModel::buscarMenuPropietarioModel($id_propietario) as $item) {
-                    MenuPropietariosModel::actualizarMenuSucursalModel($item, $cafeterias['id']);
+            PropietariosMenuModel::eliminarMenuSucursalModel($id_propietario);
+            foreach (PropietariosMenuModel::buscarCafeteriasUsuarioModel($id_propietario) as $cafeterias) {
+                foreach (PropietariosMenuModel::buscarMenuPropietarioModel($id_propietario) as $item) {
+                    PropietariosMenuModel::actualizarMenuSucursalModel($item, $cafeterias['id']);
                 }
             }
         }
@@ -346,7 +346,7 @@ class MenuPropietariosController
         //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
         if ($validacion_nombre) return "error_validacion_nombre";
 
-        $datos['id'] = MenuPropietariosModel::registrarSubcategoriaModel($datos);
+        $datos['id'] = PropietariosMenuModel::registrarSubcategoriaModel($datos);
 
         return "success";
     }
@@ -359,7 +359,7 @@ class MenuPropietariosController
     static public function obtenerSubcategoriasExtraController()
     {
         $id_propietario = $_SESSION['id'];
-        return MenuPropietariosModel::obtenerSubcategoriasExtraModel(false, $id_propietario);
+        return PropietariosMenuModel::obtenerSubcategoriasExtraModel(false, $id_propietario);
     }
 
     /* OBTENER SUBCATEGORIAS */
@@ -372,14 +372,14 @@ class MenuPropietariosController
         $datos['id_propietario'] = $_SESSION['id'];
         $datos['fecha_alta'] = date("Y-m-d H:i:s");
 
-        $validacion_nombre = GeneralModel::validarCampoModel($datos['nombre'], "nombre", "cafeterias_menu_productos_extra");
+        $validacion_nombre = GeneralModel::validarCampoModel($datos['nombre'], "nombre", "propietarios_menu_productos_extra");
 
         //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
         if ($validacion_nombre) return "error_validacion_nombre";
 
-        $datos['id'] = MenuPropietariosModel::agregarProductoExtraModel($datos);
+        $datos['id'] = PropietariosMenuModel::agregarProductoExtraModel($datos);
 
-        $producto = MenuPropietariosModel::buscarProductoExtraModel($datos['id']);
+        $producto = PropietariosMenuModel::buscarProductoExtraModel($datos['id']);
 
         if ($datos['imagen_subir']) {
 
@@ -387,7 +387,7 @@ class MenuPropietariosController
                 unlink("../../" . $producto['imagen']);
             $nombre_imagen = "imagen_producto_" . $datos['id'];
             $datos['imagen'] = GeneralController::subirImagen($datos['imagen_subir'], "menu_productos", $nombre_imagen);
-            MenuPropietariosModel::editarImagenModel($datos);
+            PropietariosMenuModel::editarImagenModel($datos);
         }
 
         return "success";

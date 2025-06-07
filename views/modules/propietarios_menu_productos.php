@@ -1,5 +1,5 @@
 <?php
-$menu = MenuPropietariosController::obtenerMenuPropietarioController(false,false,false,false);
+$menu = PropietariosMenuController::obtenerMenuPropietarioController(false,false,false,false);
 
 if ($menu['subcategorias'] == "") {
     include "404-menu.php";

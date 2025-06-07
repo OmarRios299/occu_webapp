@@ -1,8 +1,8 @@
 <?php 
-require_once '../../controllers/controller_menu_propietarios.php';
+require_once '../../controllers/controller_propietarios_menu.php';
 require_once '../../controllers/controller_template.php';
 require_once '../../controllers/controller_general.php';
-require_once '../../models/model_menu_propietarios.php';
+require_once '../../models/model_propietarios_menu.php';
 require_once '../../models/model_general.php';
 
 session_start();
@@ -95,7 +95,7 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 
     }
 
-    echo ($datos) ? MenuPropietariosController::$controller($datos) : "error";
+    echo ($datos) ? PropietariosMenuController::$controller($datos) : "error";
 
 }else{
     echo "session_expired";

@@ -13,7 +13,7 @@ class QRCodeGenerator
             $url = TemplateController::obtenerUrlController();
 
             // Generar el enlace completo
-            $fullUrl = trim($url . 'menu_sucursal/' . $id_cafeteria);
+            $fullUrl = trim($url . 'cafeterias_menu/' . $id_cafeteria);
 
             // Validar y limpiar la URL
             $fullUrl = filter_var($fullUrl, FILTER_SANITIZE_URL);

@@ -102,7 +102,7 @@ $v = "1.0.10";
                 "cafeterias_lista",
                 "cafeterias_mapa",
                 "registrarme",
-                "menu_sucursal",
+                "cafeterias_menu",
                 "salir"
             ];
 
@@ -152,7 +152,7 @@ $v = "1.0.10";
             "cafeterias_lista",
             "cafeterias_mapa",
             "registrarme",
-            "menu_sucursal",
+            "cafeterias_menu",
             "inicio"
         ];
 
@@ -223,8 +223,8 @@ $v = "1.0.10";
     <script src="<?php echo $url; ?>views/assets/js/scripts/menu_categorias.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/menu_subcategorias.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/menu_productos.js?v='<?php echo $v; ?>'"></script>
-    <script src="<?php echo $url; ?>views/assets/js/scripts/menu_admin.js?v='<?php echo $v; ?>'"></script>
-    <script src="<?php echo $url; ?>views/assets/js/scripts/menu_propietarios.js?v='<?php echo $v; ?>'"></script>
+    <script src="<?php echo $url; ?>views/assets/js/scripts/menu.js?v='<?php echo $v; ?>'"></script>
+    <script src="<?php echo $url; ?>views/assets/js/scripts/propietarios_menu.js?v='<?php echo $v; ?>'"></script>
     <!-- Dashboard -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/dashboard.js?v='<?php echo $v; ?>'"></script>
 

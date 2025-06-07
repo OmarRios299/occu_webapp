@@ -28,8 +28,8 @@ require_once "controllers/controller_cafeterias_servicios.php";
 require_once "controllers/controller_menu_categorias.php";
 require_once "controllers/controller_menu_subcategorias.php";
 require_once "controllers/controller_menu_productos.php";
-require_once "controllers/controller_menu_admin.php";
-require_once "controllers/controller_menu_propietarios.php";
+require_once "controllers/controller_menu.php";
+require_once "controllers/controller_propietarios_menu.php";
 
 //Dashboard
 require_once "controllers/controller_dashboard.php";
@@ -56,8 +56,8 @@ require_once "models/model_cafeterias_servicios.php";
 require_once "models/model_menu_categorias.php";
 require_once "models/model_menu_subcategorias.php";
 require_once "models/model_menu_productos.php";
-require_once "models/model_menu_admin.php";
-require_once "models/model_menu_propietarios.php";
+require_once "models/model_menu.php";
+require_once "models/model_propietarios_menu.php";
 
 //Dashboard
 require_once "models/model_dashboard.php";

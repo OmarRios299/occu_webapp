@@ -13,7 +13,7 @@ if ($cafeteria) {
         <div class="row justify-content-center">
             <div class="col-md-4">
 
-                <a style="text-decoration: none;" href="<?= $url . 'menu_sucursal/' . $action[1]?>">
+                <a style="text-decoration: none;" href="<?= $url . 'cafeterias_menu/' . $action[1]?>">
                     <img src="<?= $qrPath ?>" alt="Código QR" class="img-fluid" style="width: 100%; height: auto; cursor: pointer;" title="Haz clic para descargar el código QR">
                 </a>
             </div>

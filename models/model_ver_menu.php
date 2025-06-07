@@ -38,11 +38,11 @@ class VerMenuModel extends Conexion
         FROM
             menu_categorias
         INNER JOIN menu_subcategorias ON menu_subcategorias.id_categoria = menu_categorias.id
-        INNER JOIN cafeterias_menu_subcategorias ON cafeterias_menu_subcategorias.id_subcategoria = menu_subcategorias.id
-        INNER JOIN cafeterias ON cafeterias.id_usuario = cafeterias_menu_subcategorias.id_propietario
+        INNER JOIN propietarios_menu_subcategorias ON propietarios_menu_subcategorias.id_subcategoria = menu_subcategorias.id
+        INNER JOIN cafeterias ON cafeterias.id_usuario = propietarios_menu_subcategorias.id_propietario
         WHERE cafeterias.id = :cafeteria 
         AND cafeterias.estado=0
-        AND cafeterias_menu_subcategorias.estado = 1");
+        AND propietarios_menu_subcategorias.estado = 1");
 
         $stmt->bindParam(':cafeteria', $cafeteria, PDO::PARAM_INT);
 
@@ -64,11 +64,11 @@ class VerMenuModel extends Conexion
             menu_categorias.*
         FROM
             menu_categorias
-        INNER JOIN cafeterias_menu_subcategorias_extra ON cafeterias_menu_subcategorias_extra.id_categoria = menu_categorias.id
-        INNER JOIN cafeterias ON cafeterias.id_usuario = cafeterias_menu_subcategorias_extra.id_propietario
+        INNER JOIN propietarios_menu_subcategorias_extra ON propietarios_menu_subcategorias_extra.id_categoria = menu_categorias.id
+        INNER JOIN cafeterias ON cafeterias.id_usuario = propietarios_menu_subcategorias_extra.id_propietario
         WHERE cafeterias.id = :cafeteria 
         AND cafeterias.estado=0
-        AND cafeterias_menu_subcategorias_extra.estado = 1");
+        AND propietarios_menu_subcategorias_extra.estado = 1");
 
         $stmt->bindParam(':cafeteria', $cafeteria, PDO::PARAM_INT);
 
@@ -89,17 +89,17 @@ class VerMenuModel extends Conexion
 
         $stmt = Conexion::conectar()->prepare("SELECT 
         menu_subcategorias.*,
-        cafeterias_menu_subcategorias.id_propietario,
+        propietarios_menu_subcategorias.id_propietario,
         'No' AS extra
         FROM
             menu_subcategorias
         INNER JOIN 
-            cafeterias_menu_subcategorias ON cafeterias_menu_subcategorias.id_subcategoria = menu_subcategorias.id
-        INNER JOIN cafeterias ON cafeterias.id_usuario = cafeterias_menu_subcategorias.id_propietario
+            propietarios_menu_subcategorias ON propietarios_menu_subcategorias.id_subcategoria = menu_subcategorias.id
+        INNER JOIN cafeterias ON cafeterias.id_usuario = propietarios_menu_subcategorias.id_propietario
         WHERE cafeterias.id = :cafeteria
         AND menu_subcategorias.estado = 0
         AND cafeterias.estado=0
-        AND cafeterias_menu_subcategorias.estado=1");
+        AND propietarios_menu_subcategorias.estado=1");
 
         $stmt->bindParam(':cafeteria', $cafeteria, PDO::PARAM_INT);
 
@@ -118,12 +118,12 @@ class VerMenuModel extends Conexion
     static public function obtenerSubcategoriasExtraModel($id_propietario)
     {
         $sql = "SELECT 
-                    cafeterias_menu_subcategorias_extra.*,
+                    propietarios_menu_subcategorias_extra.*,
                     'Si' AS extra
-                FROM cafeterias_menu_subcategorias_extra
-                INNER JOIN menu_categorias ON menu_categorias.id = cafeterias_menu_subcategorias_extra.id_categoria
-                WHERE cafeterias_menu_subcategorias_extra.id_propietario = :id_propietario
-                 AND cafeterias_menu_subcategorias_extra.estado = 1";
+                FROM propietarios_menu_subcategorias_extra
+                INNER JOIN menu_categorias ON menu_categorias.id = propietarios_menu_subcategorias_extra.id_categoria
+                WHERE propietarios_menu_subcategorias_extra.id_propietario = :id_propietario
+                 AND propietarios_menu_subcategorias_extra.estado = 1";
 
 
         $stmt = Conexion::conectar()->prepare($sql);
@@ -144,16 +144,16 @@ class VerMenuModel extends Conexion
         $stmt = Conexion::conectar()->prepare("SELECT
         menu_productos.id,
         menu_productos.nombre,
-        COALESCE(cafeterias_menu_sucursales.estado, 'No') AS estado,
+        COALESCE(propietarios_menu_cafeterias.estado, 'No') AS estado,
         menu_productos.imagen
         FROM
             menu_productos
-        LEFT JOIN cafeterias_menu_sucursales ON cafeterias_menu_sucursales.id_producto = menu_productos.id
-            AND cafeterias_menu_sucursales.id_cafeteria = :id
+        LEFT JOIN propietarios_menu_cafeterias ON propietarios_menu_cafeterias.id_producto = menu_productos.id
+            AND propietarios_menu_cafeterias.id_cafeteria = :id
             AND id_tamano = 0
         WHERE menu_productos.estado = 0
         AND menu_productos.id_subcategoria = :subcategoria
-        AND cafeterias_menu_sucursales.estado = 1
+        AND propietarios_menu_cafeterias.estado = 1
         ");
 
         $stmt->bindParam(':subcategoria', $subcategoria, PDO::PARAM_INT);
@@ -171,26 +171,26 @@ class VerMenuModel extends Conexion
 
     static public function obtenerProductosExtraModel($subcategoria, $idCafeteria, $subcategoriaExtra = false)
     {
-        $filtro = "  AND cafeterias_menu_productos_extra.id_subcategoria = :subcategoria";
+        $filtro = "  AND propietarios_menu_productos_extra.id_subcategoria = :subcategoria";
 
         if ($subcategoriaExtra) {
-            $filtro = "  AND cafeterias_menu_productos_extra.id_subcategoria_extra = :subcategoria";
+            $filtro = "  AND propietarios_menu_productos_extra.id_subcategoria_extra = :subcategoria";
         }
 
         $cafeteria = self::buscarCafeteriaModel($idCafeteria);
 
         $stmt = Conexion::conectar()->prepare("SELECT
-        cafeterias_menu_productos_extra.id,
-        cafeterias_menu_productos_extra.nombre,
-        COALESCE(cafeterias_menu_sucursales.estado, 'No') AS estado,
-        cafeterias_menu_productos_extra.imagen
+        propietarios_menu_productos_extra.id,
+        propietarios_menu_productos_extra.nombre,
+        COALESCE(propietarios_menu_cafeterias.estado, 'No') AS estado,
+        propietarios_menu_productos_extra.imagen
         FROM
-            cafeterias_menu_sucursales
-        INNER JOIN cafeterias_menu_productos_extra ON cafeterias_menu_sucursales.id_producto_extra = cafeterias_menu_productos_extra.id
-            AND cafeterias_menu_productos_extra.id_propietario = :id
-            AND cafeterias_menu_productos_extra.estado != 2
-        WHERE cafeterias_menu_sucursales.estado = 1
-        AND cafeterias_menu_sucursales.id_tamano = 0
+            propietarios_menu_cafeterias
+        INNER JOIN propietarios_menu_productos_extra ON propietarios_menu_cafeterias.id_producto_extra = propietarios_menu_productos_extra.id
+            AND propietarios_menu_productos_extra.id_propietario = :id
+            AND propietarios_menu_productos_extra.estado != 2
+        WHERE propietarios_menu_cafeterias.estado = 1
+        AND propietarios_menu_cafeterias.id_tamano = 0
         $filtro
         ");
 

@@ -18,7 +18,7 @@
     </div>
     <div class="row">
         <div class="col-md-12 text-center">
-            <a href="<?= $url ?>menu_propietarios-productos" class="btn btn-outline-primary">Seleccionar productos > ></a>
+            <a href="<?= $url ?>propietarios_menu_productos" class="btn btn-outline-primary">Seleccionar productos > ></a>
         </div>
     </div>
 </div>
@@ -37,7 +37,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label>Nombre:</label>
-                                <input type="text" class="form-control input_subcategorias" tabla='cafeterias_menu_subcategorias_extra' columna='nombre' mensaje='Esta subcategoría ya se encuentra registrada' id="nombre_subcategoria">
+                                <input type="text" class="form-control input_subcategorias" tabla='propietarios_menu_subcategorias_extra' columna='nombre' mensaje='Esta subcategoría ya se encuentra registrada' id="nombre_subcategoria">
                                 <div class="invalid-feedback" style="display: none;"></div>
                             </div>
                         </div>
