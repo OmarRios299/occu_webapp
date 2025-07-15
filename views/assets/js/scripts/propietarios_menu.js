@@ -48,29 +48,6 @@ $(document).on("click",".check_subcategoria",function(){
     });
 });
 
-$(document).on("click",".check_subcategoria_extra",function(){
-    let estado = $(this).attr("estado");
-    let id_registro = $(this).attr("id");
-    var datos = new FormData();
-    
-    datos.append("estado_subcategoria_extra", true);
-    datos.append("id_subcategoria", $(this).attr("id"));
-    datos.append("estado", estado);
-    datos.append("id_registro", id_registro);
-
-    $.ajax({
-        url:url+'views/ajax/ajax_propietarios_menu.php',
-        method:'POST',
-        data: datos,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success:function(respuesta){
-            console.log(respuesta);
-        },
-    });
-});
-
 $(document).on("click",".check_productos",function(){
     let estado = $(this).attr("estado");
     let id_registro = $(this).attr("idRegistro");
@@ -107,11 +84,9 @@ $(document).on("click", ".btn_editar_tamanos", function () {
 
     let id_producto = $(this).attr('idProducto');
     let cafeteria = $("#cafeteria").val();
-    let campo = $(this).attr('campo');
     $("#id_producto").val(id_producto);
-    $("#campo_tabla").val(campo);
 
-    let filtro = `?buscarProducto=${true}&id_producto=${id_producto}&cafeteria=${(cafeteria) ? cafeteria : false}&campo=${campo}`;
+    let filtro = `?buscarProducto=${true}&id_producto=${id_producto}&cafeteria=${(cafeteria) ? cafeteria : false}`;
 
     $.ajax({
         url: url + 'views/ajax/ajax_propietarios_menu.php' + filtro,
@@ -156,11 +131,10 @@ $(document).on("change", ".switch_vasos", function () {
     let id_producto = $("#id_producto").val();
     let id_tamano = $(this).attr('id_tamano');
     let precio = $(this).closest('.opcion_vaso').find('.precio_vaso').val();
-    let campo = $("#campo_tabla").val();
     
 
     let accion = $(this).prop("checked") ? "activar" : "desactivar";
-    let filtro = `?switch_vasos=${accion}&id_producto=${id_producto}&id_tamano=${id_tamano}&precio=${precio}&cafeteria=${(cafeteria) ? cafeteria : false}&campo=${campo}`;
+    let filtro = `?switch_vasos=${accion}&id_producto=${id_producto}&id_tamano=${id_tamano}&precio=${precio}&cafeteria=${(cafeteria) ? cafeteria : false}`;
 
     $.ajax({
         url: url + 'views/ajax/ajax_propietarios_menu.php' + filtro,

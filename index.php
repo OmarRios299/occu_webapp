@@ -30,6 +30,8 @@ require_once "controllers/controller_menu_subcategorias.php";
 require_once "controllers/controller_menu_productos.php";
 require_once "controllers/controller_menu.php";
 require_once "controllers/controller_propietarios_menu.php";
+require_once "controllers/controller_menu_ingredientes_categorias.php";
+require_once "controllers/controller_menu_ingredientes.php";
 
 //Dashboard
 require_once "controllers/controller_dashboard.php";
@@ -58,6 +60,8 @@ require_once "models/model_menu_subcategorias.php";
 require_once "models/model_menu_productos.php";
 require_once "models/model_menu.php";
 require_once "models/model_propietarios_menu.php";
+require_once "models/model_menu_ingredientes_categorias.php";
+require_once "models/model_menu_ingredientes.php";
 
 //Dashboard
 require_once "models/model_dashboard.php";

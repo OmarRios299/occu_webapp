@@ -1,7 +1,7 @@
 <?php
 include "propietarios_menu/modal_tamano_bebidas.php";
 if ($action[0] == 'propietarios_menu' && !isset($action[1])) {
-  $menu = PropietariosMenuController::obtenerMenuPropietarioController(true, false, true, true);
+  $menu = PropietariosMenuController::obtenerMenuPropietarioController(true, false,false);
   $hidden = (PropietariosMenuController::cafeteriasPropietarioController() > 1) ? '' : 'display:none';
 
   if ($menu['subcategorias'] == "") {
@@ -58,7 +58,7 @@ if ($action[0] == 'propietarios_menu' && !isset($action[1])) {
 } else if ($action[0] == 'propietarios_menu' && isset($action[1])) {
   $cafeteria = GeneralController::verificarCafeteriaContoller($action[1], $_SESSION['id']);
   if ($cafeteria) {
-    $menu = PropietariosMenuController::obtenerMenuPropietarioController(false, $cafeteria['id'], true, true);
+    $menu = PropietariosMenuController::obtenerMenuPropietarioController(false, $cafeteria['id'], false);
     if ($menu['subcategorias'] == "") {
       include "404-menu.php";
     } else {
@@ -138,9 +138,6 @@ if ($action[0] == 'propietarios_menu' && !isset($action[1])) {
                 <label>Categoría:</label>
                 <select class="form-control input_productos" id="select_subcategoria">
                   <option value="" disabled selected>Selecciona una opción</option>
-                  <?php foreach (PropietariosMenuController::obtenerSubcategoriasExtraController() as $subcategoria) { ?>
-                    <option value="<?= $subcategoria['id'] ?>" campo="id_subcategoria_extra"><?= $subcategoria['categoria'] . ' - ' . $subcategoria['nombre'] ?></option>
-                  <?php } ?>
                   <?php foreach (MenuProductosController::obtenerSubcategoriasController() as $subcategoria) { ?>
                     <option value="<?= $subcategoria['id'] ?>" campo="id_subcategoria"><?= $subcategoria['categoria'] . ' - ' . $subcategoria['nombre'] ?></option>
                   <?php } ?>

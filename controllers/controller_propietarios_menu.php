@@ -35,10 +35,12 @@ class PropietariosMenuController
                 if ($subcategoria['estado'] == 1) {
                     $checked = 'checked';
                 }
+                $eliminar = ($subcategoria['registro_occu']==2) ? '<a class="me-1 eliminarRegistro" style="color:red; cursor:pointer" tabla="menu_subcategorias" idRegistro="' . $subcategoria['id'] . '">x</a>' : '';
                 $data .= '
                 <div class="form-check form-switch">
                     <div class="row align-items-center">
                         <div class="col-10">
+                            '.$eliminar.'
                             <label class="form-check-label" for="' . $subcategoria['id'] . '">' . $subcategoria['nombre'] . '</label>
                         </div>
                         <div class="col-2">
@@ -49,28 +51,6 @@ class PropietariosMenuController
                 ';
             }
 
-            // Obtener subcategorias_extra
-            $subcategorias_extra = PropietariosMenuModel::obtenerSubcategoriasExtraModel($categoria['id'], $id_propietario);
-
-            foreach ($subcategorias_extra as $subcategoria) {
-                $checked = '';
-                if ($subcategoria['estado'] == 1) {
-                    $checked = 'checked';
-                }
-                $data .= '
-                <div class="form-check form-switch">
-                    <div class="row align-items-center">
-                        <div class="col-10">
-                            <a class="me-1 eliminarRegistro" style="color:red; cursor:pointer" tabla="propietarios_menu_subcategorias_extra" idRegistro="' . $subcategoria['id'] . '">x</a>
-                            <label class="form-check-label" for="' . $subcategoria['id'] . '">' . $subcategoria['nombre'] . '</label>
-                        </div>
-                        <div class="col-2">
-                            <input class="form-check-input check_subcategoria_extra" type="checkbox" id="' . $subcategoria['id'] . '" estado="' . $subcategoria['estado'] . '" ' . $checked . '>
-                        </div>
-                    </div>
-                </div>
-                ';
-            }
             $data .= '</div></div>';
         }
 
@@ -95,18 +75,6 @@ class PropietariosMenuController
     }
 
     /* INSERTAR REGISTRO DE SUBCATEGORIAS */
-
-
-    /* INSERTAR REGISTRO DE SUBCATEGORIAS EXTRA */
-
-    static public function agregarSubcategoriaExtraController($datos)
-    {
-
-        $datos['estado'] = ($datos['estado'] == 1) ? 0 : 1;
-        PropietariosMenuModel::cambiarEstadoSubcategoriaExtraModel($datos);
-    }
-
-    /* INSERTAR REGISTRO DE SUBCATEGORIAS EXTRA */
 
 
     /* INSERTAR REGISTRO DE PRODUCTOS */
@@ -169,7 +137,7 @@ class PropietariosMenuController
             }
         }
 
-        return json_encode(PropietariosMenuModel::buscarProductoModel($datos, $datos['cafeteria'], $datos['campo']));
+        return json_encode(PropietariosMenuModel::buscarProductoModel($datos, $datos['cafeteria']));
     }
 
     /* BUSCAR REGISTRO DE PRODUCTOS */
@@ -177,75 +145,18 @@ class PropietariosMenuController
 
     /* OBTENER MENU POR PROPIETARIO */
 
-    static public function obtenerMenuPropietarioController($productosActivos, $cafeterias, $extras, $ExtrasActivas = true)
+    static public function obtenerMenuPropietarioController($productosActivos, $cafeterias, $occu)
     {
         $id_propietario = $_SESSION['id'];
 
         $url = TemplateController::obtenerUrlController();
         $categorias = '<li><a href="todos"class="menu-link active">Todos</a></li>';
 
-        foreach (PropietariosMenuModel::obtenerCategoriasPropietarioModel($id_propietario, $extras) as $categoria) {
+        foreach (PropietariosMenuModel::obtenerCategoriasPropietarioModel($id_propietario) as $categoria) {
             $categorias .= '<li><a href="' . $categoria['id'] . '" class="menu-link">' . $categoria['nombre'] . '</a></li>';
         }
 
         $subcategorias = '';
-
-
-        // Subcategorías extra ---->>>>
-
-        if ($extras) {
-
-            foreach (PropietariosMenuModel::obtenerSubcategoriasExtraModel(false, $id_propietario, $ExtrasActivas) as $subcategoria) {
-
-                $productos_data = '';
-                $hidden = '';
-                $hidden = ($subcategoria['id_categoria'] == 1 ||
-                    $subcategoria['id_categoria'] == 2 ||
-                    $subcategoria['id_categoria'] == 3 ||
-                    $subcategoria['id_categoria'] == 4)
-                    ? '' : 'hidden';
-
-                $productos = PropietariosMenuModel::obtenerProductosExtraModel($subcategoria['id'], $id_propietario, 'id_subcategoria_extra', false, $cafeterias);
-
-                if (!$productos) {
-                    $productos_data = '                
-                    <div class="product-item">
-                        <div class="alert alert-warning w-100 m-0">
-                            <span class="">Aún no activas ningún producto en esta categoría.</span>
-                        </div>
-                    </div>';
-                }
-                foreach ($productos as $producto) {
-                    $checked = '';
-                    if ($producto['estado'] == 1) {
-                        $checked = 'checked';
-                    }
-                    $productos_data .= '<div class="product-item">
-                                            <img src="' . $url . $producto['imagen'] . '" alt="" class="product-image">
-                                            <div class="product-info">
-                                                <span class="product-name">' . $producto['nombre'] . '</span>
-                                                <span class="product-price"></span>
-                                            </div>
-                                            <div class="form-check form-switch">
-                                                <div class="row align-items-center">
-                                                    <div class="col">
-                                                        <button type="button" class="btn btn-icono btn-categorias btn_editar_tamanos" campo="id_producto_extra" idProducto="' . $producto['id_producto_extra'] . '" ' . $hidden . '></button>
-                                                        <input class="form-check-input check_productos mt-3" type="checkbox" campo="id_producto_extra" id="' . $producto['id'] . '" idRegistro="' . $producto['id_registro'] . '" estado="' . $producto['estado'] . '" ' . $checked . '>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            
-                                        </div>';
-                }
-
-                $subcategorias .= '<div class="' . $subcategoria['id_categoria'] . ' category active">
-                                        <h2>' . $subcategoria['nombre'] . '</h2>
-                                        ' . $productos_data . '
-                                        <hr>
-                                    </div>';
-            }
-        }
-
 
         foreach (PropietariosMenuModel::obtenerSubcategoriasPropietarioModel($id_propietario, 'activas') as $subcategoria) {
 
@@ -257,7 +168,7 @@ class PropietariosMenuController
                 $subcategoria['id_categoria'] == 4)
                 ? '' : 'hidden';
 
-            $productos = PropietariosMenuModel::obtenerProductosModel($subcategoria['id'], $id_propietario, $productosActivos, $cafeterias, $extras);
+            $productos = PropietariosMenuModel::obtenerProductosModel($subcategoria['id'], $id_propietario, $productosActivos, $cafeterias,$occu);
             if (!$productos) {
                 $productos_data = '                
                     <div class="product-item">
@@ -272,12 +183,7 @@ class PropietariosMenuController
                 if ($producto['estado'] == 1) {
                     $checked = 'checked';
                 }
-                $campo = 'id_producto';
                 $idProducto = $producto['id'];
-                if (isset($producto['id_producto_extra'])) {
-                    $campo = 'id_producto_extra';
-                    $idProducto = $producto['id_producto_extra'];
-                }
                 $productos_data .= '<div class="product-item">
                                         <img src="' . $url . $producto['imagen'] . '" alt="" class="product-image">
                                         <div class="product-info">
@@ -287,8 +193,8 @@ class PropietariosMenuController
                                         <div class="form-check form-switch">
                                             <div class="row align-items-center">
                                                 <div class="col">
-                                                    <button type="button" class="btn btn-icono btn-categorias btn_editar_tamanos" campo="' . $campo . '" idProducto="' . $idProducto . '" ' . $hidden . '></button>
-                                                    <input class="form-check-input check_productos mt-3" type="checkbox" campo="' . $campo . '" id="' . $producto['id'] . '" estado="' . $producto['estado'] . '" idRegistro="' . $producto['id_registro'] . '" ' . $checked . '>
+                                                    <button type="button" class="btn btn-icono btn-categorias btn_editar_tamanos" idProducto="' . $idProducto . '" ' . $hidden . '></button>
+                                                    <input class="form-check-input check_productos mt-3" type="checkbox" id="' . $producto['id'] . '" estado="' . $producto['estado'] . '" idRegistro="' . $producto['id_registro'] . '" ' . $checked . '>
                                                 </div>
                                             </div>
                                         </div>
@@ -354,17 +260,6 @@ class PropietariosMenuController
     /* AGREGAR SUBCATEGORIAS */
 
 
-    /* OBTENER SUBCATEGORIAS */
-
-    static public function obtenerSubcategoriasExtraController()
-    {
-        $id_propietario = $_SESSION['id'];
-        return PropietariosMenuModel::obtenerSubcategoriasExtraModel(false, $id_propietario);
-    }
-
-    /* OBTENER SUBCATEGORIAS */
-
-
     /* AGREGAR PRODUCTOS EXTRA */
 
     static public function agregarProductosExtraController($datos)
@@ -372,7 +267,7 @@ class PropietariosMenuController
         $datos['id_propietario'] = $_SESSION['id'];
         $datos['fecha_alta'] = date("Y-m-d H:i:s");
 
-        $validacion_nombre = GeneralModel::validarCampoModel($datos['nombre'], "nombre", "propietarios_menu_productos_extra");
+        $validacion_nombre = GeneralModel::validarCampoModel($datos['nombre'], "nombre", "menu_productos");
 
         //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
         if ($validacion_nombre) return "error_validacion_nombre";

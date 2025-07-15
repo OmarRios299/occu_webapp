@@ -34,33 +34,17 @@ class CafeteriasMenuController
                     $productos_data = '';
 
                     // Obtener productos de la subcategoría
-                    if ($subcategoria['extra'] == "No") {
-                        $productos = CafeteriasMenuModel::obtenerProductosModel($subcategoria['id'], $cafeteria);
+                    $productos = CafeteriasMenuModel::obtenerProductosModel($subcategoria['id'], $cafeteria);
 
-                        foreach ($productos as $producto) {
-                            if ($producto['estado'] == 1) { // Solo productos activos
-                                $productos_data .= '<div class="product-item">
+                    foreach ($productos as $producto) {
+                        if ($producto['estado'] == 1) { // Solo productos activos
+                            $productos_data .= '<div class="product-item">
                                                     <img src="' . $url . $producto['imagen'] . '" alt="" class="product-image">
                                                     <div class="product-info">
                                                         <span class="product-name">' . $producto['nombre'] . '</span>
                                                         <span class="product-price"></span>
                                                     </div>
                                                 </div>';
-                            }
-                        }
-                    } else {
-                        $productos = CafeteriasMenuModel::obtenerProductosExtraModel($subcategoria['id'], $cafeteria, true);
-
-                        foreach ($productos as $producto) {
-                            if ($producto['estado'] == 1) { // Solo productos activos
-                                $productos_data .= '<div class="product-item">
-                                                    <img src="' . $url . $producto['imagen'] . '" alt="" class="product-image">
-                                                    <div class="product-info">
-                                                        <span class="product-name">' . $producto['nombre'] . '</span>
-                                                        <span class="product-price"></span>
-                                                    </div>
-                                                </div>';
-                            }
                         }
                     }
 

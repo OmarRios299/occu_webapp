@@ -23,15 +23,6 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = "agregarSubcategoriaController";
 
-    }else if(isset($_POST['estado_subcategoria_extra'])){
-
-        $datos = array(
-            "id_subcategoria"             => $_POST['id_subcategoria'],
-            "estado"                => isset($_POST['estado']) ? $_POST['estado'] : false,
-            "id_registro"                => isset($_POST['id_registro'])? $_POST['id_registro'] : false,
-        );
-        $controller = "agregarSubcategoriaExtraController";
-
     }else if(isset($_POST['agregar_producto'])){
 
         $datos = array(
@@ -39,7 +30,6 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
             "estado"                => isset($_POST['estado']) ? $_POST['estado'] : false,
             "id_registro"                => isset($_POST['id_registro'])? $_POST['id_registro'] : false,
             "cafeteria"                => isset($_POST['cafeteria'])? $_POST['cafeteria'] : false,
-            "campo"             => $_POST['campo'],
         );
         $controller = "agregarProductoController";
 
@@ -51,7 +41,6 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
             "id_tamano"                 => $_GET['id_tamano'],
             "precio"                    => $_GET['precio'],
             "cafeteria"                => isset($_GET['cafeteria'])? $_GET['cafeteria'] : false,
-            "campo"                    => $_GET['campo'],
         );
         $controller = "activarTamanoController";
 
@@ -60,7 +49,6 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         $datos = array(
             "id_producto"               => $_GET['id_producto'],
             "cafeteria"                => isset($_GET['cafeteria'])? $_GET['cafeteria'] : false,
-            "campo"               => $_GET['campo'],
         );
         $controller = "buscarProductoController";
 

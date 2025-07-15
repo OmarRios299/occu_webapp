@@ -52,7 +52,7 @@ class PropietariosMenuModel extends Conexion {
     
     /* OBTENER CATEGORIAS POR PROPIETARIO */
     
-    static public function obtenerCategoriasPropietarioModel($id_propietario,$extras){
+    static public function obtenerCategoriasPropietarioModel($id_propietario){
     
         $stmt = Conexion::conectar()->prepare("SELECT DISTINCT
             menu_categorias.*
@@ -60,48 +60,21 @@ class PropietariosMenuModel extends Conexion {
             menu_categorias
         INNER JOIN menu_subcategorias ON menu_subcategorias.id_categoria = menu_categorias.id
         INNER JOIN propietarios_menu_subcategorias ON propietarios_menu_subcategorias.id_subcategoria = menu_subcategorias.id
-        WHERE
-            propietarios_menu_subcategorias.id_propietario = :propietario AND propietarios_menu_subcategorias.estado = 1");
+        WHERE propietarios_menu_subcategorias.id_propietario = :propietario 
+            AND propietarios_menu_subcategorias.estado = 1");
     
         $stmt->bindParam(':propietario', $id_propietario,PDO::PARAM_INT);
     
         $stmt -> execute();
     
         $categorias = $stmt -> fetchAll();
-
-        if ($extras) {
-            $categorias = array_merge(
-                $categorias,
-                self::obtenerCategoriasExtraPropietarioModel($id_propietario)
-            );
-        }
         
-    
         return $categorias;
         
         $stmt = null;
     
     }
 
-    static public function obtenerCategoriasExtraPropietarioModel($id_propietario){
-    
-        $stmt = Conexion::conectar()->prepare("SELECT DISTINCT
-            menu_categorias.*
-        FROM
-            menu_categorias
-        INNER JOIN propietarios_menu_subcategorias_extra ON propietarios_menu_subcategorias_extra.id_categoria = menu_categorias.id
-        WHERE
-            propietarios_menu_subcategorias_extra.id_propietario = :propietario AND propietarios_menu_subcategorias_extra.estado = 1");
-    
-        $stmt->bindParam(':propietario', $id_propietario,PDO::PARAM_INT);
-    
-        $stmt -> execute();
-    
-        return $stmt -> fetchAll();
-    
-        $stmt = null;
-    
-    }
     
     /* OBTENER CATEGORIAS POR PROPIETARIO */
 
@@ -144,6 +117,7 @@ class PropietariosMenuModel extends Conexion {
         $stmt = Conexion::conectar()->prepare("SELECT 
         menu_subcategorias.id,
         menu_subcategorias.nombre,
+        menu_subcategorias.registro_occu,
         COALESCE(propietarios_menu_subcategorias.estado, 'No') AS estado,
         COALESCE(propietarios_menu_subcategorias.id, 'No') AS id_registro
         FROM
@@ -174,7 +148,7 @@ class PropietariosMenuModel extends Conexion {
 
     /* OBTENER PRODUCTOS */
 
-    static public function obtenerProductosModel($subcategoria, $id_propietario, $estado=false, $cafeteria=false,$extras){
+    static public function obtenerProductosModel($subcategoria, $id_propietario, $estado=false, $cafeteria=false, $occu=false){
 
         $tabla='propietarios_menu_productos';
         $campo ="id_propietario";
@@ -191,6 +165,10 @@ class PropietariosMenuModel extends Conexion {
         if ($estado) {
             $filtro = ' AND '.$tabla.'.estado=1';
             $condicion=' AND '.$tabla.'.estado =1';
+        }
+
+        if ($occu) {
+            $condicion = ' AND menu_productos.registro_occu = 1';
         }
 
         $stmt = Conexion::conectar()->prepare("SELECT
@@ -216,14 +194,6 @@ class PropietariosMenuModel extends Conexion {
         $stmt -> execute();
     
         $productos = $stmt -> fetchAll();
-
-        if ($extras) {
-            $productos = array_merge(
-                $productos,
-                self::obtenerProductosExtraModel($subcategoria, $id_propietario, "id_subcategoria",false, $cafeteria)
-            );
-        }
-        
     
         return $productos;
         
@@ -329,9 +299,6 @@ class PropietariosMenuModel extends Conexion {
             $tabla = 'propietarios_menu_cafeterias';
         }
 
-        // if ($datos['campo']=='id_producto_extra') {
-        //     $tabla = 'propietarios_menu_productos';
-        // }
     
         $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET estado = :estado WHERE id = :id");
     
@@ -453,7 +420,6 @@ class PropietariosMenuModel extends Conexion {
     static public function actualizarProductoModel($datos, $cafeteria) {
         $tabla='propietarios_menu_productos';
         $campo ="id_propietario";
-        $campoProducto = $datos['campo'];
         $id = $datos['id_propietario'];
         if ($cafeteria!=='false') {
             $tabla = 'propietarios_menu_cafeterias';
@@ -464,7 +430,7 @@ class PropietariosMenuModel extends Conexion {
         $conexion = Conexion::conectar();
         $stmt = $conexion->prepare("UPDATE $tabla 
             SET estado = 1, precio = :precio
-            WHERE $campoProducto = :id_producto 
+            WHERE id_producto = :id_producto 
             AND id_tamano = :id_tamano 
             AND $campo = :id");
     
@@ -478,7 +444,7 @@ class PropietariosMenuModel extends Conexion {
         // Si no se actualizó ningún registro, insertar uno nuevo
         if ($stmt->rowCount() == 0) {
             $stmt = $conexion->prepare("INSERT INTO $tabla 
-                ($campoProducto, id_tamano, $campo, precio, estado) 
+                (id_producto, id_tamano, $campo, precio, estado) 
                 VALUES (:id_producto, :id_tamano, :id, :precio, 1)");
     
             $stmt->bindParam(":id_producto", $datos['id_producto'], PDO::PARAM_INT);
@@ -502,8 +468,8 @@ class PropietariosMenuModel extends Conexion {
     
     /* BUSCAR PRODUCTO */
     
-    static public function buscarProductoModel($datos, $cafeteria=false,$campoProducto){
-        $tabla='propietarios_menu_productos';
+    static public function buscarProductoModel($datos, $cafeteria=false){
+        $tabla="propietarios_menu_productos";
         $campo ="id_propietario";
         $id = $datos['id_propietario'];
         if ($cafeteria!=='false') {
@@ -513,7 +479,7 @@ class PropietariosMenuModel extends Conexion {
         }
     
         $stmt = Conexion::conectar()->prepare("SELECT * FROM $tabla              
-        WHERE $campoProducto = :id_producto 
+        WHERE id_producto = :id_producto 
         AND $campo = :id
         AND id_tamano != 0");
     
@@ -579,17 +545,10 @@ class PropietariosMenuModel extends Conexion {
     
     static public function actualizarMenuSucursalModel($datos, $cafeteria){
 
-        $campo='id_producto';
-        $valor = $datos['id_producto'];
-        if ($datos['id_producto']==0) {
-            $campo = 'id_producto_extra';
-            $valor = $datos['id_producto_extra'];
-        }
-    
-        $stmt = Conexion::conectar()->prepare("INSERT INTO propietarios_menu_cafeterias ($campo, id_tamano, id_cafeteria, precio, estado) 
+        $stmt = Conexion::conectar()->prepare("INSERT INTO propietarios_menu_cafeterias (id_producto, id_tamano, id_cafeteria, precio, estado) 
         VALUES (:id_producto, :id_tamano, :id_cafeteria, :precio, :estado)");
     
-        $stmt->bindParam(':id_producto', $valor, PDO::PARAM_INT);
+        $stmt->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
         $stmt->bindParam(':id_tamano', $datos['id_tamano'], PDO::PARAM_INT);
         $stmt->bindParam(':id_cafeteria', $cafeteria, PDO::PARAM_INT);
         $stmt->bindParam(':precio', $datos['precio'], PDO::PARAM_STR);
@@ -614,7 +573,6 @@ class PropietariosMenuModel extends Conexion {
         $stmt = Conexion::conectar()->prepare("UPDATE propietarios_menu_cafeterias 
         SET precio = :precio 
         WHERE id_producto = :id_producto
-        AND id_producto_extra = :id_producto_extra
         AND id_tamano = :id_tamano
         AND id_cafeteria = :id_cafeteria");
     
@@ -636,46 +594,6 @@ class PropietariosMenuModel extends Conexion {
     /* ACTUALIZAR PRECIOS DE MENU POR SUCURSAL */
 
 
-
-
-    /* De aqui en adelante se gestiona lo relacionado 
-    con las categorias subcategorias "Extra" agregadas por los propietarios */
-
-    
-    /* OBTENER SUBCATEGORIAS POR CATEGORIA */
-
-    static public function obtenerSubcategoriasExtraModel($categoria, $id_propietario, $subcategoriasExtrasActivas=false) {
-        $sql = "SELECT 
-                    propietarios_menu_subcategorias_extra.*,
-                    COALESCE(propietarios_menu_subcategorias_extra.estado, 'No') AS estado,
-                    menu_categorias.nombre AS categoria
-                FROM propietarios_menu_subcategorias_extra
-                INNER JOIN menu_categorias ON menu_categorias.id = propietarios_menu_subcategorias_extra.id_categoria
-                WHERE propietarios_menu_subcategorias_extra.id_propietario = :id_propietario";
-
-        if ($categoria !== false) {
-            $sql .= " AND propietarios_menu_subcategorias_extra.id_categoria = :categoria";
-        }
-
-        if ($subcategoriasExtrasActivas !== false) {
-            $sql .= " AND propietarios_menu_subcategorias_extra.estado = 1";
-        }else{
-            $sql .= " AND propietarios_menu_subcategorias_extra.estado != 2";
-        }
-
-        $stmt = Conexion::conectar()->prepare($sql);
-        $stmt->bindParam(':id_propietario', $id_propietario, PDO::PARAM_INT);
-
-        if ($categoria !== false) {
-            $stmt->bindParam(':categoria', $categoria, PDO::PARAM_INT);
-        }
-
-        $stmt->execute();
-        return $stmt->fetchAll();
-    }
-    
-    /* OBTENER SUBCATEGORIAS POR CATEGORIA */
-    
     
     /* AGREGAR SUBCATEGORIAS */
 
@@ -683,8 +601,8 @@ class PropietariosMenuModel extends Conexion {
     {
 
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("INSERT INTO propietarios_menu_subcategorias_extra(nombre, id_categoria, id_propietario) 
-        VALUES (:nombre, :id_categoria, :id_propietario)");
+        $stmt = $conexion->prepare("INSERT INTO menu_subcategorias(nombre, id_categoria, id_propietario, registro_occu) 
+        VALUES (:nombre, :id_categoria, :id_propietario, 2)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':id_categoria', $datos['id_categoria'], PDO::PARAM_INT);
@@ -702,36 +620,13 @@ class PropietariosMenuModel extends Conexion {
     /* AGREGAR SUBCATEGORIAS */
 
 
-    /* CAMBIAR ESTADO SUBCATEGORIA */
-
-    static public function cambiarEstadoSubcategoriaExtraModel($datos){
-
-        $stmt = Conexion::conectar()->prepare("UPDATE propietarios_menu_subcategorias_extra SET estado = :estado WHERE id = :id");
-    
-        $stmt->bindParam(":id", $datos['id_registro'], PDO::PARAM_INT);
-        $stmt->bindParam(":estado", $datos['estado'], PDO::PARAM_INT);
-    
-        if($stmt->execute()){
-            return 'success';
-        }else{
-            return 'error';
-        }
-    
-        $stmt = null;
-    
-    }
-    
-    /* CAMBIAR ESTADO SUBCATEGORIA */
-
-
     /* AGREGAR PRODUCTOS */
 
     static public function agregarProductoExtraModel($datos)
     {
-        $campo = $datos['campo'];
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("INSERT INTO propietarios_menu_productos_extra(nombre, $campo, imagen, id_propietario) 
-        VALUES (:nombre, :id_subcategoria, 'views/assets/img/cafeteria_default.png', :id_propietario)");
+        $stmt = $conexion->prepare("INSERT INTO menu_productos(nombre, id_subcategoria, imagen, id_alta, registro_occu) 
+        VALUES (:nombre, :id_subcategoria, 'views/assets/img/cafeteria_default.png', :id_propietario, 2)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':id_subcategoria', $datos['id_subcategoria'], PDO::PARAM_INT);
@@ -740,8 +635,8 @@ class PropietariosMenuModel extends Conexion {
         if ($stmt->execute()) {
             $id = $conexion->lastInsertId();
 
-            $stmtInsertar = $conexion->prepare("INSERT INTO propietarios_menu_productos (id_producto_extra, id_propietario, estado) VALUES (:id_producto_extra, :id_propietario, 1)");
-            $stmtInsertar->bindParam(':id_producto_extra', $id, PDO::PARAM_INT);
+            $stmtInsertar = $conexion->prepare("INSERT INTO propietarios_menu_productos (id_producto, id_propietario, estado) VALUES (:id_producto, :id_propietario, 1)");
+            $stmtInsertar->bindParam(':id_producto', $id, PDO::PARAM_INT);
             $stmtInsertar->bindParam(':id_propietario', $datos['id_propietario'], PDO::PARAM_INT);
     
             if ($stmtInsertar->execute()) {
@@ -763,7 +658,7 @@ class PropietariosMenuModel extends Conexion {
 
     static public function buscarProductoExtraModel($id_producto){
 
-        $stmt = Conexion::conectar()->prepare("SELECT * FROM propietarios_menu_productos_extra WHERE id=:id_producto");
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM menu_productos WHERE id=:id_producto");
     
         $stmt->bindParam(':id_producto', $id_producto,PDO::PARAM_INT);
     
@@ -783,7 +678,7 @@ class PropietariosMenuModel extends Conexion {
     static public function editarImagenModel($datos)
     {
 
-        $stmt = Conexion::conectar()->prepare("UPDATE propietarios_menu_productos_extra SET imagen=:imagen WHERE id = :id");
+        $stmt = Conexion::conectar()->prepare("UPDATE menu_productos SET imagen=:imagen WHERE id = :id");
 
         $stmt->bindParam(":id", $datos['id'], PDO::PARAM_INT);
         $stmt->bindParam(":imagen", $datos['imagen'], PDO::PARAM_STR);
@@ -798,60 +693,6 @@ class PropietariosMenuModel extends Conexion {
     }
 
     /* EDITAR IMAGEN */
-
-    
-    /* OBTENER PRODUCTOS EXTRA */
-    
-    static public function obtenerProductosExtraModel($subcategoria, $id_propietario, $campo, $productosActivos, $cafeteria){
-
-        if ($cafeteria) {
-            $id_propietario = $cafeteria;
-            $stmt = Conexion::conectar()->prepare("SELECT
-            propietarios_menu_productos_extra.id,
-            propietarios_menu_cafeterias.id_producto_extra,
-            propietarios_menu_productos_extra.nombre,
-            COALESCE(propietarios_menu_cafeterias.estado, 'No') AS estado,
-            COALESCE(propietarios_menu_cafeterias.id, 'No') AS id_registro,
-            propietarios_menu_productos_extra.imagen
-            FROM
-                propietarios_menu_productos_extra
-            LEFT JOIN propietarios_menu_cafeterias ON propietarios_menu_cafeterias.id_producto_extra = propietarios_menu_productos_extra.id
-                AND propietarios_menu_cafeterias.id_cafeteria = :propietario
-                AND id_tamano = 0
-            WHERE propietarios_menu_productos_extra.estado = 0
-            AND propietarios_menu_productos_extra.$campo = :subcategoria 
-            AND propietarios_menu_cafeterias.estado !=2
-            ");
-
-        }else{
-            $filtro='';
-            if ($productosActivos) {
-                $filtro = ' AND estado=1';
-            }
-            $stmt = Conexion::conectar()->prepare("SELECT *,
-            propietarios_menu_productos.id AS id_registro,
-            propietarios_menu_productos.id_producto_extra
-            FROM propietarios_menu_productos_extra 
-            INNER JOIN propietarios_menu_productos ON propietarios_menu_productos.id_producto_extra = propietarios_menu_productos_extra.id
-                AND propietarios_menu_productos.id_tamano = 0
-            WHERE propietarios_menu_productos_extra.$campo=:subcategoria
-            AND propietarios_menu_productos.id_propietario=:propietario
-            $filtro");
-
-        }
-        
-            $stmt->bindParam(':subcategoria',$subcategoria ,PDO::PARAM_INT);
-            $stmt->bindParam(':propietario',$id_propietario ,PDO::PARAM_INT);
-        
-            $stmt -> execute();
-        
-            return $stmt -> fetchAll();
-        
-            $stmt = null; 
-    
-    }
-    
-    /* OBTENER PRODUCTOS EXTRA */
 
     
 }
