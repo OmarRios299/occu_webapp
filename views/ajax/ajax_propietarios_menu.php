@@ -77,6 +77,22 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = "agregarProductosExtraController";
 
+    }   
+
+    /* ----- FUNCIONAMIENTO DEL MODAL DE SELECCION DE INGREDIENTES ----- 
+    ---------------------------------------------------------------------*/
+
+    else if(isset($_POST['agregar_ingrediente'])){
+
+        $datos = array(
+            "id_producto"             => $_POST['id_producto'],
+            "id_ingrediente"             => $_POST['id_ingrediente'],
+            "estado"                => isset($_POST['estado']) ? $_POST['estado'] : false,
+            "id_registro"                => isset($_POST['id_registro'])? $_POST['id_registro'] : false,
+            "id_cafeteria"                => isset($_POST['cafeteria']) ? $_POST['cafeteria'] : false,
+        );
+        $controller = "agregarIngredienteController";
+
     }else{
 
         $datos = false;

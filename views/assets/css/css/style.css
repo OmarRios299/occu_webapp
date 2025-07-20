@@ -1294,6 +1294,11 @@ dl, ol, ul {
     border-color: var(--color-claro-azul)!important;
     background-color: var(--color-claro-azul)!important;
 }
+.btn-ingredientes {
+    color: var(--color-rojo)!important;
+    border-color: var(--color-claro-rojo)!important;
+    background-color: var(--color-claro-rojo)!important;
+}
 .btn-detalles {
     color: var(--color-blanco)!important;
     border-color: var(--color-gris)!important;
@@ -1556,6 +1561,10 @@ dl, ol, ul {
 .btn-categorias.con-icono::before, 
 .btn-categorias.btn-icono {
     background-image: url(../img/iconos/botones/icono-categorias.svg);
+}
+.btn-ingredientes.con-icono::before, 
+.btn-ingredientes.btn-icono {
+    background-image: url(../img/iconos/botones/icono-ingrediente.svg);
 }
 .btn-detalles.con-icono::before, 
 .btn-detalles.btn-icono {

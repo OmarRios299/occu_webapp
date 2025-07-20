@@ -137,7 +137,46 @@ class PropietariosMenuController
             }
         }
 
-        return json_encode(PropietariosMenuModel::buscarProductoModel($datos, $datos['cafeteria']));
+        $data = '';
+
+        foreach (PropietariosMenuModel::obtenerCategoriasingredientesModel() as $categoria) {
+            $data .= '
+            <div class="col-md-4">
+                <h6 class=""><b>' . $categoria['nombre'] . '</b></h6>
+                <div class="row mb-3">
+            ';
+
+            // verificar si la cafeteria ya cuenta con registros de ingrediente para la informacion que se mostrará
+            $ingredientes = PropietariosMenuModel::obtenerIngredientesModel($categoria['id'], $datos, $datos['id_producto']);
+
+            foreach ($ingredientes as $ingrediente) {
+                $checked = '';
+                if ($ingrediente['estado'] == 1) {
+                    $checked = 'checked';
+                }
+                $eliminar = ($ingrediente['registro_occu']==2) ? '<a class="me-1 eliminarRegistro" style="color:red; cursor:pointer" tabla="menu_ingredientes" idRegistro="' . $ingrediente['id'] . '">x</a>' : '';
+                $data .= '
+                <div class="form-check form-switch">
+                    <div class="row align-items-center">
+                        <div class="col-10">
+                            '.$eliminar.'
+                            <label class="form-check-label" for="' . $ingrediente['id'] . '">' . $ingrediente['nombre'] . '</label>
+                        </div>
+                        <div class="col-2">
+                            <input class="form-check-input check_ingredientes" type="checkbox" id="' . $ingrediente['id'] . '" estado="' . $ingrediente['estado'] . '" idRegistro="' . $ingrediente['id_registro'] . '" ' . $checked . '>
+                        </div>
+                    </div>
+                </div>
+                ';
+            }
+
+            $data .= '</div></div>';
+        }
+
+        return json_encode([
+            'producto' => PropietariosMenuModel::buscarProductoModel($datos, $datos['cafeteria']),
+            'ingredientes' => $data,
+        ]);
     }
 
     /* BUSCAR REGISTRO DE PRODUCTOS */
@@ -193,6 +232,7 @@ class PropietariosMenuController
                                         <div class="form-check form-switch">
                                             <div class="row align-items-center">
                                                 <div class="col">
+                                                    <button type="button" class="btn btn-icono btn-ingredientes btn_editar_ingre" idProducto="' . $idProducto . '" ></button>
                                                     <button type="button" class="btn btn-icono btn-categorias btn_editar_tamanos" idProducto="' . $idProducto . '" ' . $hidden . '></button>
                                                     <input class="form-check-input check_productos mt-3" type="checkbox" id="' . $producto['id'] . '" estado="' . $producto['estado'] . '" idRegistro="' . $producto['id_registro'] . '" ' . $checked . '>
                                                 </div>
@@ -289,4 +329,22 @@ class PropietariosMenuController
     }
 
     /* AGREGAR PRODUCTOS EXTRA */
+
+
+
+/* ----- FUNCIONAMIENTO DEL MODAL DE SELECCION DE INGREDIENTES ----- 
+---------------------------------------------------------------------*/
+
+
+    static public function agregarIngredienteController($datos)
+    {
+        if ($datos['id_registro'] != 'No') {
+            $datos['estado'] = ($datos['estado'] == 1) ? 0 : 1;
+            PropietariosMenuModel::cambiarEstadoIngredienteModel($datos);
+        } else {
+            //$cafeterias = PropietariosMenuModel::buscarCafeteriasUsuarioModel($datos['id_usuario']);
+            $datos['id_propietario'] = $_SESSION['id'];
+            PropietariosMenuModel::agregarIngredienteModel($datos);
+        }
+    }
 }

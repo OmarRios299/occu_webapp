@@ -2,7 +2,7 @@
 <div class="modal fade" id="modal_bebidas" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form onsubmit="return false;" class="form_agregar_servicios">
+            <form onsubmit="return false;" class="">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalLabel">Tamaños genéricos de bebidas</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -101,6 +101,32 @@
                             <!-- <div class="d-grid">
                 <button type="button" class="btn btn-secondary">CONTINUAR</button>
               </div> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal_ingredientes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <form onsubmit="return false;" class="">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Eligiendo ingredientes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <p>Elige los ingredientes que quieres mostrar en este producto.</p>
+                        <input type="hidden" id="id_producto_ingre">
+                        <div class="row" id="cont_ingre">
+                            
+                            
                         </div>
                     </div>
                 </div>

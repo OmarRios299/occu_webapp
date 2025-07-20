@@ -385,7 +385,6 @@ class PropietariosMenuModel extends Conexion {
 
         $tabla='propietarios_menu_productos';
         $campo ="id_propietario";
-        $campoProducto = $datos['campo'];
         $id = $datos['id_propietario'];
         if ($cafeteria!=='false') {
             $tabla = 'propietarios_menu_cafeterias';
@@ -394,7 +393,7 @@ class PropietariosMenuModel extends Conexion {
         }
 
         $stmt = Conexion::conectar()->prepare("UPDATE $tabla SET estado = 0 
-        WHERE $campoProducto = :id_producto 
+        WHERE id_producto = :id_producto 
         AND id_tamano = :id_tamano 
         AND $campo = :id");
     
@@ -694,5 +693,131 @@ class PropietariosMenuModel extends Conexion {
 
     /* EDITAR IMAGEN */
 
+
+
+    /* ----- FUNCIONAMIENTO DEL MODAL DE SELECCION DE INGREDIENTES ----- 
+    ---------------------------------------------------------------------*/
+
+
+    static public function obtenerCategoriasingredientesModel(){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT
+        cat.*
+        FROM
+            menu_ingredientes_categorias cat
+        WHERE
+        cat.estado = 0");
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+
+
+    static public function obtenerIngredientesModel($categoria, $datos, $id_producto){
+
+        $campo ='id_propietario';
+        $registro = $datos['id_propietario'];
+
+        if ($datos['cafeteria']!=='false') {
+            $campo ='id_cafeteria';
+            $registro = $datos['cafeteria'];
+        }
+    
+        $stmt = Conexion::conectar()->prepare("SELECT 
+        menu_ingredientes.id,
+        menu_ingredientes.nombre,
+        menu_ingredientes.registro_occu,
+        COALESCE(prop_ingre.estado, 'No') AS estado,
+        COALESCE(prop_ingre.id, 'No') AS id_registro
+        FROM
+            menu_ingredientes
+        LEFT JOIN propietarios_menu_ingredientes prop_ingre ON prop_ingre.id_ingrediente = menu_ingredientes.id
+            AND prop_ingre.$campo = :registro
+            AND prop_ingre.id_producto = :id_producto
+        WHERE
+            menu_ingredientes.estado = 0
+            AND menu_ingredientes.id_ingrediente_categoria = :categoria;
+
+        ");
+    
+        $stmt->bindParam(':categoria', $categoria,PDO::PARAM_INT);
+        $stmt->bindParam(':registro', $registro,PDO::PARAM_INT);
+        $stmt->bindParam(':id_producto', $id_producto,PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        return $stmt -> fetchAll();
+    
+        $stmt = null;
+    
+    }
+
+    static public function cambiarEstadoIngredienteModel($datos){
+        
+        $stmt = Conexion::conectar()->prepare("UPDATE propietarios_menu_ingredientes SET estado = :estado WHERE id = :id");
+    
+        $stmt->bindParam(":id", $datos['id_registro'], PDO::PARAM_INT);
+        $stmt->bindParam(":estado", $datos['estado'], PDO::PARAM_INT);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+    
+        $stmt = null;
+    
+    }
+
+
+    static public function agregarIngredienteModel($datos) {
+
+        $campo ='id_propietario';
+        $registro = $datos['id_propietario'];
+
+        if ($datos['id_cafeteria']!==false) {
+            $campo ='id_cafeteria';
+            $registro = $datos['id_cafeteria'];
+        }
+
+        $conexion = Conexion::conectar();
+    
+        // Primero, validamos si ya existe el ingrediente
+        $stmtValidar = $conexion->prepare("SELECT COUNT(*) FROM propietarios_menu_ingredientes 
+        WHERE id_producto = :id_producto 
+        AND id_ingrediente = :id_ingrediente
+        AND $campo = :registro");
+
+        $stmtValidar->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
+        $stmtValidar->bindParam(':id_ingrediente', $datos['id_ingrediente'], PDO::PARAM_INT);
+        $stmtValidar->bindParam(':registro', $registro, PDO::PARAM_INT);
+        $stmtValidar->execute();
+    
+        if ($stmtValidar->fetchColumn() > 0) {
+            // Ya existe, no se inserta
+            return 'existe';
+        }
+    
+        // Si no existe, se inserta
+        $stmtInsertar = $conexion->prepare("INSERT INTO propietarios_menu_ingredientes 
+        (id_producto, id_ingrediente, $campo, estado) 
+        VALUES 
+        (:id_producto, :id_ingrediente, :registro, 1)");
+
+        $stmtInsertar->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
+        $stmtInsertar->bindParam(':id_ingrediente', $datos['id_ingrediente'], PDO::PARAM_INT);
+        $stmtInsertar->bindParam(':registro', $registro, PDO::PARAM_INT);
+    
+        if ($stmtInsertar->execute()) {
+            return 'success';
+        } else {
+            return 'error';
+        }
+    }
+    
     
 }

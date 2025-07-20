@@ -98,7 +98,7 @@ $(document).on("click", ".btn_editar_tamanos", function () {
             respuesta = JSON.parse(respuesta);
 
             // Iterar sobre la respuesta (que es un array de objetos)
-            respuesta.forEach(producto => {
+            respuesta.producto.forEach(producto => {
                 let tamanoSelector = `#tamano_${producto.id_tamano}`;
                 let switchElement = $(tamanoSelector).closest('.opcion_vaso').find('.switch_vasos');
                 let precioInput = $(tamanoSelector).closest('.opcion_vaso').find('.precio_vaso');
@@ -230,5 +230,65 @@ $(document).on("submit",".form_add_producto_extra",function(){
             }
             cargaSistema(false);
         }
+    });
+});
+
+
+/* ----- FUNCIONAMIENTO DEL MODAL DE SELECCION DE INGREDIENTES ----- 
+---------------------------------------------------------------------*/
+
+$(document).on("click", ".btn_editar_ingre", function () {
+    if ($("#input_alerta_menu").length) {
+        swal("¡Alerta!", `Para modificar los ingredientes ve a "Mi menú".`, "warning");
+        return;
+    }
+
+    let id_producto = $(this).attr('idProducto');
+    let cafeteria = $("#cafeteria").val();
+    $("#id_producto_ingre").val(id_producto);
+
+    let filtro = `?buscarProducto=${true}&id_producto=${id_producto}&cafeteria=${(cafeteria) ? cafeteria : false}`;
+
+    $.ajax({
+        url: url + 'views/ajax/ajax_propietarios_menu.php' + filtro,
+        method: 'POST',
+        cache: false,
+        contentType: false,
+        beforeSend: cargaSistema(true),
+        success: function (respuesta) {
+            respuesta = JSON.parse(respuesta);
+
+           $("#cont_ingre").html(respuesta.ingredientes);
+            cargaSistema(false);
+        }
+    });
+
+    $("#modal_ingredientes").modal('show');
+});
+
+$(document).on("click",".check_ingredientes",function(){
+    let estado = $(this).attr("estado");
+    let id_registro = $(this).attr("idRegistro");
+    let cafeteria = $("#cafeteria").val();
+    let id_producto = $("#id_producto_ingre").val();
+    var datos = new FormData();
+    
+    datos.append("agregar_ingrediente", true);
+    datos.append("id_producto", id_producto);
+    datos.append("id_ingrediente", $(this).attr("id"));
+    (estado) ? datos.append("estado", estado): false;
+    (cafeteria) ? datos.append("cafeteria", cafeteria): false;
+    (id_registro) ? datos.append("id_registro", id_registro) : false;
+
+    $.ajax({
+        url:url+'views/ajax/ajax_propietarios_menu.php',
+        method:'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success:function(respuesta){
+            console.log(respuesta);
+        },
     });
 });
