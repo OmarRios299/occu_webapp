@@ -116,8 +116,8 @@ class MenuProductosModel extends Conexion
     {
 
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("INSERT INTO menu_productos(nombre, id_subcategoria, imagen, id_alta, fecha_alta) 
-        VALUES (:nombre, :id_subcategoria, 'views/assets/img/cafeteria_default.png', :id_alta, :fecha_alta)");
+        $stmt = $conexion->prepare("INSERT INTO menu_productos(nombre, id_subcategoria, imagen, id_alta, fecha_alta, registro_occu) 
+        VALUES (:nombre, :id_subcategoria, 'views/assets/img/cafeteria_default.png', :id_alta, :fecha_alta, 1)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':id_subcategoria', $datos['id_subcategoria'], PDO::PARAM_INT);

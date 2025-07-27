@@ -44,6 +44,21 @@ class PropietariosMenuModel extends Conexion {
         return $result['sucursales'];
         
         $stmt = null;
+    }  
+    
+        static public function cafeteriasSucPropietarioModel($id_propietario){
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM cafeterias 
+        WHERE estado !=2
+        AND id_usuario=:usuario");
+        $stmt->bindParam(':usuario', $id_propietario, PDO::PARAM_INT);
+        
+        $stmt->execute();
+        
+        $result = $stmt->fetchAll();
+        
+        return $result;
+        
+        $stmt = null;
     }    
     
     /* CONTAR CAFETERIAS POR PROPIETARIO */
@@ -95,7 +110,11 @@ class PropietariosMenuModel extends Conexion {
             ON propietarios_menu_subcategorias.id_subcategoria = menu_subcategorias.id
             AND propietarios_menu_subcategorias.id_propietario = :propietario
         WHERE
-            menu_subcategorias.estado = 0 $filtro");
+            menu_subcategorias.estado = 0 $filtro
+            AND (
+                menu_subcategorias.registro_occu != 2
+                OR (menu_subcategorias.registro_occu = 2 AND menu_subcategorias.id_propietario = :propietario)
+            )");
 
         $stmt->bindParam(':propietario', $id_propietario,PDO::PARAM_INT);
     
@@ -125,11 +144,14 @@ class PropietariosMenuModel extends Conexion {
         LEFT JOIN 
             propietarios_menu_subcategorias 
             ON propietarios_menu_subcategorias.id_subcategoria = menu_subcategorias.id
-            AND propietarios_menu_subcategorias.id_propietario = :id_propietario -- Se mueve aquí
+            AND propietarios_menu_subcategorias.id_propietario = :id_propietario
         WHERE
             menu_subcategorias.estado = 0
-            AND menu_subcategorias.id_categoria = :categoria;
-
+            AND menu_subcategorias.id_categoria = :categoria
+            AND (
+                menu_subcategorias.registro_occu != 2
+                OR (menu_subcategorias.registro_occu = 2 AND menu_subcategorias.id_propietario = :id_propietario)
+            )
         ");
     
         $stmt->bindParam(':categoria', $categoria,PDO::PARAM_INT);
@@ -498,15 +520,14 @@ class PropietariosMenuModel extends Conexion {
     
     /* ELIMINAR REGISTROS DE MENU SUCURSALES */
     
-    static public function eliminarMenuSucursalModel($id_propietario){
+    static public function eliminarMenuSucursalModel($id_cafeteria){
     
         $stmt = Conexion::conectar()->prepare("DELETE propietarios_menu_cafeterias 
         FROM propietarios_menu_cafeterias
-        INNER JOIN cafeterias ON cafeterias.id = propietarios_menu_cafeterias.id_cafeteria
-        WHERE cafeterias.id_usuario = :usuario;
+        WHERE id_cafeteria = :id_cafeteria;
         ");
 
-        $stmt->bindParam(":usuario", $id_propietario, PDO::PARAM_INT);
+        $stmt->bindParam(":id_cafeteria", $id_cafeteria, PDO::PARAM_INT);
     
         if($stmt->execute()){
             return 'success';
@@ -600,12 +621,13 @@ class PropietariosMenuModel extends Conexion {
     {
 
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("INSERT INTO menu_subcategorias(nombre, id_categoria, id_propietario, registro_occu) 
-        VALUES (:nombre, :id_categoria, :id_propietario, 2)");
+        $stmt = $conexion->prepare("INSERT INTO menu_subcategorias(nombre, id_categoria, id_propietario, registro_occu, fecha_alta) 
+        VALUES (:nombre, :id_categoria, :id_propietario, 2, :fecha)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':id_categoria', $datos['id_categoria'], PDO::PARAM_INT);
         $stmt->bindParam(':id_propietario', $datos['id_propietario'], PDO::PARAM_INT);
+        $stmt->bindParam(':fecha', $datos['fecha_alta'], PDO::PARAM_STR);
         
         if($stmt->execute()){
             return $conexion-> lastInsertId();
@@ -624,12 +646,13 @@ class PropietariosMenuModel extends Conexion {
     static public function agregarProductoExtraModel($datos)
     {
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("INSERT INTO menu_productos(nombre, id_subcategoria, imagen, id_alta, registro_occu) 
-        VALUES (:nombre, :id_subcategoria, 'views/assets/img/cafeteria_default.png', :id_propietario, 2)");
+        $stmt = $conexion->prepare("INSERT INTO menu_productos(nombre, id_subcategoria, imagen, id_alta, registro_occu, fecha_alta) 
+        VALUES (:nombre, :id_subcategoria, 'views/assets/img/cafeteria_default.png', :id_propietario, 2, :fecha)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':id_subcategoria', $datos['id_subcategoria'], PDO::PARAM_INT);
         $stmt->bindParam(':id_propietario', $datos['id_propietario'], PDO::PARAM_INT);
+        $stmt->bindParam(':fecha', $datos['fecha_alta'], PDO::PARAM_STR);
 
         if ($stmt->execute()) {
             $id = $conexion->lastInsertId();
@@ -732,7 +755,10 @@ class PropietariosMenuModel extends Conexion {
         menu_ingredientes.nombre,
         menu_ingredientes.registro_occu,
         COALESCE(prop_ingre.estado, 'No') AS estado,
-        COALESCE(prop_ingre.id, 'No') AS id_registro
+        COALESCE(prop_ingre.id, 'No') AS id_registro,
+        prop_ingre.cantidad_gratis,
+        prop_ingre.precio,
+        prop_ingre.costo_extra
         FROM
             menu_ingredientes
         LEFT JOIN propietarios_menu_ingredientes prop_ingre ON prop_ingre.id_ingrediente = menu_ingredientes.id
@@ -740,13 +766,17 @@ class PropietariosMenuModel extends Conexion {
             AND prop_ingre.id_producto = :id_producto
         WHERE
             menu_ingredientes.estado = 0
-            AND menu_ingredientes.id_ingrediente_categoria = :categoria;
-
+            AND menu_ingredientes.id_ingrediente_categoria = :categoria
+            AND (
+                menu_ingredientes.registro_occu != 2
+                OR (menu_ingredientes.registro_occu = 2 AND menu_ingredientes.id_alta = :id_propietario)
+            )
         ");
     
         $stmt->bindParam(':categoria', $categoria,PDO::PARAM_INT);
         $stmt->bindParam(':registro', $registro,PDO::PARAM_INT);
         $stmt->bindParam(':id_producto', $id_producto,PDO::PARAM_INT);
+        $stmt->bindParam(':id_propietario', $datos['id_propietario'],PDO::PARAM_INT);
     
         $stmt -> execute();
     
@@ -804,19 +834,157 @@ class PropietariosMenuModel extends Conexion {
     
         // Si no existe, se inserta
         $stmtInsertar = $conexion->prepare("INSERT INTO propietarios_menu_ingredientes 
-        (id_producto, id_ingrediente, $campo, estado) 
+        (id_producto, id_ingrediente, $campo, estado, precio) 
         VALUES 
-        (:id_producto, :id_ingrediente, :registro, 1)");
+        (:id_producto, :id_ingrediente, :registro, 1, :precio)");
 
         $stmtInsertar->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
         $stmtInsertar->bindParam(':id_ingrediente', $datos['id_ingrediente'], PDO::PARAM_INT);
         $stmtInsertar->bindParam(':registro', $registro, PDO::PARAM_INT);
-    
+        $stmtInsertar->bindParam(':precio', $datos['precio'], PDO::PARAM_STR);
+
         if ($stmtInsertar->execute()) {
             return 'success';
         } else {
             return 'error';
         }
+    }
+    
+    static public function actualizarIngredienteModel($datos){
+        
+        $stmt = Conexion::conectar()->prepare("UPDATE propietarios_menu_ingredientes 
+        SET 
+            cantidad_gratis = :cantidad,
+            precio = :precio
+        WHERE id = :id");
+    
+        $stmt->bindParam(':id', $datos['idRegistro'], PDO::PARAM_INT);
+        $stmt->bindParam(":cantidad", $datos['cantidad'], PDO::PARAM_STR);
+        $stmt->bindParam(":precio", $datos['precio'], PDO::PARAM_STR);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+    
+        $stmt = null;
+    
+    }
+
+    static public function checkCostoExtraIngredienteModel($datos){
+        
+        $stmt = Conexion::conectar()->prepare("UPDATE propietarios_menu_ingredientes SET costo_extra = :costo_extra WHERE id = :id");
+    
+        $stmt->bindParam(":id", $datos['idRegistro'], PDO::PARAM_INT);
+        $stmt->bindParam(":costo_extra", $datos['estatus'], PDO::PARAM_STR);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+    
+        $stmt = null;
+    
+    }
+
+    static public function agregarPropietarioIngredienteModel($datos)
+    {
+
+        $conexion = Conexion::conectar();
+        $stmt = $conexion->prepare("INSERT INTO menu_ingredientes(nombre, id_ingrediente_categoria, registro_occu, id_alta, fecha_alta) 
+        VALUES (:nombre, :id_ingrediente_categoria, 2, :id_alta, :fecha)");
+
+        $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
+        $stmt->bindParam(':id_ingrediente_categoria', $datos['id_ingrediente_categoria'], PDO::PARAM_INT);
+        $stmt->bindParam(':fecha', $datos['fecha_alta'], PDO::PARAM_STR);
+        $stmt->bindParam(':id_alta', $datos['id_propietario'], PDO::PARAM_INT);
+
+        if ($stmt->execute()) {
+            return $conexion->lastInsertId();
+        } else {
+            return "error";
+        }
+        $stmt = null;
+    }
+
+    
+    static public function buscarPropietarioPrecioIngredienteModel($datos){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM propietarios_menu_ingredientes 
+        WHERE id_ingrediente = :id_ingrediente
+        AND id_propietario = :id_propietario
+        AND precio > 0");
+    
+        $stmt->bindParam(':id_ingrediente', $datos['id_ingrediente'],PDO::PARAM_INT);
+        $stmt->bindParam(':id_propietario', $datos['id_propietario'],PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        $ingre = $stmt -> fetch();
+        return $ingre['precio']??0;
+    
+        $stmt = null;
+    
+    }
+
+    static public function buscarPropietarioIngredienteModel($id_propietario){
+    
+        $stmt = Conexion::conectar()->prepare("SELECT * FROM propietarios_menu_ingredientes 
+        WHERE id_propietario = :id_propietario");
+    
+        $stmt->bindParam(':id_propietario', $id_propietario,PDO::PARAM_INT);
+    
+        $stmt -> execute();
+    
+        $ingre = $stmt -> fetchAll();
+        return $ingre;
+    
+        $stmt = null;
+    
+    }
+
+        static public function actualizarIngredientesSucursalModel($datos, $cafeteria){
+
+        $stmt = Conexion::conectar()->prepare("INSERT INTO propietarios_menu_ingredientes
+        (id_producto, id_ingrediente, costo_extra, cantidad_gratis, precio, id_cafeteria, estado) 
+        VALUES 
+        (:id_producto, :id_ingrediente, :costo_extra, :cantidad_gratis, :precio, :id_cafeteria, :estado)");
+    
+        $stmt->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
+        $stmt->bindParam(':id_ingrediente', $datos['id_ingrediente'], PDO::PARAM_INT);
+        $stmt->bindParam(':costo_extra', $datos['costo_extra'], PDO::PARAM_STR);
+        $stmt->bindParam(':cantidad_gratis', $datos['cantidad_gratis'], PDO::PARAM_STR);
+        $stmt->bindParam(':precio', $datos['precio'], PDO::PARAM_STR);
+        $stmt->bindParam(':id_cafeteria', $cafeteria, PDO::PARAM_INT);
+        $stmt->bindParam(':estado', $datos['estado'], PDO::PARAM_INT);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+        $stmt = null;
+    }
+
+        static public function eliminarIngredientesSucursalModel($id_cafeteria){
+    
+        $stmt = Conexion::conectar()->prepare("DELETE propietarios_menu_ingredientes 
+        FROM propietarios_menu_ingredientes
+        WHERE id_cafeteria = :id_cafeteria;
+        ");
+
+        $stmt->bindParam(":id_cafeteria", $id_cafeteria, PDO::PARAM_INT);
+    
+        if($stmt->execute()){
+            return 'success';
+        }else{
+            return 'error';
+        }
+    
+        $stmt = null;
+    
     }
     
     

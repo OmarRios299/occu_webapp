@@ -37,7 +37,10 @@ class MenuIngredientesController
 
     static public function agregarIngredienteController($datos)
     {
-
+        date_default_timezone_set("America/Tijuana");
+        $datos['id_alta'] = $_SESSION['id'];
+        $datos['fecha_alta'] = date("Y-m-d H:i:s");
+        
         if (!$datos['id']) {
 
             $datos['id'] = MenuIngredientesModel::agregarIngredienteModel($datos);

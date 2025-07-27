@@ -45,6 +45,9 @@ static public function agregarSubcategoriaController($datos){
     GeneralModel::validarCampoEditarModel($datos['nombre'],"nombre","menu_subcategorias",$datos['id'])
     : GeneralModel::validarCampoModel($datos['nombre'],"nombre","menu_subcategorias");
 
+    $datos['fecha_alta'] = date("Y-m-d H:i:s");
+    $datos['id_alta'] = $_SESSION['id'];
+
     //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
     if($validacion_nombre) return "error_validacion_nombre";
 

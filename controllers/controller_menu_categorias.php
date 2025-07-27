@@ -44,6 +44,7 @@ static public function obtenerCategoriasController(){
 /* AGREGAR CATEGORIAS */
 
 static public function agregarCategoriasController($datos){
+    date_default_timezone_set("America/Tijuana");
     $datos['id_alta'] = $_SESSION['id'];
     $datos['fecha_alta'] = date("Y-m-d H:i:s");
 

@@ -56,6 +56,7 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 
         $datos = array(
             "actualizar"               => $_GET['actualizarMenu'],
+            "sucursal"               => isset($_GET['sucursal'])? $_GET['sucursal'] : false,
         );
         $controller = "actualizarMenuController";
 
@@ -93,7 +94,34 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = "agregarIngredienteController";
 
-    }else{
+    }else if(isset($_POST['registroPrecioExtra'])){
+
+        $datos = array(
+            "idRegistro"             => $_POST['idRegistro'],
+            "cantidad"             => $_POST['cantidad'],
+            "precio"                => $_POST['precio'],
+        );
+        $controller = "actualizarIngredienteController";
+
+    }else if(isset($_POST['checkPrecioExtra'])){
+
+        $datos = array(
+            "idRegistro"             => $_POST['idRegistro'],
+            "costo_extra"             => $_POST['costo_extra'],
+        );
+        $controller = "checkCostoExtraIngredienteController";
+
+    }else if(isset($_POST['agregarPropietarioIngrediente'])){
+
+        $datos = array(
+            "nombre"                      => $_POST['nombre'],
+            "id_ingrediente_categoria"    => $_POST['id_ingrediente_categoria'],
+        );
+        $controller = "agregarPropietarioIngredienteController";
+
+    }
+    
+    else{
 
         $datos = false;
 

@@ -64,6 +64,7 @@ static public function obtenerSubcategoriasController(){
 /* AGREGAR PRODUCTOS */
 
 static public function agregarProductosController($datos){
+    date_default_timezone_set("America/Tijuana");
     $datos['id_alta'] = $_SESSION['id'];
     $datos['fecha_alta'] = date("Y-m-d H:i:s");
 

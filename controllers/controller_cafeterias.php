@@ -72,6 +72,7 @@ class CafeteriasController{
     /* REGISTRAR CAFETERIA */
     
     static public function registrarCafeteriaController($datos){
+        date_default_timezone_set("America/Tijuana");
         //var_dump($datos['horarios']);
         //validamos el correo electrónico y nombre
         if ($datos['correo']) {

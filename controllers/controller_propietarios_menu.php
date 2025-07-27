@@ -10,6 +10,11 @@ class PropietariosMenuController
         return PropietariosMenuModel::cafeteriasPropietarioModel($_SESSION['id']);
     }
 
+    static public function cafeteriasSucPropietarioController()
+    {
+        return PropietariosMenuModel::cafeteriasSucPropietarioModel($_SESSION['id']);
+    }
+
     /* CONTAR CAFETERIAS DE PROPIETARIO */
 
 
@@ -142,8 +147,8 @@ class PropietariosMenuController
         foreach (PropietariosMenuModel::obtenerCategoriasingredientesModel() as $categoria) {
             $data .= '
             <div class="col-md-4">
-                <h6 class=""><b>' . $categoria['nombre'] . '</b></h6>
-                <div class="row mb-3">
+                <h5 class=""><b>' . $categoria['nombre'] . '</b></h5>
+                <hr/>
             ';
 
             // verificar si la cafeteria ya cuenta con registros de ingrediente para la informacion que se mostrará
@@ -154,23 +159,60 @@ class PropietariosMenuController
                 if ($ingrediente['estado'] == 1) {
                     $checked = 'checked';
                 }
+                $checked_ex = '';
+                $display = 'style="display:none"';
+                if ($ingrediente['costo_extra'] == 'Si') {
+                    $checked_ex = 'checked';
+                    $display = '';
+                }
                 $eliminar = ($ingrediente['registro_occu']==2) ? '<a class="me-1 eliminarRegistro" style="color:red; cursor:pointer" tabla="menu_ingredientes" idRegistro="' . $ingrediente['id'] . '">x</a>' : '';
                 $data .= '
-                <div class="form-check form-switch">
-                    <div class="row align-items-center">
-                        <div class="col-10">
+                    <div class="row mb-3 divItemIngrediente">
+                        <div class="col-5 ml-2">
                             '.$eliminar.'
-                            <label class="form-check-label" for="' . $ingrediente['id'] . '">' . $ingrediente['nombre'] . '</label>
+                            <b><label class="form-check-label" for="' . $ingrediente['id'] . '">' . $ingrediente['nombre'] . '</label></b>
+                        </div>
+                         <div class="col-5">
+                            <div class="form-check">
+                                <input class="form-check-input checkIng_precio_extra" type="checkbox" ' . $checked_ex . ' costo_extra="' . $ingrediente['costo_extra'] . '" idRegistro="' . $ingrediente['id_registro'] . '">
+                                <label class="form-check-label">
+                                   Costo extra
+                                </label>
+                            </div>
                         </div>
                         <div class="col-2">
-                            <input class="form-check-input check_ingredientes" type="checkbox" id="' . $ingrediente['id'] . '" estado="' . $ingrediente['estado'] . '" idRegistro="' . $ingrediente['id_registro'] . '" ' . $checked . '>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input check_ingredientes" type="checkbox" id="' . $ingrediente['id'] . '" estado="' . $ingrediente['estado'] . '" idRegistro="' . $ingrediente['id_registro'] . '" ' . $checked . '>
+                            </div>
                         </div>
-                    </div>
-                </div>
-                ';
+                        
+                        ';
+                            $data.='
+                                <div class="col-12 divExtra" '.$display.'>
+                                    <div class="row d-flex justify-content-center ingredItem" idRegistroItem="' . $ingrediente['id_registro'] . '">
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                            <label>Cantidad gratis:</label>
+                                            <input type="number" class="form-control ingred_cantidad_gratis" value="' . $ingrediente['cantidad_gratis'] . '">
+                                        </div>
+                                        </div>
+                                        <div class="col-5">
+                                            <div class="form-group">
+                                                <label>Precio:</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">$</span>
+                                                    <input type="number" class="form-control ingred_precio_extra" placeholder="0.00" value="' . $ingrediente['precio'] . '">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>';
+                        
+
+                $data.='</div>';
             }
 
-            $data .= '</div></div>';
+            $data .= '</div>';
         }
 
         return json_encode([
@@ -263,17 +305,32 @@ class PropietariosMenuController
     {
         $id_propietario = $_SESSION['id'];
 
-        if ($datos['actualizar'] == 'precios') {
+        if ($datos['actualizar'] == 'sucursalMenu') {
+           if (!empty($datos['sucursal'])) {
+                PropietariosMenuModel::eliminarMenuSucursalModel($datos['sucursal']);
+                 PropietariosMenuModel::eliminarIngredientesSucursalModel($datos['sucursal']);
+                foreach (PropietariosMenuModel::buscarMenuPropietarioModel($id_propietario) as $item) {
+                    PropietariosMenuModel::actualizarMenuSucursalModel($item, $datos['sucursal']);
+                }
+                foreach (PropietariosMenuModel::buscarPropietarioIngredienteModel($id_propietario) as $ingre) {
+                    PropietariosMenuModel::actualizarIngredientesSucursalModel($ingre, $datos['sucursal']);
+                }
+            }
+        }else if ($datos['actualizar'] == 'precios') {
             foreach (PropietariosMenuModel::buscarCafeteriasUsuarioModel($id_propietario) as $cafeterias) {
                 foreach (PropietariosMenuModel::buscarMenuPropietarioModel($id_propietario) as $item) {
                     PropietariosMenuModel::actualizarPrecioSucursaleModel($item, $cafeterias['id']);
                 }
             }
         } else {
-            PropietariosMenuModel::eliminarMenuSucursalModel($id_propietario);
             foreach (PropietariosMenuModel::buscarCafeteriasUsuarioModel($id_propietario) as $cafeterias) {
+                PropietariosMenuModel::eliminarMenuSucursalModel($cafeterias['id']);
+                 PropietariosMenuModel::eliminarIngredientesSucursalModel($cafeterias['id']);
                 foreach (PropietariosMenuModel::buscarMenuPropietarioModel($id_propietario) as $item) {
                     PropietariosMenuModel::actualizarMenuSucursalModel($item, $cafeterias['id']);
+                }
+                foreach (PropietariosMenuModel::buscarPropietarioIngredienteModel($id_propietario) as $ingre) {
+                    PropietariosMenuModel::actualizarIngredientesSucursalModel($ingre, $cafeterias['id']);
                 }
             }
         }
@@ -286,6 +343,8 @@ class PropietariosMenuController
 
     static public function registrarSubcategoriaController($datos)
     {
+        date_default_timezone_set("America/Tijuana");
+        $datos['fecha_alta'] = date("Y-m-d H:i:s");
         $datos['id_propietario'] = $_SESSION['id'];
 
         $validacion_nombre = GeneralModel::validarCampoModel($datos['nombre'], "nombre", "menu_subcategorias");
@@ -304,6 +363,7 @@ class PropietariosMenuController
 
     static public function agregarProductosExtraController($datos)
     {
+        date_default_timezone_set("America/Tijuana");
         $datos['id_propietario'] = $_SESSION['id'];
         $datos['fecha_alta'] = date("Y-m-d H:i:s");
 
@@ -344,7 +404,33 @@ class PropietariosMenuController
         } else {
             //$cafeterias = PropietariosMenuModel::buscarCafeteriasUsuarioModel($datos['id_usuario']);
             $datos['id_propietario'] = $_SESSION['id'];
+            $datos['precio'] =  PropietariosMenuModel::buscarPropietarioPrecioIngredienteModel($datos);
             PropietariosMenuModel::agregarIngredienteModel($datos);
         }
+    }
+
+    static public function actualizarIngredienteController($datos)
+    {
+        return PropietariosMenuModel::actualizarIngredienteModel($datos);   
+    }
+
+    static public function checkCostoExtraIngredienteController($datos)
+    {
+        $datos['estatus'] = ($datos['costo_extra']=="Si") ? "No" : "Si";
+        return PropietariosMenuModel::checkCostoExtraIngredienteModel($datos);   
+    }
+
+    
+    static public function obtenerCategoriasingredientesController(){
+        return PropietariosMenuModel::obtenerCategoriasingredientesModel();
+    }
+    
+    static public function agregarPropietarioIngredienteController($datos)
+    {
+        date_default_timezone_set("America/Tijuana");
+        $datos['id_propietario'] = $_SESSION['id'];
+        $datos['fecha_alta'] = date("Y-m-d H:i:s");
+        PropietariosMenuModel::agregarPropietarioIngredienteModel($datos);
+        
     }
 }

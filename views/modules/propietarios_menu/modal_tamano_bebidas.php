@@ -1,4 +1,4 @@
-<input type="hidden" id="cafeteria" value="<?=isset($action[1])? $action[1] : '';?>">
+<input type="hidden" id="cafeteria" value="<?= isset($action[1]) ? $action[1] : ''; ?>">
 <div class="modal fade" id="modal_bebidas" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -28,7 +28,7 @@
                                 </div>
                             </div>
                             <!-- Opción 6oz -->
-                            <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso"  id="tamano_2">
+                            <div class="col-md-6 d-flex align-items-center mb-3 opcion_vaso" id="tamano_2">
                                 <div class="me-2">
                                     <img src="<?= $url ?>/views/assets/css/img/vasos/vaso-mediano.png" alt="Vaso 4oz" style="height: 40px; width: 35px;">
                                 </div>
@@ -113,7 +113,7 @@
 </div>
 
 <div class="modal fade" id="modal_ingredientes" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form onsubmit="return false;" class="">
                 <div class="modal-header">
@@ -122,18 +122,69 @@
                 </div>
                 <div class="modal-body">
                     <div class="container">
-                        <p>Elige los ingredientes que quieres mostrar en este producto.</p>
+                        <div class="row">
+                            <div class="col-9">
+                                <p>Elige los ingredientes que quieres mostrar en este producto.</p>
+                            </div>
+                            <div class="col-2 text-end">
+                                <button type="button" class="btn btn-icono btn-mas ms-5" data-bs-toggle="modal" data-bs-target="#addIngredienteExtraModal"></button>
+                            </div>
+                        </div>
+
                         <input type="hidden" id="id_producto_ingre">
                         <div class="row" id="cont_ingre">
-                            
-                            
+
+
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <div class="d-grid">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="addIngredienteExtraModal" tabindex="-1" aria-labelledby="addIngredienteExtraModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addIngredienteExtraModalLabel">Agregando ingrediente</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <form onsubmit="return false;" class="form_add_ing_extra">
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Nombre:</label>
+                <input type="text" class="form-control input_ingre" tabla='menu_ingredientes' columna='nombre' mensaje='Este ingrediente ya se encuentra registrado' id="input_nombre_ingre">
+                <div class="invalid-feedback" style="display: none;"></div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label>Categoría:</label>
+                <select class="form-control input_ingre" id="select_ing_categoria">
+                  <option value="" disabled selected>Selecciona una opción</option>
+                  <?php foreach (PropietariosMenuController::obtenerCategoriasingredientesController() as $categoria) { ?>
+                    <option value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
+                  <?php } ?>
+                </select>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="btnCerrarModalIngExtra">Cerrar</button>
+          <button type="submit" class="btn btn-primary" id="btnAceptarModalIngExtra">Aceptar</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

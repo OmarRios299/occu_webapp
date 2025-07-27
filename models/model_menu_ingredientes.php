@@ -49,11 +49,13 @@ class MenuIngredientesModel extends Conexion
     {
 
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("INSERT INTO menu_ingredientes(nombre, id_ingrediente_categoria) 
-        VALUES (:nombre, :id_ingrediente_categoria)");
+        $stmt = $conexion->prepare("INSERT INTO menu_ingredientes(nombre, id_ingrediente_categoria, registro_occu, id_alta, fecha_alta) 
+        VALUES (:nombre, :id_ingrediente_categoria, 1, id_alta, fecha_alta)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':id_ingrediente_categoria', $datos['id_ingrediente_categoria'], PDO::PARAM_INT);
+        $stmt->bindParam(':fecha', $datos['fecha_alta'], PDO::PARAM_STR);
+        $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
 
         if ($stmt->execute()) {
             return $conexion->lastInsertId();

@@ -1,7 +1,7 @@
 <?php
 include "propietarios_menu/modal_tamano_bebidas.php";
 if ($action[0] == 'propietarios_menu' && !isset($action[1])) {
-  $menu = PropietariosMenuController::obtenerMenuPropietarioController(true, false,false);
+  $menu = PropietariosMenuController::obtenerMenuPropietarioController(false, false,false);
   $hidden = (PropietariosMenuController::cafeteriasPropietarioController() > 1) ? '' : 'display:none';
 
   if ($menu['subcategorias'] == "") {
@@ -22,9 +22,17 @@ if ($action[0] == 'propietarios_menu' && !isset($action[1])) {
                 ✅ En todas las sucursales
               </button>
             </li>
+            <?php foreach(PropietariosMenuController::cafeteriasSucPropietarioController() as $sucursal){
+              ?>
+              <button class="dropdown-item" id="actualizarMenu" actualizar="sucursalMenu" idSucursal="<?=$sucursal['id']?>">
+                - En sucursal <?=$sucursal['nombre']?>
+              </button>
+              <?php
+              
+            } ?>
             <li>
               <button class="dropdown-item" id="actualizarPrecios" actualizar="precios">
-                💲 Solo precios
+                💲 Solo precios en todas las sucursales
               </button>
             </li>
           </ul>

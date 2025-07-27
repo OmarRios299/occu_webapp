@@ -44,11 +44,13 @@ class MenuSubcategoriasModel extends Conexion
     {
 
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("INSERT INTO menu_subcategorias(nombre, id_categoria) 
-        VALUES (:nombre, :id_categoria)");
+        $stmt = $conexion->prepare("INSERT INTO menu_subcategorias(nombre, id_categoria, registro_occu, id_propietario, fecha_alta) 
+        VALUES (:nombre, :id_categoria, 1, :id_alta, :fecha)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':id_categoria', $datos['id_categoria'], PDO::PARAM_INT);
+        $stmt->bindParam(':fecha', $datos['fecha_alta'], PDO::PARAM_STR);
+        $stmt->bindParam(':id_alta', $datos['id_propietario'], PDO::PARAM_INT);
         
         if($stmt->execute()){
             return $conexion-> lastInsertId();

@@ -44,6 +44,7 @@ $(document).on("click",".check_subcategoria",function(){
         processData: false,
         success:function(respuesta){
             console.log(respuesta);
+            cargarCategorias();
         },
     });
 });
@@ -150,8 +151,9 @@ $(document).on("change", ".switch_vasos", function () {
 
 $(document).on("click","#actualizarMenu, #actualizarPrecios",function(){
     let actualizar = $(this).attr("actualizar");
+    let sucursal = $(this).attr("idSucursal")??false;
 
-    let filtro = `?actualizarMenu=${actualizar}`;
+    let filtro = `?actualizarMenu=${actualizar}&sucursal=${sucursal}`;
 
     $.ajax({
         url: url + 'views/ajax/ajax_propietarios_menu.php' + filtro,
@@ -247,6 +249,11 @@ $(document).on("click", ".btn_editar_ingre", function () {
     let cafeteria = $("#cafeteria").val();
     $("#id_producto_ingre").val(id_producto);
 
+    cargarModalIngredientes(id_producto,cafeteria);
+
+});
+
+function cargarModalIngredientes(id_producto,cafeteria){
     let filtro = `?buscarProducto=${true}&id_producto=${id_producto}&cafeteria=${(cafeteria) ? cafeteria : false}`;
 
     $.ajax({
@@ -264,7 +271,7 @@ $(document).on("click", ".btn_editar_ingre", function () {
     });
 
     $("#modal_ingredientes").modal('show');
-});
+}
 
 $(document).on("click",".check_ingredientes",function(){
     let estado = $(this).attr("estado");
@@ -289,6 +296,95 @@ $(document).on("click",".check_ingredientes",function(){
         processData: false,
         success:function(respuesta){
             console.log(respuesta);
+            cargarModalIngredientes(id_producto,cafeteria);
         },
+    });
+});
+
+$(document).on("change", ".ingred_cantidad_gratis, .ingred_precio_extra", function () {
+
+    var input = $(this);
+
+    var contenedor = input.closest(".divItemIngrediente");
+
+    var idRegistro = contenedor.find(".ingredItem").attr("idRegistroItem");
+    var cantidad = contenedor.find(".ingred_cantidad_gratis").val();
+    var precio = contenedor.find(".ingred_precio_extra").val();
+
+    var datos = new FormData();
+    datos.append("registroPrecioExtra", true);
+    datos.append("idRegistro", idRegistro);
+    datos.append("cantidad", cantidad);
+    datos.append("precio", precio);
+
+    $.ajax({
+        url: url + 'views/ajax/ajax_propietarios_menu.php',
+        method: 'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (respuesta) {
+            console.log(respuesta);
+        }
+    });
+});
+
+
+$(document).on("change", ".checkIng_precio_extra", function () {
+
+    var input = $(this);
+    var contenedor = input.closest(".divItemIngrediente");
+
+    var idRegistro = input.attr("idRegistro");
+
+    var costoExtra = contenedor.find("input[costo_extra]").attr("costo_extra") || "0";
+
+    var datos = new FormData();
+    datos.append("checkPrecioExtra", true);
+    datos.append("idRegistro", idRegistro);
+    datos.append("costo_extra", costoExtra);
+
+    $.ajax({
+        url: url + 'views/ajax/ajax_propietarios_menu.php',
+        method: 'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function (respuesta) {
+            console.log(respuesta);
+            contenedor.find(".divExtra").toggle();
+        }
+    });
+});
+
+
+$(document).on("click","#btnCerrarModalIngExtra",function(){
+    $("#modal_ingredientes").modal('show');
+});
+
+$(document).on("submit",".form_add_ing_extra",function(){
+    
+    var datos = new FormData();
+    datos.append("agregarPropietarioIngrediente", true);
+    datos.append("nombre", $("#input_nombre_ingre").val());
+    datos.append("id_ingrediente_categoria", $("#select_ing_categoria").val());
+
+    $.ajax({
+        url: url + 'views/ajax/ajax_propietarios_menu.php',
+        method: 'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: cargaSistema(true),
+        success: function (respuesta) {
+            console.log(respuesta);
+            cargaSistema(false);
+            $("#addIngredienteExtraModal").modal('hide');
+            $(".input_ingre").val('');
+            cargarModalIngredientes();
+        }
     });
 });
