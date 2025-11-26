@@ -21,6 +21,7 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
             "id"             => isset($_POST['id_categoria']) ? $_POST['id_categoria'] : false,
             "nombre"                => $_POST['nombre'],
             "imagen_subir"          => isset($_FILES["imagen_categoria"]) ? $_FILES['imagen_categoria'] : false,
+            "es_bebida"                => $_POST['es_bebida'],
         );
         $controller = "agregarCategoriasController";
 

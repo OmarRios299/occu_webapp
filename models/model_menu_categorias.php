@@ -48,12 +48,13 @@ class MenuCategoriasModel extends Conexion
     {
 
         $conexion = Conexion::conectar();
-        $stmt = $conexion->prepare("INSERT INTO menu_categorias(nombre, imagen, id_alta, fecha_alta) 
-        VALUES (:nombre, 'views/assets/img/cafeteria_default.png', :id_alta, :fecha_alta)");
+        $stmt = $conexion->prepare("INSERT INTO menu_categorias(nombre, imagen, id_alta, fecha_alta, es_bebida) 
+        VALUES (:nombre, 'views/assets/img/cafeteria_default.png', :id_alta, :fecha_alta, :es_bebida)");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
         $stmt->bindParam(':fecha_alta', $datos['fecha_alta'], PDO::PARAM_STR);
+        $stmt->bindParam(':es_bebida', $datos['es_bebida'], PDO::PARAM_STR);
         
         if($stmt->execute()){
             return $conexion-> lastInsertId();
@@ -112,10 +113,11 @@ class MenuCategoriasModel extends Conexion
     
     static public function editarCategoriaModel($datos){
     
-        $stmt = Conexion::conectar()->prepare("UPDATE menu_categorias SET nombre=:nombre WHERE id = :id");
+        $stmt = Conexion::conectar()->prepare("UPDATE menu_categorias SET nombre=:nombre, es_bebida=:es_bebida WHERE id = :id");
     
         $stmt->bindParam(":id", $datos['id'], PDO::PARAM_INT);
         $stmt->bindParam(":nombre", $datos['nombre'], PDO::PARAM_STR);
+        $stmt->bindParam(':es_bebida', $datos['es_bebida'], PDO::PARAM_STR);
     
         if($stmt->execute()){
             return 'success';

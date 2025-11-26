@@ -102,9 +102,11 @@ class PropietariosMenuModel extends Conexion {
             $filtro = ' AND propietarios_menu_subcategorias.estado=1';
         }
         $stmt = Conexion::conectar()->prepare("SELECT 
-        menu_subcategorias.*
+        menu_subcategorias.*,
+        menu_categorias.es_bebida
         FROM
             menu_subcategorias
+        INNER JOIN menu_categorias ON menu_categorias.id = menu_subcategorias.id_categoria
         INNER JOIN 
             propietarios_menu_subcategorias 
             ON propietarios_menu_subcategorias.id_subcategoria = menu_subcategorias.id

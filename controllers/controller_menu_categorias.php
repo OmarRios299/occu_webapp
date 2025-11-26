@@ -12,7 +12,7 @@ static public function obtenerCategoriasController(){
         $checked = ($categoria['estado']==0) ? "checked" : "";
         $imagen='<img src="'.$url .''. $categoria['imagen'].'" style="width:80px;">';
         $botones = '<button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="menu_categorias" idRegistro="'.$categoria['id'].'"></button>    
-                    <button class="btn btn-icono btn-editar btn_editar_categoria" imagen="'.$url .''. $categoria['imagen'].'" idRegistro="'.$categoria['id'].'" nombre="'.$categoria['nombre'].'"></button>';
+                    <button class="btn btn-icono btn-editar btn_editar_categoria" imagen="'.$url .''. $categoria['imagen'].'" idRegistro="'.$categoria['id'].'" nombre="'.$categoria['nombre'].'" es_bebida="'.$categoria['es_bebida'].'"></button>';
         $estado = '<div class="form-check form-switch">
                 <input type="checkbox"
                 class="form-check-input cambioEstado"

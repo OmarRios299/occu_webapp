@@ -35,6 +35,7 @@ $(document).on("submit",".form_agregar_categoria",function(){
     if(id_categoria) datos.append("id_categoria", id_categoria);
     datos.append('nombre',$("#nombre_categoria").val());
     datos.append('imagen_categoria',$("#imagen_categoria")[0].files[0]);
+    datos.append('es_bebida',$("#switch_es_bebida").is(':checked')?'Si':'No');
     
     $.ajax({
         url:url+'views/ajax/ajax_menu_categorias.php',
@@ -65,6 +66,7 @@ $(document).on("click",".btn_editar_categoria",function(){
     $("#nombre_categoria").removeAttr('validarCampo')
     .attr('validarCampoEditar', true)
     .attr('idRegistro', $(this).attr("idRegistro"));
+    $("#switch_es_bebida").prop("checked", $(this).attr("es_bebida") == "Si");
 
     $("#modal_editar_categorias").modal('show');
 });

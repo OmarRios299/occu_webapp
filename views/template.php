@@ -77,12 +77,18 @@ $v = "1.0.11";
     <?php
     if (isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok') {
         // Determina si la página actual es "cafeterias_mapa" y estructura el layout en consecuencia
-        if($_SESSION['nivel']=='Barista'  || $_SESSION['nivel']=='Cliente'){
-            include "modules/sections/navbar_movil.php";
-            echo '<div id="sistema">';
-            echo '<div class="content_sin_sesion">';
-            echo '<div class="modulos">';
-        }else if ($moduloActual == "cafeterias_mapa") {
+        if ($_SESSION['nivel'] == 'Barista'  || $_SESSION['nivel'] == 'Cliente') {
+            include "modules/carrito.php";
+            if ($moduloActual == "cafeterias_mapa") {
+                echo '<div style="width: 100%; margin: 0; height:100vh;"><div>';
+                include "modules/sections/navbar_movil.php";
+            } else {
+                include "modules/sections/navbar_movil.php";
+                echo '<div id="sistema">';
+                echo '<div class="content_sin_sesion">';
+                echo '<div class="modulos">';
+            }
+        } else if ($moduloActual == "cafeterias_mapa") {
             echo '<div style="width: 100%; margin: 0; height:100vh;"><div>';
             include "modules/sections/navbar.php";
         } else {
@@ -125,7 +131,7 @@ $v = "1.0.11";
             }
         } else {
             echo '<div class="modulo-dashboard">';
-            include 'modules/dashboards/dashboard_'.$_SESSION['nivel'].'.php';
+            include 'modules/dashboards/dashboard_' . $_SESSION['nivel'] . '.php';
             echo '</div>';
         }
 
@@ -184,7 +190,7 @@ $v = "1.0.11";
     <script src="<?php echo $url; ?>views/assets/js/jquery-3.7.1.min.js"></script>
 
     <!-- Mapa google -->
-    <script async src="https://maps.googleapis.com/maps/api/js?key=<?=TemplateController::obtenerKeyGoogle()?>&libraries=geometry,drawing&v=beta" defer></script>
+    <script async src="https://maps.googleapis.com/maps/api/js?key=<?= TemplateController::obtenerKeyGoogle() ?>&libraries=geometry,drawing&v=beta" defer></script>
 
     <!-- Popper.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
@@ -228,7 +234,8 @@ $v = "1.0.11";
     <script src="<?php echo $url; ?>views/assets/js/scripts/menu.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/propietarios_menu.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/menu_ingredientes_categorias.js?v='<?php echo $v; ?>'"></script>
-        <script src="<?php echo $url; ?>views/assets/js/scripts/menu_ingredientes.js?v='<?php echo $v; ?>'"></script>
+    <script src="<?php echo $url; ?>views/assets/js/scripts/menu_ingredientes.js?v='<?php echo $v; ?>'"></script>
+    <script src="<?php echo $url; ?>views/assets/js/scripts/carrito.js?v='<?php echo $v; ?>'"></script>
     <!-- Dashboard -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/dashboard.js?v='<?php echo $v; ?>'"></script>
 

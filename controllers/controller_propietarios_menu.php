@@ -176,7 +176,7 @@ class PropietariosMenuController
                             <div class="form-check">
                                 <input class="form-check-input checkIng_precio_extra" type="checkbox" ' . $checked_ex . ' costo_extra="' . $ingrediente['costo_extra'] . '" idRegistro="' . $ingrediente['id_registro'] . '">
                                 <label class="form-check-label">
-                                   Costo extra
+                                Extra
                                 </label>
                             </div>
                         </div>
@@ -243,10 +243,7 @@ class PropietariosMenuController
 
             $productos_data = '';
             $hidden = '';
-            $hidden = ($subcategoria['id_categoria'] == 1 ||
-                $subcategoria['id_categoria'] == 2 ||
-                $subcategoria['id_categoria'] == 3 ||
-                $subcategoria['id_categoria'] == 4)
+            $hidden = ($subcategoria['es_bebida'] == "Si")
                 ? '' : 'hidden';
 
             $productos = PropietariosMenuModel::obtenerProductosModel($subcategoria['id'], $id_propietario, $productosActivos, $cafeterias,$occu);

@@ -229,7 +229,7 @@ $(document).on("click", "#btn_aceptar_comentario", function () {
             if (respuesta == 'success') {
                 swal({
                     title: "¡Ok!",
-                    text: "Tu comentario se registro correctamente.",
+                    text: "Tu comentario se registró correctamente.",
                     icon: "success",
                     button: "Aceptar",
                 }).then(function () {

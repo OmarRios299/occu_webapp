@@ -6,7 +6,7 @@ if ($menu['subcategorias'] == "") {
 } else {
 ?>
     <input type="hidden" id="input_alerta_menu">
-    <div class="menu-cafeterias ">
+    <div class="menu-cafeterias">
         <!-- Menú de Navegación -->
         <div class="nav-menu">
             <ul>

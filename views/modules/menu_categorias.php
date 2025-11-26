@@ -30,13 +30,13 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form onsubmit="return false;" class="form_agregar_categoria">
-            <div class="modal-header">
-                <input type="hidden" id="id_categorias">
-                <h5 class="modal-title" id="modalLabel"></h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                
+                <div class="modal-header">
+                    <input type="hidden" id="id_categorias">
+                    <h5 class="modal-title" id="modalLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
                     <input type="hidden" class="input_categorias" id="id_categoria">
                     <div class="row">
                         <div class="col-md-4">
@@ -46,9 +46,22 @@
                                 <div class="invalid-feedback" style="display: none;"></div>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <label for="">Bebidas</label>
+                                </div>
+                                <div class="col-md-12 d-flex justify-content-center">
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="switch_es_bebida" name="">
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="col-md-2">
                             <div class="form-group">
-                                <label>Agrega una imagen:</label>
+                                <label>Imagen:</label>
                             </div>
                             <div class="input-group">
                                 <input type="file" class="form-control input_categorias imagenPrevisualizar validarImagen" id="imagen_categoria" lang="esp">
@@ -60,12 +73,12 @@
                             </div>
                         </div>
                     </div>
-                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Aceptar</button>
-            </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-primary">Aceptar</button>
+                </div>
             </form>
         </div>
     </div>
