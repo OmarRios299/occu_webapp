@@ -88,11 +88,14 @@ class CafeteriasListaController{
 
         $active='active';
         $i=0;
+        $imagenesArray = []; // Array para la nueva galería
         foreach(CafeteriasListaModel::obtenerImagenesModel($id) as $imagen){
             $active = ($i==0) ? $active='active' : $active='' ;
+            $imagenUrl = $url.$imagen['imagen'];
+            $imagenesArray[] = $imagenUrl; // Agregar URL al array
             $carousel .='
             <div class="carousel-item '.$active.' ver_img_modal" data-bs-interval="10000">
-                <img src="'.$url.''.$imagen['imagen'].'" class="d-block w-100 img-fluid" alt="...">
+                <img src="'.$imagenUrl.'" class="d-block w-100 img-fluid" alt="...">
             </div>';
             ++$i;
         }
@@ -118,6 +121,7 @@ class CafeteriasListaController{
         return json_encode([
             'data' => $data, 
             'imagenes' => $carousel,
+            'imagenesArray' => $imagenesArray,
             'servicios' => $servicios
         ]);
     }

@@ -110,7 +110,9 @@ $v = "1.0.11";
                 "registrarme",
                 "cafeterias_menu",
                 "dashboard",
-                "salir"
+                "salir",
+                "metodo_pago",
+                "cafeteria_pedidos"
             ];
 
             if (in_array($action[0], $modulosPermitidos)) {
@@ -236,6 +238,8 @@ $v = "1.0.11";
     <script src="<?php echo $url; ?>views/assets/js/scripts/menu_ingredientes_categorias.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/menu_ingredientes.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/carrito.js?v='<?php echo $v; ?>'"></script>
+    <!-- Pedidos -->
+    <script src="<?php echo $url; ?>views/assets/js/scripts/cafeteria_pedidos.js?v='<?php echo $v; ?>'"></script>
     <!-- Dashboard -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/dashboard.js?v='<?php echo $v; ?>'"></script>
 

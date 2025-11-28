@@ -1324,6 +1324,11 @@ dl, ol, ul {
     border-color: var(--color-morado)!important;
     background-color: var(--color-morado)!important;
 }
+.btn-pedidos {
+    color: var(--color-blanco)!important;
+    border-color: #fd7e14!important;
+    background-color: #fd7e14!important;
+}
 /* @@@@ - [Botones] Con borde - @@@@ */
 .btn-aceptar.con-borde {
     color: var(--color-azul)!important;
@@ -1586,6 +1591,10 @@ dl, ol, ul {
 .btn-qr.btn-icono {
     background-image: url(../img/iconos/botones/icono-qr.svg);
 }
+.btn-pedidos.con-icono::before, 
+.btn-pedidos.btn-icono {
+    background-image: url(../img/iconos/botones/icono-pedidos.svg);
+}
 
 /* ---------------------------------------
 @@@@ estilos personalizados ---> botones en tablas
@@ -1729,6 +1738,11 @@ dl, ol, ul {
     margin-right: -5.0rem;
     content: 'Menú QR';
     background-color: var(--color-morado);
+}
+.table .btn-pedidos.btn-icono::before {
+    margin-right: -4.5rem;
+    content: 'Pedidos';
+    background-color: #fd7e14;
 }
 /* ---------------------------------------
 @@@@ estilos personalizados ---> titulos con botones
@@ -2241,7 +2255,7 @@ a.fc-daygrid-event {
     /* @@@@ - [Estructura] - @@@@ */
 #sistema .content_sin_sesion {
     padding: 25px;
-    margin-top: 25px !important;
+    margin-top: 20px !important;
     margin-bottom: 25px;
 }
     #sistema {

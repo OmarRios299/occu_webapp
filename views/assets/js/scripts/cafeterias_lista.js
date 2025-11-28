@@ -119,7 +119,12 @@ function CargarVerCafeteria() {
             } else {
                 $("#aux_validacion").val(respuesta.data.id);
                 $("#titulo_cafeteria_ver").html(respuesta.data.nombre);
-                $(".carousel_imagenes").html(respuesta.imagenes);
+                
+                // Inicializar la nueva galería con el array de imágenes
+                if (respuesta.imagenesArray && respuesta.imagenesArray.length > 0) {
+                    initGallery(respuesta.imagenesArray);
+                }
+                
                 $('#carousel_servicios').append(respuesta.servicios);
                     new Splide('#splide', {
                         type   : 'loop',
@@ -135,10 +140,10 @@ function CargarVerCafeteria() {
                             },
                         },
                     }).mount();
-                $("#info1").html('<b>Dirección: </b>' + respuesta.data.direccion);
-                $("#info2").html('<b>Teléfono: </b><a id="copiar_num" href="#">' + respuesta.data.telefono + '</a>');
-                $("#info3").html('<b>Correo: </b><a id="copiar_correo" href="#">' + respuesta.data.correo + '</a>');
-                $("#info4").html('<b>Horario: </b>' + respuesta.data.horario + ' <br/> ' + respuesta.data.status);
+                $("#info1").html(respuesta.data.direccion);
+                $("#info2").html('<a id="copiar_num" href="#">' + respuesta.data.telefono + '</a>');
+                $("#info3").html('<a id="copiar_correo" href="#">' + respuesta.data.correo + '</a>');
+                $("#info4").html(respuesta.data.horario + ' &bull; ' + respuesta.data.status);
                 $(".ir_googlemaps").attr("latitud", respuesta.data.latitud).attr('longitud', respuesta.data.longitud);
                 $("#descripcion").html(respuesta.data.descripcion);
             }

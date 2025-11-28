@@ -35,6 +35,18 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         $datos = true;
         $controller = "carritoContadorItemsController";
 
+    }else if(isset($_GET['resumenPago'])){
+
+        $datos = true;
+        $controller = "obtenerResumenPagoController";
+
+    }else if(isset($_POST['procesarPago'])){
+
+        $datos = array(
+            "metodo_pago" => $_POST['metodo_pago'],
+        );
+        $controller = "procesarPagoController";
+
     }else{
 
         $datos = false;

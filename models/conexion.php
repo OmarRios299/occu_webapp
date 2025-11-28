@@ -15,7 +15,7 @@
 require_once __DIR__ . '/../config/env.php';
 loadEnv(__DIR__ . '/../.env');
 //loadEnv(__DIR__ . '/../../.env');
-
+/** 
 class Conexion{
 
     static public function conectar()
@@ -38,3 +38,11 @@ class Conexion{
     }
 
 }
+    */
+    class Conexion{
+        static public function conectar(){
+            $link = new PDO("mysql:host=localhost;dbname=occu","root","");
+            $acentos = $link->query("SET NAMES 'utf8'");
+            return $link;
+        }
+    }

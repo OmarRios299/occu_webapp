@@ -233,3 +233,140 @@ function actualizarCantidadItem(id_item, cambio) {
     },
   });
 }
+
+// ========== FUNCIONALIDAD BOTÓN PAGAR ==========
+
+// Click en botón pagar - redirige a página de método de pago
+$(document).on("click", "#btn_pagar", function () {
+  // Verificar que el carrito no esté vacío
+  let totalText = $(this).text();
+  let total = parseFloat(totalText.replace(/[^0-9.]/g, ""));
+
+  if (total <= 0) {
+    swal("Carrito vacío", "Agrega productos antes de continuar", "warning");
+    return;
+  }
+
+  // Cerrar el offcanvas del carrito
+  const offcanvasEl = document.getElementById("offcanvasCarrito");
+  const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+  if (offcanvas) {
+    offcanvas.hide();
+  }
+
+  // Redirigir a página de método de pago
+  window.location.href = url + "metodo_pago";
+});
+
+// ========== FUNCIONES PARA PÁGINA DE MÉTODO DE PAGO ==========
+
+// Cargar resumen cuando se está en la página de método de pago
+$(document).ready(function () {
+  if (moduloActual === "metodo_pago") {
+    cargarResumenPago();
+  }
+});
+
+function cargarResumenPago() {
+  $.ajax({
+    url: url + "views/ajax/ajax_carrito.php?resumenPago=true",
+    method: "GET",
+    success: function (response) {
+      response = JSON.parse(response);
+
+      if (response.error) {
+        $("#resumen_pedido").html(`
+          <div class="text-center py-3">
+            <i class="fas fa-exclamation-circle fa-2x text-warning"></i>
+            <p class="mb-0 mt-2">${response.message}</p>
+          </div>
+        `);
+        $("#btn_confirmar_pago").prop("disabled", true);
+        return;
+      }
+
+      // Renderizar resumen
+      let html = `
+        <div class="mb-2">
+          <strong><i class="fas fa-store me-2"></i>${response.carrito.nombre_cafeteria}</strong>
+        </div>
+        <hr class="my-2">
+      `;
+
+      response.productos.forEach((producto) => {
+        html += `
+          <div class="d-flex justify-content-between mb-1">
+            <span>${producto.cantidad}x ${producto.nombre}</span>
+            <span>$${producto.subtotal.toFixed(2)}</span>
+          </div>
+        `;
+      });
+
+      $("#resumen_pedido").html(html);
+      $("#total_pagar").text("$" + response.total.toFixed(2));
+    },
+    error: function () {
+      $("#resumen_pedido").html(`
+        <div class="text-center py-3 text-danger">
+          <i class="fas fa-times-circle fa-2x"></i>
+          <p class="mb-0 mt-2">Error al cargar el resumen</p>
+        </div>
+      `);
+    },
+  });
+}
+
+// Habilitar botón cuando se selecciona método de pago
+$(document).on("change", 'input[name="metodo_pago"]', function () {
+  $("#btn_confirmar_pago").prop("disabled", false);
+});
+
+// Procesar pago al hacer click en Aceptar
+$(document).on("click", "#btn_confirmar_pago", function () {
+  let metodoPago = $('input[name="metodo_pago"]:checked').val();
+
+  if (!metodoPago) {
+    swal("Error", "Selecciona un método de pago", "warning");
+    return;
+  }
+
+  // Deshabilitar botón mientras procesa
+  let btn = $(this);
+  btn.prop("disabled", true);
+  btn.html('<i class="fas fa-spinner fa-spin me-2"></i>Procesando...');
+
+  $.ajax({
+    url: url + "views/ajax/ajax_carrito.php",
+    method: "POST",
+    data: {
+      procesarPago: true,
+      metodo_pago: metodoPago,
+    },
+    success: function (response) {
+      response = JSON.parse(response);
+
+      if (response.error) {
+        swal("Error", response.message, "error");
+        btn.prop("disabled", false);
+        btn.html('<i class="fas fa-check me-2"></i>Aceptar');
+        return;
+      }
+
+      // Éxito
+      swal({
+        title: "¡Pedido realizado!",
+        text: `Tu pedido #${response.id_venta} ha sido registrado por $${response.total.toFixed(2)}`,
+        icon: "success",
+        button: "Aceptar",
+      }).then(() => {
+        // Redirigir a lista de cafeterías o dashboard
+        window.location.href = url + "cafeterias_lista";
+      });
+    },
+    error: function () {
+      swal("Error", "Ocurrió un error al procesar el pago", "error");
+      btn.prop("disabled", false);
+      btn.html('<i class="fas fa-check me-2"></i>Aceptar');
+    },
+  });
+});
