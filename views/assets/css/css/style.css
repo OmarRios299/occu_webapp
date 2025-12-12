@@ -1595,6 +1595,11 @@ dl, ol, ul {
 .btn-pedidos.btn-icono {
     background-image: url(../img/iconos/botones/icono-pedidos.svg);
 }
+.btn-precio.con-icono::before, 
+.btn-precio.btn-icono {
+    background-image: url(../img/iconos/botones/icono-editar.svg);
+    background-color: var(--color-verde);
+}
 
 /* ---------------------------------------
 @@@@ estilos personalizados ---> botones en tablas

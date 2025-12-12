@@ -26,9 +26,9 @@ if ($cafeteria) {
     </div>
 
     <!-- Contador de pedidos por estado -->
-    <div class="row mb-4">
+    <!-- <div class="row mb-4">
         <div class="col-6 col-md-3 mb-2">
-            <div class="card border-warning bg-warning bg-opacity-10">
+            <div class="card bg-primary bg-opacity-10">
                 <div class="card-body py-2 text-center">
                     <h3 class="mb-0 text-white" id="count_pendientes">0</h3>
                     <small class="text-muted">Pendientes</small>
@@ -36,7 +36,7 @@ if ($cafeteria) {
             </div>
         </div>
         <div class="col-6 col-md-3 mb-2">
-            <div class="card border-primary bg-primary bg-opacity-10">
+            <div class="card bg-warning bg-opacity-10">
                 <div class="card-body py-2 text-center">
                     <h3 class="mb-0 text-white" id="count_preparando">0</h3>
                     <small class="text-muted">En preparación</small>
@@ -44,7 +44,7 @@ if ($cafeteria) {
             </div>
         </div>
         <div class="col-6 col-md-3 mb-2">
-            <div class="card border-success bg-success bg-opacity-10">
+            <div class="card bg-info bg-opacity-10">
                 <div class="card-body py-2 text-center">
                     <h3 class="mb-0 text-white" id="count_entregados">0</h3>
                     <small class="text-muted">Entregados hoy</small>
@@ -52,14 +52,14 @@ if ($cafeteria) {
             </div>
         </div>
         <div class="col-6 col-md-3 mb-2">
-            <div class="card border-danger bg-danger bg-opacity-10">
+            <div class="card bg-danger bg-opacity-10">
                 <div class="card-body py-2 text-center">
                     <h3 class="mb-0 text-white" id="count_rechazados">0</h3>
                     <small class="text-muted">Rechazados hoy</small>
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
     <!-- Tabs para filtrar por estado -->
     <ul class="nav nav-tabs mb-3" id="pedidosTabs" role="tablist">
@@ -78,11 +78,13 @@ if ($cafeteria) {
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="tab-entregados" data-bs-toggle="tab" data-bs-target="#entregados" type="button" role="tab">
                 <i class="fas fa-check-circle me-1 text-success"></i> Entregados
+                <span class="badge bg-success ms-1" id="count_entregados">0</span>
             </button>
         </li>
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="tab-rechazados" data-bs-toggle="tab" data-bs-target="#rechazados" type="button" role="tab">
                 <i class="fas fa-times-circle me-1 text-danger"></i> Rechazados
+                <span class="badge bg-danger ms-1" id="count_rechazados">0</span>
             </button>
         </li>
     </ul>

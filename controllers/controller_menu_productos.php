@@ -14,7 +14,9 @@ static public function obtenerProductosController($datos){
         $botones = '<button class="btn btn-icono btn-eliminar eliminarRegistro" tabla="menu_productos" idRegistro="'.$producto['id'].'"></button>    
                     <button class="btn btn-icono btn-editar btn_editar_producto" imagen="'.$url .''. $producto['imagen'].'" 
                     idRegistro="'.$producto['id'].'" nombre="'.$producto['nombre'].'" 
-                    subcategoria="'.$producto['id_subcategoria'].'"></button>';
+                    subcategoria="'.$producto['id_subcategoria'].'"></button>
+                    <button class="btn btn-icono btn-categorias btn_bases_producto" 
+                    idRegistro="'.$producto['id'].'" nombre="'.$producto['nombre'].'"></button>';
         $estado = '<div class="form-check form-switch">
                 <input type="checkbox"
                 class="form-check-input cambioEstado"
@@ -100,5 +102,31 @@ static public function agregarProductosController($datos){
 
 /* AGREGAR PRODUCTOS */
 
+
+/* OBTENER CATEGORIAS DE INGREDIENTES BASE */
+
+static public function obtenerCategoriasIngredientesBaseController($id_producto = null){
+    return MenuProductosModel::obtenerCategoriasIngredientesBaseModel($id_producto);
+}
+
+/* OBTENER CATEGORIAS DE INGREDIENTES BASE */
+
+
+/* OBTENER CATEGORIAS BASE DE UN PRODUCTO */
+
+static public function obtenerBasesProductoController($id_producto){
+    return MenuProductosModel::obtenerBasesProductoModel($id_producto);
+}
+
+/* OBTENER CATEGORIAS BASE DE UN PRODUCTO */
+
+
+/* GUARDAR CATEGORIAS BASE DE PRODUCTO */
+
+static public function guardarBasesProductoController($datos){
+    return MenuProductosModel::guardarBasesProductoModel($datos);
+}
+
+/* GUARDAR CATEGORIAS BASE DE PRODUCTO */
 
 }

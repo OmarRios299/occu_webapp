@@ -49,18 +49,29 @@ $(document).on("click",".check_subcategoria",function(){
     });
 });
 
-$(document).on("click",".check_productos",function(){
-    let estado = $(this).attr("estado");
-    let id_registro = $(this).attr("idRegistro");
+$(document).on("click",".check_productos",function(e){
+    let checkbox = $(this);
+    let estado = checkbox.attr("estado");
+    let id_registro = checkbox.attr("idRegistro");
     let cafeteria = $("#cafeteria").val();
+    
+    // Guardar el estado original ANTES del cambio
+    // Si el atributo estado es 1, el checkbox está marcado (activo)
+    // Si el atributo estado es 0, el checkbox está desmarcado (inactivo)
+    let estadoOriginal = (estado == 1); // Estado original basado en el atributo
+    let nuevoEstadoVisual = !estadoOriginal; // El nuevo estado visual que queremos
+    
+    // Permitir que el checkbox cambie visualmente inmediatamente
+    // Si hay error, lo revertiremos
+    
     var datos = new FormData();
     
     datos.append("agregar_producto", true);
-    datos.append("id_producto", $(this).attr("id"));
+    datos.append("id_producto", checkbox.attr("id"));
     (estado) ? datos.append("estado", estado): false;
     (id_registro) ? datos.append("id_registro", id_registro) : false;
     datos.append("cafeteria", (cafeteria) ? cafeteria : false);
-    datos.append("campo", $(this).attr("campo"));
+    datos.append("campo", checkbox.attr("campo"));
 
     $.ajax({
         url:url+'views/ajax/ajax_propietarios_menu.php',
@@ -70,8 +81,69 @@ $(document).on("click",".check_productos",function(){
         contentType: false,
         processData: false,
         success:function(respuesta){
-            console.log(respuesta);
+            console.log("Respuesta del servidor:", respuesta);
+            
+            // Verificar si la respuesta es JSON (con información de copia)
+            let respuestaObj = null;
+            let esExitoso = false;
+            
+            try {
+                respuestaObj = JSON.parse(respuesta);
+                esExitoso = (respuestaObj && respuestaObj.status == 'success');
+            } catch(e) {
+                // No es JSON, es respuesta simple
+                // 'success' y 'existe' son respuestas válidas (existe significa que ya estaba registrado)
+                esExitoso = (respuesta == 'success' || respuesta == 'existe');
+            }
+            
+            if(esExitoso){
+                // Actualizar el atributo estado después del cambio exitoso
+                // El controlador invierte el estado: si era 1 (activo), ahora es 0 (inactivo) y viceversa
+                var nuevoEstado = (estado == 1) ? 0 : 1;
+                checkbox.attr("estado", nuevoEstado);
+                
+                // Actualizar el estado visual del checkbox
+                checkbox.prop("checked", nuevoEstadoVisual);
+                
+                // Si se copió información de un producto similar, mostrar notificación
+                // Solo mostrar si el producto se activó (nuevoEstadoVisual es true)
+                if(respuestaObj && respuestaObj.copia && respuestaObj.copia.copiado && nuevoEstadoVisual){
+                    let mensaje = 'Producto activado correctamente.\n\n';
+                    mensaje += 'Se copiaron automáticamente los datos del producto similar:\n';
+                    mensaje += '📦 ' + respuestaObj.copia.producto_origen + '\n\n';
+                    
+                    let items_copiados = [];
+                    if(respuestaObj.copia.ingredientes){
+                        items_copiados.push('✓ Ingredientes');
+                    }
+                    if(respuestaObj.copia.tamanos){
+                        items_copiados.push('✓ Tamaños');
+                    }
+                    
+                    if(items_copiados.length > 0){
+                        mensaje += items_copiados.join('\n');
+                        mensaje += '\n\nPuedes revisar y ajustar estos datos si es necesario.';
+                    }
+                    
+                    swal({
+                        title: "¡Producto activado!",
+                        text: mensaje,
+                        icon: "success",
+                        button: "Entendido"
+                    });
+                }
+            } else {
+                // Si hay error, revertir el estado del checkbox al original
+                checkbox.prop("checked", estadoOriginal);
+                swal("¡Error!", "No se pudo actualizar el estado del producto", "error");
+            }
         },
+        error: function(xhr, status, error){
+            console.log("Error AJAX:", error);
+            // Si hay error, revertir el estado del checkbox al original
+            checkbox.prop("checked", estadoOriginal);
+            swal("¡Error!", "Ocurrió un error al actualizar el estado del producto", "error");
+        }
     });
 });
 
@@ -301,6 +373,32 @@ $(document).on("click",".check_ingredientes",function(){
     });
 });
 
+// Actualizar estado del checkbox de costo extra cuando cambia el checkbox de ingrediente
+$(document).on("change", ".check_ingredientes", function(){
+    var contenedor = $(this).closest(".divItemIngrediente");
+    var checkCostoExtra = contenedor.find(".checkIng_precio_extra");
+    var divExtra = contenedor.find(".divExtra");
+    var isChecked = $(this).prop("checked");
+    
+    // Habilitar o deshabilitar el checkbox de costo extra según el estado del ingrediente
+    if(isChecked){
+        // Si se activa el ingrediente, habilitar el checkbox de costo extra
+        checkCostoExtra.prop("disabled", false);
+        // Si el costo extra estaba marcado antes, mostrar el div
+        if(checkCostoExtra.prop("checked")){
+            divExtra.show();
+        }
+    } else {
+        // Si se desactiva el ingrediente:
+        // 1. Desmarcar el checkbox de costo extra
+        checkCostoExtra.prop("checked", false);
+        // 2. Deshabilitar el checkbox de costo extra
+        checkCostoExtra.prop("disabled", true);
+        // 3. Ocultar el div de configuración de precio extra
+        divExtra.hide();
+    }
+});
+
 $(document).on("change", ".ingred_cantidad_gratis, .ingred_precio_extra", function () {
 
     var input = $(this);
@@ -337,8 +435,31 @@ $(document).on("change", ".checkIng_precio_extra", function () {
     var contenedor = input.closest(".divItemIngrediente");
 
     var idRegistro = input.attr("idRegistro");
-
-    var costoExtra = contenedor.find("input[costo_extra]").attr("costo_extra") || "0";
+    
+    // Validar que el checkbox no esté deshabilitado
+    if(input.prop("disabled")){
+        input.prop("checked", false);
+        return;
+    }
+    
+    // Validar que existe idRegistro y no es "No"
+    if(!idRegistro || idRegistro == "No" || idRegistro == ""){
+        // Si no hay registro, primero se debe activar el ingrediente
+        swal("¡Atención!", "Primero debes activar el ingrediente antes de configurar el costo extra", "warning");
+        input.prop("checked", false);
+        return;
+    }
+    
+    // Obtener el estado actual del atributo costo_extra (valor en BD antes del cambio)
+    var costoExtraActual = input.attr("costo_extra") || "No";
+    
+    // Guardar el estado del checkbox antes de enviar
+    var isChecked = input.prop("checked");
+    
+    // El controlador invierte el valor que recibe, así que enviamos el valor actual
+    // Si costo_extra actual es "Si", el controlador lo cambiará a "No"
+    // Si costo_extra actual es "No", el controlador lo cambiará a "Si"
+    var costoExtra = costoExtraActual;
 
     var datos = new FormData();
     datos.append("checkPrecioExtra", true);
@@ -354,7 +475,28 @@ $(document).on("change", ".checkIng_precio_extra", function () {
         processData: false,
         success: function (respuesta) {
             console.log(respuesta);
-            contenedor.find(".divExtra").toggle();
+            if(respuesta == 'success'){
+                // El controlador invierte el valor, así que actualizamos el atributo
+                var nuevoCostoExtra = (costoExtraActual == "Si") ? "No" : "Si";
+                input.attr("costo_extra", nuevoCostoExtra);
+                
+                // Mostrar u ocultar el div según el estado del checkbox
+                var divExtra = contenedor.find(".divExtra");
+                if(isChecked){
+                    divExtra.show();
+                } else {
+                    divExtra.hide();
+                }
+            } else {
+                // Si hay error, revertir el estado del checkbox
+                input.prop("checked", !isChecked);
+                swal("¡Error!", "No se pudo actualizar el costo extra", "error");
+            }
+        },
+        error: function(){
+            // Si hay error, revertir el estado del checkbox
+            input.prop("checked", !isChecked);
+            swal("¡Error!", "Ocurrió un error al actualizar el costo extra", "error");
         }
     });
 });
@@ -385,6 +527,86 @@ $(document).on("submit",".form_add_ing_extra",function(){
             $("#addIngredienteExtraModal").modal('hide');
             $(".input_ingre").val('');
             cargarModalIngredientes();
+        }
+    });
+});
+
+/* ----- FUNCIONAMIENTO DEL MODAL DE PRECIO PARA ALIMENTOS ----- 
+---------------------------------------------------------------------*/
+
+// Abrir modal de precio para alimentos
+$(document).on("click", ".btn_editar_precio_alimento", function () {
+    if ($("#input_alerta_menu").length) {
+        swal("¡Alerta!", `Para modificar el precio ve a "Mi menú".`, "warning");
+        return;
+    }
+
+    let id_producto = $(this).attr('idProducto');
+    let nombre_producto = $(this).attr('nombre');
+    let cafeteria = $("#cafeteria").val();
+    
+    $("#id_producto_precio").val(id_producto);
+    $("#nombre_producto_precio").text(nombre_producto);
+    $("#precio_alimento").val('');
+    
+    // Obtener precio actual si existe
+    let filtro = `?obtener_precio_alimento=${true}&id_producto=${id_producto}&cafeteria=${(cafeteria) ? cafeteria : false}`;
+    
+    $.ajax({
+        url: url + 'views/ajax/ajax_propietarios_menu.php' + filtro,
+        method: 'GET',
+        cache: false,
+        beforeSend: cargaSistema(true),
+        success: function (respuesta) {
+            let datos = JSON.parse(respuesta);
+            if(datos.precio && datos.precio != ''){
+                $("#precio_alimento").val(datos.precio);
+            }
+            cargaSistema(false);
+        }
+    });
+    
+    $("#modal_precio_alimento").modal('show');
+});
+
+// Guardar precio de alimento
+$(document).on("submit", ".form_precio_alimento", function () {
+    let id_producto = $("#id_producto_precio").val();
+    let precio = $("#precio_alimento").val();
+    let cafeteria = $("#cafeteria").val();
+    
+    if(!precio || precio == '' || precio <= 0){
+        swal("¡Atención!", "Debes ingresar un precio válido", "warning");
+        return;
+    }
+    
+    var datos = new FormData();
+    datos.append("guardar_precio_alimento", true);
+    datos.append("id_producto", id_producto);
+    datos.append("precio", precio);
+    datos.append("cafeteria", (cafeteria) ? cafeteria : false);
+
+    $.ajax({
+        url: url + 'views/ajax/ajax_propietarios_menu.php',
+        method: 'POST',
+        data: datos,
+        cache: false,
+        contentType: false,
+        processData: false,
+        beforeSend: cargaSistema(true),
+        success: function (respuesta) {
+            console.log(respuesta);
+            if(respuesta == 'success'){
+                swal("¡Éxito!", "El precio se guardó correctamente", "success");
+                $("#modal_precio_alimento").modal('hide');
+            } else {
+                swal("¡Error!", "No se pudo guardar el precio", "error");
+            }
+            cargaSistema(false);
+        },
+        error: function(){
+            swal("¡Error!", "Ocurrió un error al guardar el precio", "error");
+            cargaSistema(false);
         }
     });
 });

@@ -92,15 +92,82 @@ class PropietariosMenuController
                 return 'error';
             }
         }
+        
+        $datos['id_propietario'] = $_SESSION['id'];
+        $nuevo_estado = 0;
+        
         if ($datos['id_registro'] != 'No') {
             $datos['estado'] = ($datos['estado'] == 1) ? 0 : 1;
-            PropietariosMenuModel::cambiarEstadoProductoModel($datos, $datos['cafeteria']);
+            $nuevo_estado = $datos['estado'];
+            $resultado = PropietariosMenuModel::cambiarEstadoProductoModel($datos, $datos['cafeteria']);
         } else {
-            // $datos['id_usuario'] = $_SESSION['id'];
-            //$cafeterias = PropietariosMenuModel::buscarCafeteriasUsuarioModel($datos['id_usuario']);
-            $datos['id_propietario'] = $_SESSION['id'];
-            PropietariosMenuModel::agregarProductoModel($datos);
+            $resultado = PropietariosMenuModel::agregarProductoModel($datos);
+            // Si el producto ya existe, tratarlo como éxito
+            if($resultado == 'existe'){
+                $resultado = 'success';
+            }
+            $nuevo_estado = 1; // Producto nuevo se activa
         }
+        
+        // Si el producto se activó (estado = 1) y la operación fue exitosa, verificar y copiar datos de producto similar
+        $info_copia = array();
+        if($resultado == 'success' && $nuevo_estado == 1){
+            $tiene_ingredientes = PropietariosMenuModel::tieneIngredientesActivosModel($datos['id_producto'], $datos['id_propietario'], $datos['cafeteria']);
+            $tiene_tamanos = PropietariosMenuModel::tieneTamanosActivosModel($datos['id_producto'], $datos['id_propietario'], $datos['cafeteria']);
+            
+            // Si no tiene ingredientes ni tamaños, buscar producto similar
+            // Si no se encuentra producto similar, simplemente se ignora (no hay error)
+            if(!$tiene_ingredientes && !$tiene_tamanos){
+                $producto_similar = PropietariosMenuModel::buscarProductoSimilarModel($datos['id_producto'], $datos['id_propietario'], $datos['cafeteria']);
+                
+                // Solo copiar si se encuentra un producto similar
+                if($producto_similar){
+                    // Obtener nombre del producto origen para mostrar en notificación
+                    $nombre_producto_origen = PropietariosMenuModel::obtenerNombreProductoModel($producto_similar['id_producto_origen']);
+                    
+                    // Solo copiar ingredientes si es una bebida
+                    $resultado_ingredientes = 'no_aplica';
+                    if($producto_similar['es_bebida'] == 'Si'){
+                        // Copiar ingredientes (si falla, se ignora)
+                        $resultado_ingredientes = PropietariosMenuModel::copiarIngredientesModel(
+                            $producto_similar['id_producto_origen'],
+                            $datos['id_producto'],
+                            $datos['id_propietario'],
+                            $datos['cafeteria']
+                        );
+                    }
+                    
+                    // Si es bebida, copiar tamaños (si falla, se ignora)
+                    $resultado_tamanos = 'no_aplica';
+                    if($producto_similar['es_bebida'] == 'Si'){
+                        $resultado_tamanos = PropietariosMenuModel::copiarTamanosModel(
+                            $producto_similar['id_producto_origen'],
+                            $datos['id_producto'],
+                            $datos['id_propietario'],
+                            $datos['cafeteria']
+                        );
+                    }
+                    
+                    // Preparar información de copia para respuesta solo si se copió algo
+                    if($resultado_ingredientes == 'success' || $resultado_tamanos == 'success'){
+                        $info_copia = array(
+                            'copiado' => true,
+                            'producto_origen' => $nombre_producto_origen,
+                            'ingredientes' => ($resultado_ingredientes == 'success'),
+                            'tamanos' => ($resultado_tamanos == 'success')
+                        );
+                    }
+                }
+            }
+        }
+        
+        // Si se copió información, devolver JSON con la información
+        // Solo devolver JSON cuando se activó el producto (nuevo_estado == 1) y se copió algo
+        if(!empty($info_copia) && $nuevo_estado == 1){
+            return json_encode(array('status' => 'success', 'copia' => $info_copia));
+        }
+        
+        return $resultado;
     }
 
     /* INSERTAR REGISTRO DE PRODUCTOS */
@@ -144,7 +211,7 @@ class PropietariosMenuController
 
         $data = '';
 
-        foreach (PropietariosMenuModel::obtenerCategoriasingredientesModel() as $categoria) {
+        foreach (PropietariosMenuModel::obtenerCategoriasingredientesModel($datos['id_producto']) as $categoria) {
             $data .= '
             <div class="col-md-4">
                 <h5 class=""><b>' . $categoria['nombre'] . '</b></h5>
@@ -161,9 +228,14 @@ class PropietariosMenuController
                 }
                 $checked_ex = '';
                 $display = 'style="display:none"';
+                $disabled = '';
                 if ($ingrediente['costo_extra'] == 'Si') {
                     $checked_ex = 'checked';
                     $display = '';
+                }
+                // Deshabilitar el checkbox de costo extra si el ingrediente no está activo
+                if ($ingrediente['estado'] != 1) {
+                    $disabled = 'disabled';
                 }
                 $eliminar = ($ingrediente['registro_occu']==2) ? '<a class="me-1 eliminarRegistro" style="color:red; cursor:pointer" tabla="menu_ingredientes" idRegistro="' . $ingrediente['id'] . '">x</a>' : '';
                 $data .= '
@@ -174,9 +246,9 @@ class PropietariosMenuController
                         </div>
                          <div class="col-5">
                             <div class="form-check">
-                                <input class="form-check-input checkIng_precio_extra" type="checkbox" ' . $checked_ex . ' costo_extra="' . $ingrediente['costo_extra'] . '" idRegistro="' . $ingrediente['id_registro'] . '">
+                                <input class="form-check-input checkIng_precio_extra" type="checkbox" ' . $checked_ex . ' costo_extra="' . $ingrediente['costo_extra'] . '" idRegistro="' . $ingrediente['id_registro'] . '" ' . $disabled . '>
                                 <label class="form-check-label">
-                                Extra
+                                Costo extra
                                 </label>
                             </div>
                         </div>
@@ -192,7 +264,7 @@ class PropietariosMenuController
                                     <div class="row d-flex justify-content-center ingredItem" idRegistroItem="' . $ingrediente['id_registro'] . '">
                                         <div class="col-5">
                                             <div class="form-group">
-                                            <label>Cantidad gratis:</label>
+                                            <label>Porción incluida:</label>
                                             <input type="number" class="form-control ingred_cantidad_gratis" value="' . $ingrediente['cantidad_gratis'] . '">
                                         </div>
                                         </div>
@@ -273,6 +345,7 @@ class PropietariosMenuController
                                                 <div class="col">
                                                     <button type="button" class="btn btn-icono btn-ingredientes btn_editar_ingre" idProducto="' . $idProducto . '" ></button>
                                                     <button type="button" class="btn btn-icono btn-categorias btn_editar_tamanos" idProducto="' . $idProducto . '" ' . $hidden . '></button>
+                                                    <button type="button" class="btn btn-icono btn-precio btn_editar_precio_alimento" idProducto="' . $idProducto . '" nombre="' . $producto['nombre'] . '" style="' . (($subcategoria['es_bebida'] == "Si") ? 'display:none;' : '') . '"></button>
                                                     <input class="form-check-input check_productos mt-3" type="checkbox" id="' . $producto['id'] . '" estado="' . $producto['estado'] . '" idRegistro="' . $producto['id_registro'] . '" ' . $checked . '>
                                                 </div>
                                             </div>
@@ -418,8 +491,8 @@ class PropietariosMenuController
     }
 
     
-    static public function obtenerCategoriasingredientesController(){
-        return PropietariosMenuModel::obtenerCategoriasingredientesModel();
+    static public function obtenerCategoriasingredientesController($id_producto = null){
+        return PropietariosMenuModel::obtenerCategoriasingredientesModel($id_producto);
     }
     
     static public function agregarPropietarioIngredienteController($datos)
@@ -430,4 +503,40 @@ class PropietariosMenuController
         PropietariosMenuModel::agregarPropietarioIngredienteModel($datos);
         
     }
+    
+    /* OBTENER PRECIO DE ALIMENTO */
+    
+    static public function obtenerPrecioAlimentoController($datos)
+    {
+        $datos['id_propietario'] = $_SESSION['id'];
+        if ($datos['cafeteria'] !== 'false') {
+            $cafeteria = GeneralController::verificarCafeteriaContoller($datos['cafeteria'], $_SESSION['id']);
+            if (!$cafeteria) {
+                return json_encode(['error' => 'Cafetería no válida']);
+            }
+        }
+        
+        $precio = PropietariosMenuModel::obtenerPrecioAlimentoModel($datos, $datos['cafeteria']);
+        return json_encode(['precio' => $precio]);
+    }
+    
+    /* OBTENER PRECIO DE ALIMENTO */
+    
+    
+    /* GUARDAR PRECIO DE ALIMENTO */
+    
+    static public function guardarPrecioAlimentoController($datos)
+    {
+        $datos['id_propietario'] = $_SESSION['id'];
+        if ($datos['cafeteria'] !== 'false') {
+            $cafeteria = GeneralController::verificarCafeteriaContoller($datos['cafeteria'], $_SESSION['id']);
+            if (!$cafeteria) {
+                return 'error';
+            }
+        }
+        
+        return PropietariosMenuModel::guardarPrecioAlimentoModel($datos, $datos['cafeteria']);
+    }
+    
+    /* GUARDAR PRECIO DE ALIMENTO */
 }

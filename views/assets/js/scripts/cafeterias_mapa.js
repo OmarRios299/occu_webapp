@@ -21,7 +21,11 @@ function cargarMapaCafeterias(){
     });
     
     let horario = $('input[name="horario_filtro"]:checked').val();
-    let ciudad = ($("#select_ciudad_1 option:selected").val()!='') ? $("#select_ciudad_1 option:selected").val() : $("#select_ciudad_2 option:selected").val();
+    // Obtener ciudad del select de filtros (funciona en desktop y móvil)
+    let ciudad = $('.select_ciudades_filtro option:selected').val();
+    if (!ciudad) {
+        ciudad = $("#ciudades_filtro_offcanvas").val() || $("#ciudades_filtro_mobile").val() || '';
+    }
     
     var datos = new FormData();
     datos.append("obtenerCafeterias", true);
@@ -44,9 +48,16 @@ function cargarMapaCafeterias(){
             clearMarkers();
 
             // Verificar si el atributo 'coordenadas' existe y es válido
-            let coordenadasAttr = ($("#ciudades_filtro").attr('coordenadas')) ? $("#ciudades_filtro").attr('coordenadas') : '';
-            coordenadasAttr = (coordenadasAttr=='')?$('#select_ciudad_1').find('option:selected').attr('coordenadas'):coordenadasAttr;
-            coordenadasAttr = (coordenadasAttr=='')?$('#select_ciudad_2').find('option:selected').attr('coordenadas'):coordenadasAttr;
+            let coordenadasAttr = '';
+            // Intentar obtener coordenadas del select actual
+            coordenadasAttr = $('.select_ciudades_filtro option:selected').attr('coordenadas') || '';
+            // Si no hay coordenadas, intentar desde los campos hidden
+            if (!coordenadasAttr) {
+                coordenadasAttr = $("#ciudades_filtro_offcanvas").attr('coordenadas') || '';
+            }
+            if (!coordenadasAttr) {
+                coordenadasAttr = $("#ciudades_filtro_mobile").attr('coordenadas') || '';
+            }
             
             let polygonCoordinates = coordenadasAttr ? JSON.parse(coordenadasAttr) : [];
 
@@ -130,7 +141,8 @@ function abrirModalCafeteria(id) {
 
 $(document).ready(function(){
     if (moduloActual=='cafeterias_mapa') {
-        $(document).on("submit", "#aplicar_filtros_mapa", function () {
+        // Eventos para los nuevos formularios de filtros
+        $(document).on("submit", "#aplicar_filtros_offcanvas, #aplicar_filtros_mobile", function () {
             $("#modal_cafeteria").modal('hide');
             cargarMapaCafeterias();
         });
@@ -138,28 +150,10 @@ $(document).ready(function(){
         $(document).on("change", ".check_servicios", function () {
             if ($(this).prop('checked')) {
                 $(".div_servicios").show();
-                $("#filtro-input").hide();
-                $(".cambiar-clase").removeClass('col-md-5').addClass('col-md-6');
+                cargarServiciosFiltro();
             } else {
                 $(".div_servicios").hide();
-                $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
             }
-        });
-        
-        $(document).on("change", ".check_servicios", function () {
-            if ($(this).prop('checked')) {
-                $(".div_servicios").show();
-                $("#filtro-input").hide();
-                $(".cambiar-clase").removeClass('col-md-5').addClass('col-md-6');
-            } else {
-                $(".div_servicios").hide();
-                $(".cambiar-clase").removeClass('col-md-6').addClass('col-md-5');
-            }
-            cargarServiciosFiltro();
-        });
-        
-        $(document).on("submit", "#aplicar_filtros", function () {
-            cargarMapaCafeterias();
         });
         
         $(document).on("change", ".seleccionar_servicio", function () {
@@ -172,13 +166,73 @@ $(document).ready(function(){
         });
         
         $(document).on("change",".select_ciudades_filtro",function(){
-            $("#ciudades_filtro").val($(this).val());
-            $("#ciudades_filtro").attr('coordenadas',$(this).find('option:selected').attr('coordenadas'));
-            cargarMapaCafeterias();
+            var ciudadVal = $(this).val();
+            var coordenadas = $(this).find('option:selected').attr('coordenadas') || '';
+            // Sincronizar valores en todos los campos hidden
+            $("#ciudades_filtro_offcanvas").val(ciudadVal);
+            $("#ciudades_filtro_offcanvas").attr('coordenadas', coordenadas);
+            $("#ciudades_filtro_mobile").val(ciudadVal);
+            $("#ciudades_filtro_mobile").attr('coordenadas', coordenadas);
         });
         
+        // Función global para aplicar filtros desde el offcanvas desktop
+        window.aplicarFiltros = function() {
+            // Sincronizar valores antes de aplicar
+            var ciudadVal = $('.select_ciudades_filtro').val();
+            var coordenadas = $('.select_ciudades_filtro option:selected').attr('coordenadas') || '';
+            $("#ciudades_filtro_offcanvas").val(ciudadVal);
+            $("#ciudades_filtro_offcanvas").attr('coordenadas', coordenadas);
+            $("#ciudades_filtro_mobile").val(ciudadVal);
+            $("#ciudades_filtro_mobile").attr('coordenadas', coordenadas);
+            
+            $('#aplicar_filtros_offcanvas').submit();
+            const offcanvasEl = document.getElementById("offcanvasFiltros");
+            const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+            if (offcanvas) {
+                setTimeout(function() {
+                    offcanvas.hide();
+                }, 300);
+            }
+        };
+        
+        // Función global para aplicar filtros desde el offcanvas móvil
+        window.aplicarFiltrosMobile = function() {
+            // Sincronizar valores antes de aplicar
+            var ciudadVal = $('.select_ciudades_filtro').val();
+            var coordenadas = $('.select_ciudades_filtro option:selected').attr('coordenadas') || '';
+            $("#ciudades_filtro_offcanvas").val(ciudadVal);
+            $("#ciudades_filtro_offcanvas").attr('coordenadas', coordenadas);
+            $("#ciudades_filtro_mobile").val(ciudadVal);
+            $("#ciudades_filtro_mobile").attr('coordenadas', coordenadas);
+            
+            $('#aplicar_filtros_mobile').submit();
+            const offcanvasEl = document.getElementById("offcanvasFiltrosMobile");
+            const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+            if (offcanvas) {
+                setTimeout(function() {
+                    offcanvas.hide();
+                }, 300);
+            }
+        };
+        
+        // Función global para limpiar filtros
+        window.limpiarFiltros = function() {
+            $('input[name="rating"]').prop('checked', false);
+            $('#star3-filtros, #star3-mobile').prop('checked', true);
+            $('input[name="horario_filtro"][value="todos"]').prop('checked', true);
+            $('.select_ciudades_filtro').val('').trigger('change');
+            $('.check_servicios').prop('checked', false);
+            $('.div_servicios').hide();
+            $('.seleccionar_servicio').prop('checked', false);
+            $("#ciudades_filtro_offcanvas").val('');
+            $("#ciudades_filtro_offcanvas").attr('coordenadas', '');
+            $("#ciudades_filtro_mobile").val('');
+            $("#ciudades_filtro_mobile").attr('coordenadas', '');
+            cargarMapaCafeterias();
+        };
+        
         // Usando matchMedia para comprobar el tamaño de pantalla
-        const mediaQuery = window.matchMedia("(min-width: 765px)");
+        const mediaQuery = window.matchMedia("(min-width: 992px)");
         
         // Verifica si la condición se cumple de entrada
         checkScreenSize(mediaQuery);
@@ -186,39 +240,69 @@ $(document).ready(function(){
         // Detecta cambios en el tamaño de pantalla y aplica la función
         mediaQuery.addEventListener("change", checkScreenSize);
         
-        
         function filtro_pantalla_grande() {
             // Añadir eventos solo si la pantalla es mayor a 991px
-            $(document).on("click", "#btn_filtro_mapa", function () {
-                $(this).attr("open", $(this).attr("open") === 'si' ? 'no' : 'si');
-                $("#modal_filtro_mapa").modal('show');
-                //cargarServiciosFiltro();
+            $(document).on("click", "#btn_filtro_mapa, .menu_offcanvas", function (e) {
+                e.preventDefault();
+                // Cerrar offcanvas móvil si está abierto
+                var mobileOffcanvas = document.getElementById("offcanvasFiltrosMobile");
+                var bsMobileOffcanvas = bootstrap.Offcanvas.getInstance(mobileOffcanvas);
+                if (bsMobileOffcanvas) {
+                    bsMobileOffcanvas.hide();
+                }
+                // Abrir offcanvas desktop
+                var desktopOffcanvas = document.getElementById("offcanvasFiltros");
+                var bsDesktopOffcanvas = new bootstrap.Offcanvas(desktopOffcanvas);
+                bsDesktopOffcanvas.show();
+                
+                // Cargar servicios si ya está activado el checkbox
+                if ($('.check_servicios').is(':checked')) {
+                    cargarServiciosFiltro();
+                }
             });
         }
+        
         // Función para gestionar la activación y desactivación de los eventos
         function checkScreenSize(e) {
             if (e.matches) {
-                // Si la pantalla es mayor a 991px, ejecutar la función
-                var offcanvasElement = document.getElementById("offcanvasBottom");
-                var bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvasElement); // Obtener la instancia actual
-                if (bsOffcanvas) {
-                    bsOffcanvas.hide();
+                // Si la pantalla es mayor a 991px, ejecutar la función de desktop
+                var mobileOffcanvas = document.getElementById("offcanvasFiltrosMobile");
+                var bsMobileOffcanvas = bootstrap.Offcanvas.getInstance(mobileOffcanvas);
+                if (bsMobileOffcanvas) {
+                    bsMobileOffcanvas.hide();
                 }
                 $(document).off("click", ".menu_offcanvas");
                 filtro_pantalla_grande();
             } else {
-                // Si la pantalla es menor o igual a 991px, remover los eventos
-                $(document).off("click", "#btn_filtro_mapa");
-                $(document).off("submit", "#aplicar_filtros");
+                // Si la pantalla es menor o igual a 991px, usar móvil
+                var desktopOffcanvas = document.getElementById("offcanvasFiltros");
+                var bsDesktopOffcanvas = bootstrap.Offcanvas.getInstance(desktopOffcanvas);
+                if (bsDesktopOffcanvas) {
+                    bsDesktopOffcanvas.hide();
+                }
+                $(document).off("click", "#btn_filtro_mapa, .menu_offcanvas");
                 filtro_pantalla_chico();
             }
         }
         
         function filtro_pantalla_chico() {
-            $(document).on("click", ".menu_offcanvas", function() {
-                var offcanvasElement = document.getElementById("offcanvasBottom");
-                var bsOffcanvas = new bootstrap.Offcanvas(offcanvasElement);
-                bsOffcanvas.show();
+            $(document).on("click", ".menu_offcanvas, #btn_filtro_mapa", function(e) {
+                e.preventDefault();
+                // Cerrar offcanvas desktop si está abierto
+                var desktopOffcanvas = document.getElementById("offcanvasFiltros");
+                var bsDesktopOffcanvas = bootstrap.Offcanvas.getInstance(desktopOffcanvas);
+                if (bsDesktopOffcanvas) {
+                    bsDesktopOffcanvas.hide();
+                }
+                // Abrir offcanvas móvil
+                var mobileOffcanvas = document.getElementById("offcanvasFiltrosMobile");
+                var bsMobileOffcanvas = new bootstrap.Offcanvas(mobileOffcanvas);
+                bsMobileOffcanvas.show();
+                
+                // Cargar servicios si ya está activado el checkbox
+                if ($('.check_servicios').is(':checked')) {
+                    cargarServiciosFiltro();
+                }
             });  
         }
             

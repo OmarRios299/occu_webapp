@@ -1,5 +1,5 @@
 <?php
-require_once "conexion.php";
+require_once __DIR__ . '/../config/conexion.php';
 
 class AdminUsuariosModel extends Conexion
 {

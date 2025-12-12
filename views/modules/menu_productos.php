@@ -148,3 +148,27 @@
         </div>
     </div>
 </div>
+
+<!-- Modal para seleccionar categorías de ingredientes base -->
+<div class="modal fade" id="modal_bases_producto" tabindex="-1" aria-labelledby="modalBasesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <input type="hidden" id="id_producto_bases">
+                <h5 class="modal-title" id="modalBasesLabel">Categorías de Ingredientes Base</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p class="mb-3"><strong id="nombre_producto_bases"></strong></p>
+                <p class="text-muted mb-4">Selecciona las categorías de ingredientes base que aplican para este producto:</p>
+                <div class="row" id="contenedor_categorias_bases">
+                    <!-- Las categorías se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" id="btn_guardar_bases">Guardar</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -188,3 +188,38 @@
     </div>
   </div>
 </div>
+
+<!-- Modal para establecer precio de alimentos -->
+<div class="modal fade" id="modal_precio_alimento" tabindex="-1" aria-labelledby="modalPrecioAlimentoLabel" aria-hidden="true">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalPrecioAlimentoLabel">Establecer Precio</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <form onsubmit="return false;" class="form_precio_alimento">
+        <div class="modal-body">
+          <input type="hidden" id="id_producto_precio">
+          <div class="row">
+            <div class="col-md-12 mb-3">
+              <p><strong id="nombre_producto_precio"></strong></p>
+            </div>
+            <div class="col-md-12">
+              <div class="form-group">
+                <label>Precio:</label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="number" class="form-control" id="precio_alimento" placeholder="0.00" step="0.01" min="0">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

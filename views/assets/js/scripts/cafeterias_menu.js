@@ -67,63 +67,191 @@ function cargarIngredientesProducto(id_producto) {
             ? ` <span class="badge bg-dark rounded-pill">Obligatorio</span>`
             : "";
 
+        // Verificar si hay ingredientes con cantidad_gratis en esta categoría
+        const tieneIngredientesIncluidos = cat.ingredientes.some(item => parseInt(item.cantidad_gratis) > 0);
+        
         htmlOpciones += `
             <div class="opcion-producto mb-4" data-tipo="ingredientes" data-obligatorio="${
               cat.obligatoria === "Si" ? "1" : "0"
-            }">
+            }" data-categoria-id="${cat.id}">
               <div class="d-flex justify-content-between align-items-center">
                 <h6><b>${cat.nombre}</b></h6>
                 ${obligatorio}
               </div>
-              <small class="text-muted d-block mb-2">Selecciona 1</small>
-            <div class="list-group">
+              <small class="text-muted d-block mb-2">Selecciona 1 opción</small>
+            <div class="list-group mb-3">
           `;
 
+        // Primero mostrar los ingredientes como radio buttons (selección única)
         cat.ingredientes.forEach((item) => {
-          let extra =
-            item.costo_extra === "Si"
-              ? `<span class="badge bg-warning text-dark ms-2">+MX$${item.precio}</span>`
-              : "";
-
-          if (item.costo_extra === "Si") {
-            htmlOpciones += `
-            <label class="list-group-item d-flex justify-content-between align-items-center">
-                <span>${item.nombre} ${extra}</span>
-                <div class="d-flex align-items-center gap-2">
-                    <button class="btn btn-outline-secondary btn_extra_minus" data-id="${item.id}" data-precio="${item.precio}" type="button">-</button>
-                    <span class="extra_cantidad" data-id="${item.id}" data-precio="${item.precio}">0</span>
-                    <button class="btn btn-outline-secondary btn_extra_plus" data-id="${item.id}" data-precio="${item.precio}" type="button">+</button>
-                </div>
-            </label>`;
-          } else {
-            htmlOpciones += `
-            <label class="list-group-item d-flex justify-content-between align-items-center">
-                <span>${item.nombre}</span>
-                <input class="form-check-input radio-ingrediente" type="radio" name="ingred_${cat.id}" data-id="${item.id}" data-precio="0">
-            </label>`;
+          const cantidadGratis = parseInt(item.cantidad_gratis) || 0;
+          const precio = parseFloat(item.precio) || 0;
+          const tieneIncluido = cantidadGratis > 0;
+          
+          let badgeIncluido = "";
+          let badgePrecio = "";
+          
+          // if (tieneIncluido) {
+          //   badgeIncluido = `<span class="badge bg-success ms-2">Incluido</span>`;
+          // }
+          
+          // Si tiene precio y no tiene cantidad gratis, mostrar badge de precio
+          if (precio > 0 && cantidadGratis === 0) {
+            badgePrecio = `<span class="badge bg-warning text-dark ms-2">+MX$${precio.toFixed(2)}</span>`;
           }
+          
+          // Radio button para selección única
+          // NUNCA marcar automáticamente - el cliente siempre debe seleccionar
+          htmlOpciones += `
+          <label class="list-group-item d-flex justify-content-between align-items-center">
+              <span>${item.nombre} ${badgeIncluido} ${badgePrecio}</span>
+              <input class="form-check-input radio-ingrediente-categoria" 
+                  type="radio" 
+                  name="ingred_${cat.id}" 
+                  data-id="${item.id}" 
+                  data-precio="${precio}"
+                  data-cantidad-gratis="${cantidadGratis}"
+                  data-categoria-id="${cat.id}">
+          </label>
+          `;
         });
 
-        htmlOpciones += `</div></div>`;
+        htmlOpciones += `</div>`;
+        
+        // Sección de extras (solo ingredientes que permiten múltiples porciones)
+        // Un ingrediente permite múltiples porciones si:
+        // 1. Tiene cantidad_gratis > 0 (viene incluido y puedes agregar más)
+        // 2. O tiene costo_extra = 'Si' Y cantidad_gratis > 0 (puedes agregar porciones extra)
+        // NO incluir ingredientes que solo tienen precio pero cantidad_gratis = 0 (selección única con costo)
+        const ingredientesConExtras = cat.ingredientes.filter(item => {
+          const cantidadGratis = parseInt(item.cantidad_gratis) || 0;
+          const precio = parseFloat(item.precio) || 0;
+          const costoExtra = item.costo_extra === "Si";
+          
+          // Solo mostrar si tiene precio Y (tiene cantidad_gratis > 0 O tiene costo_extra = 'Si' con cantidad_gratis > 0)
+          return precio > 0 && cantidadGratis > 0;
+        });
+        
+        if (ingredientesConExtras.length > 0) {
+          htmlOpciones += `
+            <div class="extras-categoria mb-2" data-categoria-id="${cat.id}">
+              <small class="text-muted d-block mb-2"><b>Agregar extras (con costo adicional):</b></small>
+              <div class="list-group">
+          `;
+          
+          ingredientesConExtras.forEach((item) => {
+            const precio = parseFloat(item.precio) || 0;
+            const cantidadGratis = parseInt(item.cantidad_gratis) || 0;
+            
+            htmlOpciones += `
+            <label class="list-group-item d-flex justify-content-between align-items-center">
+                <span>${item.nombre} <span class="badge bg-warning text-dark ms-2">+MX$${precio.toFixed(2)}</span></span>
+                <div class="d-flex align-items-center gap-2">
+                    <button class="btn btn-sm btn-outline-secondary btn_extra_minus" 
+                        data-id="${item.id}" 
+                        data-precio="${precio}" 
+                        data-cantidad-gratis="${cantidadGratis}"
+                        data-categoria-id="${cat.id}"
+                        type="button">-</button>
+                    <span class="extra_cantidad" 
+                        data-id="${item.id}" 
+                        data-precio="${precio}"
+                        data-cantidad-gratis="${cantidadGratis}"
+                        data-categoria-id="${cat.id}">0</span>
+                    <button class="btn btn-sm btn-outline-secondary btn_extra_plus" 
+                        data-id="${item.id}" 
+                        data-precio="${precio}"
+                        data-cantidad-gratis="${cantidadGratis}"
+                        data-categoria-id="${cat.id}"
+                        type="button">+</button>
+                </div>
+            </label>
+            `;
+          });
+          
+          htmlOpciones += `</div></div>`;
+        }
+        
+        htmlOpciones += `</div>`;
       });
 
       // Insertar todo
       $("#options").html(htmlOpciones);
 
       // ==============================
+      // INICIALIZAR TOTAL
+      // ==============================
+      // NUNCA seleccionar automáticamente ingredientes - el cliente siempre debe elegir
+      setTimeout(function() {
+        actualizarTotal();
+      }, 50);
+
+      // ==============================
       // SI NO HAY TAMAÑOS, USAR PRECIO BASE DEL PRODUCTO
       // ==============================
       if (response.tamanos.length === 0) {
-        precioBase = parseFloat(response.producto.precio);
-        actualizarTotal();
+        precioBase = parseFloat(response.producto.precio) || 0;
+      } else {
+        precioBase = 0;
       }
+      
+      actualizarTotal();
     },
   });
 }
 
 function actualizarTotal() {
+  // Recalcular extrasTotal
+  extrasTotal = 0;
+  
+  // Calcular costo del ingrediente seleccionado (si tiene precio y no está incluido)
+  $(".radio-ingrediente-categoria:checked").each(function() {
+    const precio = parseFloat($(this).data("precio")) || 0;
+    const cantidadGratis = parseInt($(this).data("cantidad-gratis")) || 0;
+    const categoriaId = $(this).data("categoria-id");
+    const idIngrediente = $(this).data("id");
+    
+    // Si tiene precio y no tiene cantidad gratis, se cobra desde el inicio
+    if (precio > 0 && cantidadGratis === 0) {
+      extrasTotal += precio;
+    }
+    
+    // Si tiene cantidad gratis y precio, verificar si hay extras en la sección de extras
+    if (cantidadGratis > 0 && precio > 0) {
+      const extraCantidadSpan = $(`.extras-categoria[data-categoria-id='${categoriaId}'] .extra_cantidad[data-id='${idIngrediente}']`);
+      if (extraCantidadSpan.length > 0) {
+        const cantidadExtras = parseInt(extraCantidadSpan.text()) || 0;
+        // El extra_cantidad solo cuenta los EXTRAS (adicionales), no la cantidad gratis
+        // Cobrar solo los extras
+        if (cantidadExtras > 0) {
+          extrasTotal += cantidadExtras * precio;
+        }
+      }
+    }
+  });
+  
+  // Calcular extras de ingredientes DIFERENTES al seleccionado en el radio
+  $(".extras-categoria .extra_cantidad").each(function() {
+    const cantidad = parseInt($(this).text()) || 0;
+    const precio = parseFloat($(this).data("precio")) || 0;
+    const categoriaId = $(this).data("categoria-id");
+    const idExtra = $(this).data("id");
+    
+    if (cantidad > 0 && precio > 0) {
+      // Verificar si este ingrediente está seleccionado en el radio
+      const radioSeleccionado = $(`.radio-ingrediente-categoria[data-categoria-id='${categoriaId}']:checked`);
+      const idRadio = radioSeleccionado.length > 0 ? radioSeleccionado.data("id") : null;
+      
+      // Solo procesar si NO es el mismo ingrediente seleccionado (ese ya se procesó arriba)
+      if (idRadio !== idExtra) {
+        // Es un ingrediente diferente, cobrar toda la cantidad
+        extrasTotal += cantidad * precio;
+      }
+    }
+  });
+  
   const total = (precioBase + extrasTotal) * cantidadProducto;
-  $("#btn_agregar").text(`Agregar · MX$${total}`);
+  $("#btn_agregar").text(`Agregar · MX$${total.toFixed(2)}`);
 }
 
 $(document).on("change", ".radio-tamano", function () {
@@ -131,29 +259,43 @@ $(document).on("change", ".radio-tamano", function () {
   actualizarTotal();
 });
 
+// Manejar cambio de radio para ingredientes (selección única)
+$(document).on("change", ".radio-ingrediente-categoria", function () {
+  const categoriaId = $(this).data("categoria-id");
+  
+  // Resetear TODOS los extras de esta categoría a 0 al cambiar de opción
+  // El usuario debe presionar + manualmente si quiere agregar extras
+  $(`.extras-categoria[data-categoria-id='${categoriaId}'] .extra_cantidad`).each(function() {
+    $(this).text(0);
+  });
+  
+  actualizarTotal();
+});
+
+
 $(document).on("click", ".btn_extra_plus", function () {
   const id = $(this).data("id");
-  const precio = parseFloat($(this).data("precio"));
-
-  let span = $(`.extra_cantidad[data-id='${id}']`);
-  let cant = parseInt(span.text()) + 1;
+  const categoriaId = $(this).data("categoria-id");
+  let span = $(`.extras-categoria[data-categoria-id='${categoriaId}'] .extra_cantidad[data-id='${id}']`);
+  let cant = parseInt(span.text()) || 0;
+  
+  // Simplemente incrementar - el extra_cantidad solo cuenta los EXTRAS (adicionales)
+  // La cantidad gratis del radio se maneja por separado
+  cant++;
   span.text(cant);
-
-  extrasTotal += precio;
   actualizarTotal();
 });
 
 $(document).on("click", ".btn_extra_minus", function () {
   const id = $(this).data("id");
-  const precio = parseFloat($(this).data("precio"));
-
-  let span = $(`.extra_cantidad[data-id='${id}']`);
-  let cant = parseInt(span.text());
+  const categoriaId = $(this).data("categoria-id");
+  let span = $(`.extras-categoria[data-categoria-id='${categoriaId}'] .extra_cantidad[data-id='${id}']`);
+  let cant = parseInt(span.text()) || 0;
 
   if (cant > 0) {
+    // Simplemente decrementar - el extra_cantidad solo cuenta los EXTRAS (adicionales)
     cant--;
     span.text(cant);
-    extrasTotal -= precio;
     actualizarTotal();
   }
 });
@@ -189,6 +331,32 @@ function agregarProductoCarrito(eliminarOtroCarrito = "No") {
 
   let tamano = $(".radio-tamano:checked").data("id");
 
+  // Ingredientes seleccionados (radio buttons - selección única por categoría)
+  $(".radio-ingrediente-categoria:checked").each(function () {
+    const id = $(this).data("id");
+    const cantidadGratis = parseInt($(this).data("cantidad-gratis")) || 0;
+    const categoriaId = $(this).data("categoria-id");
+    
+    // Obtener cantidad de extras para este ingrediente (si existe en la sección de extras)
+    const extraCantidad = parseInt($(`.extras-categoria[data-categoria-id='${categoriaId}'] .extra_cantidad[data-id='${id}']`).text()) || 0;
+    
+    // Calcular cantidad total: cantidad gratis (mínimo 1) + extras
+    const cantidadBase = cantidadGratis > 0 ? cantidadGratis : 1;
+    const cantidadTotal = cantidadBase + extraCantidad;
+    
+    // Sumar con cantidad existente si el ingrediente ya está en el array
+    const index = ingredientes.findIndex(ing => ing.id === id);
+    if (index >= 0) {
+      ingredientes[index].cantidad += cantidadTotal;
+    } else {
+      ingredientes.push({
+        id: id,
+        cantidad: cantidadTotal,
+      });
+    }
+  });
+
+  // Ingredientes con radio normal (sin categoría - para compatibilidad)
   $(".radio-ingrediente:checked").each(function () {
     ingredientes.push({
       id: $(this).data("id"),
@@ -196,13 +364,30 @@ function agregarProductoCarrito(eliminarOtroCarrito = "No") {
     });
   });
 
-  $(".extra_cantidad").each(function () {
-    const cant = parseInt($(this).text());
+  // Extras de ingredientes (solo los que NO están seleccionados en el radio)
+  $(".extras-categoria .extra_cantidad").each(function () {
+    const cant = parseInt($(this).text()) || 0;
+    const id = $(this).data("id");
+    const categoriaId = $(this).data("categoria-id");
+    
     if (cant > 0) {
-      ingredientes.push({
-        id: $(this).data("id"),
-        cantidad: cant,
-      });
+      // Verificar si este ingrediente está seleccionado en el radio de su categoría
+      const radioSeleccionado = $(`.radio-ingrediente-categoria[data-categoria-id='${categoriaId}']:checked`);
+      const idRadio = radioSeleccionado.length > 0 ? radioSeleccionado.data("id") : null;
+      
+      // Solo agregar si NO es el mismo ingrediente seleccionado (ya se procesó arriba)
+      if (idRadio !== id) {
+        // Verificar si ya existe en el array
+        const index = ingredientes.findIndex(ing => ing.id === id);
+        if (index >= 0) {
+          ingredientes[index].cantidad += cant;
+        } else {
+          ingredientes.push({
+            id: id,
+            cantidad: cant,
+          });
+        }
+      }
     }
   });
 
@@ -300,16 +485,12 @@ function validarOpciones() {
 
       // ---- Caso: categoría con cantidades ----
       if (tieneCantidad) {
-        let suma = 0;
-        $(this)
-          .find(".extra_cantidad")
-          .each(function () {
-            suma += parseInt($(this).text());
-          });
-
-        if (suma === 0) {
+        // Verificar si hay un radio seleccionado
+        const tieneRadioSeleccionado = $(this).find(".radio-ingrediente-categoria:checked").length > 0;
+        
+        if (!tieneRadioSeleccionado) {
           valido = false;
-          mensaje = `Debes seleccionar al menos una unidad en "${titulo}".`;
+          mensaje = `Debes seleccionar una opción de "${titulo}".`;
           return false;
         }
       }

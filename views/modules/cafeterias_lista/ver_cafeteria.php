@@ -15,6 +15,7 @@ if (isset($action[1])) {
     border-radius: 0 0 40px 40px;
     padding: 2rem 1.5rem 3rem;
     margin-bottom: -2rem;
+    margin-top: -1rem;
     overflow: hidden;
 }
 
@@ -117,289 +118,187 @@ if (isset($action[1])) {
     box-shadow: 0 20px 50px rgba(0,0,0,0.12);
 }
 
-/* ========== GALERÍA DE IMÁGENES MODERNA ========== */
-.gallery-container {
-    padding: 1rem;
-}
+/* ========== GALERÍA PROFESIONAL - ESTILO GOOGLE MAPS/AIRBNB ========== */
 
-/* Imagen Principal */
-.main-image-wrapper {
-    position: relative;
+.gallery-grid {
+    display: grid;
+    gap: 8px;
+    height: 450px;
     border-radius: 16px;
     overflow: hidden;
-    margin-bottom: 1rem;
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-    aspect-ratio: 16/10;
+    cursor: pointer;
+    position: relative;
 }
 
-.main-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    cursor: zoom-in;
-    transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    opacity: 0;
-    animation: fadeInImage 0.5s ease forwards;
+/* Layout 1 imagen */
+.gallery-grid.layout-1 {
+    grid-template-columns: 1fr;
 }
 
-@keyframes fadeInImage {
-    from { opacity: 0; transform: scale(1.05); }
-    to { opacity: 1; transform: scale(1); }
+/* Layout 2 imágenes */
+.gallery-grid.layout-2 {
+    grid-template-columns: 1fr 1fr;
 }
 
-.main-image:hover {
-    transform: scale(1.03);
+/* Layout 3 imágenes */
+.gallery-grid.layout-3 {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
 }
 
-/* Overlay con controles */
-.image-overlay {
+.gallery-grid.layout-3 .gallery-item:first-child {
+    grid-row: 1 / 3;
+}
+
+/* Layout 4 imágenes */
+.gallery-grid.layout-4 {
+    grid-template-columns: 2fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.gallery-grid.layout-4 .gallery-item:first-child {
+    grid-row: 1 / 3;
+}
+
+/* Layout 5+ imágenes */
+.gallery-grid.layout-5plus {
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+.gallery-grid.layout-5plus .gallery-item:first-child {
+    grid-row: 1 / 3;
+}
+
+/* Items de galería */
+.gallery-item {
+    position: relative;
+    overflow: hidden;
+    background: #f0f0f0;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-item::before {
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(0,0,0,0.3) 0%,
-        transparent 30%,
-        transparent 70%,
-        rgba(0,0,0,0.5) 100%
-    );
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    background: rgba(0, 0, 0, 0);
+    transition: background 0.3s ease;
+    z-index: 1;
     pointer-events: none;
 }
 
-.main-image-wrapper:hover .image-overlay {
-    opacity: 1;
+.gallery-item:hover::before {
+    background: rgba(0, 0, 0, 0.1);
 }
 
-/* Contador de imágenes */
-.image-counter {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    background: rgba(0,0,0,0.6);
-    backdrop-filter: blur(10px);
-    color: #fff;
-    padding: 0.5rem 1rem;
-    border-radius: 30px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    z-index: 2;
-}
-
-.image-counter i {
-    color: var(--principal);
-}
-
-/* Botón ampliar */
-.btn-expand {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    width: 45px;
-    height: 45px;
-    background: rgba(255,255,255,0.95);
-    border: none;
-    border-radius: 12px;
-    color: var(--cuarto);
-    font-size: 1.1rem;
-    cursor: pointer;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
-
-.btn-expand:hover {
-    background: var(--principal);
-    color: #fff;
-    transform: scale(1.1);
-}
-
-/* Navegación de la imagen principal */
-.nav-btn-gallery {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
-    background: rgba(255,255,255,0.95);
-    border: none;
-    border-radius: 50%;
-    color: var(--cuarto);
-    font-size: 1.2rem;
-    cursor: pointer;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-    opacity: 0;
-}
-
-.main-image-wrapper:hover .nav-btn-gallery {
-    opacity: 1;
-}
-
-.nav-btn-gallery:hover {
-    background: var(--principal);
-    color: #fff;
-    transform: translateY(-50%) scale(1.1);
-}
-
-.nav-btn-gallery.prev {
-    left: 1rem;
-}
-
-.nav-btn-gallery.next {
-    right: 1rem;
-}
-
-/* Contenedor de miniaturas */
-.thumbnails-wrapper {
-    position: relative;
-    padding: 0 2.5rem;
-}
-
-.thumbnails-container {
-    display: flex;
-    gap: 0.75rem;
-    overflow-x: auto;
-    scroll-behavior: smooth;
-    padding: 0.5rem 0;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.thumbnails-container::-webkit-scrollbar {
-    display: none;
-}
-
-/* Miniaturas individuales */
-.thumbnail-item {
-    flex: 0 0 auto;
-    width: 80px;
-    height: 60px;
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    position: relative;
-    transition: all 0.3s ease;
-    border: 3px solid transparent;
-}
-
-.thumbnail-item img {
+.gallery-item img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 0.3s ease;
+    display: block;
+    transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.thumbnail-item:hover {
-    transform: translateY(-3px);
+.gallery-item:hover img {
+    transform: scale(1.05);
 }
 
-.thumbnail-item:hover img {
-    transform: scale(1.1);
-}
-
-.thumbnail-item.active {
-    border-color: var(--principal);
-    box-shadow: 0 5px 20px rgba(241,108,91,0.4);
-}
-
-.thumbnail-item::after {
-    content: '';
+/* Contador de imágenes */
+.gallery-counter {
     position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.3);
-    opacity: 1;
-    transition: opacity 0.3s ease;
+    top: 16px;
+    left: 16px;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-size: 14px;
+    font-weight: 600;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
-.thumbnail-item:hover::after,
-.thumbnail-item.active::after {
-    opacity: 0;
+.gallery-counter i {
+    font-size: 13px;
 }
 
-/* Botones de scroll para miniaturas */
-.thumb-scroll-btn {
+/* Botón ver todas */
+.gallery-view-all {
     position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 32px;
-    height: 32px;
-    background: #fff;
-    border: 2px solid var(--bg-body);
-    border-radius: 50%;
-    color: var(--cuarto);
-    font-size: 0.9rem;
+    bottom: 16px;
+    right: 16px;
+    background: white;
+    color: #222;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
-    z-index: 2;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.gallery-view-all:hover {
+    background: #f7f7f7;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.gallery-view-all i {
+    font-size: 13px;
+}
+
+/* Overlay de más imágenes */
+.gallery-item.has-more {
+    position: relative;
+}
+
+.gallery-item.has-more::after {
+    content: attr(data-remaining) ' más';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.thumb-scroll-btn:hover {
-    background: var(--principal);
-    border-color: var(--principal);
-    color: #fff;
-}
-
-.thumb-scroll-btn.left {
-    left: 0;
-}
-
-.thumb-scroll-btn.right {
-    right: 0;
-}
-
-/* Indicador de más imágenes */
-.more-images-indicator {
-    position: absolute;
-    bottom: 1rem;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(255,255,255,0.95);
-    padding: 0.5rem 1.2rem;
-    border-radius: 30px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--cuarto);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-    cursor: pointer;
-    transition: all 0.3s ease;
+    font-size: 24px;
+    font-weight: 700;
     z-index: 2;
+    transition: all 0.3s ease;
 }
 
-.more-images-indicator:hover {
-    background: var(--principal);
-    color: #fff;
+.gallery-item.has-more:hover::after {
+    background: rgba(0, 0, 0, 0.8);
 }
 
 /* Estado vacío */
 .gallery-empty {
+    height: 450px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 300px;
-    color: var(--color-gris);
-    text-align: center;
+    color: #999;
 }
 
 .gallery-empty i {
@@ -410,7 +309,36 @@ if (isset($action[1])) {
 
 .gallery-empty p {
     margin: 0;
-    font-size: 1rem;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+/* Personalización GLightbox */
+.glightbox-clean .gslide-media {
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+}
+
+.glightbox-clean .gslide-image img {
+    border-radius: 8px;
+}
+
+.glightbox-clean .gbtn {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.2s ease;
+}
+
+.glightbox-clean .gbtn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.glightbox-clean .gslide-description {
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    padding: 12px 20px;
+    border-radius: 8px 8px 0 0;
 }
 
 /* Card de información */
@@ -846,95 +774,6 @@ if (isset($action[1])) {
     color: #fff;
 }
 
-/* ========== MODAL DE GALERÍA ========== */
-#carouselModal .modal-content {
-    border-radius: 20px;
-    overflow: hidden;
-    border: none;
-    background: #0a0a0a;
-}
-
-#carouselModal .modal-header {
-    background: transparent;
-    border: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 10;
-    padding: 1.5rem;
-}
-
-#carouselModal .modal-title {
-    color: #fff;
-    font-weight: 700;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.5);
-}
-
-#carouselModal .btn-close {
-    filter: brightness(0) invert(1);
-    opacity: 0.8;
-    transition: all 0.3s ease;
-    background-color: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    padding: 0.8rem;
-}
-
-#carouselModal .btn-close:hover {
-    opacity: 1;
-    transform: rotate(90deg);
-}
-
-#carouselModal .modal-body {
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 70vh;
-}
-
-#carouselModal .carousel {
-    width: 100%;
-}
-
-#carouselModal .carousel-item {
-    transition: transform 0.5s ease, opacity 0.5s ease;
-}
-
-#carouselModal .carousel-item img {
-    max-height: 80vh;
-    width: auto;
-    max-width: 100%;
-    object-fit: contain;
-    margin: 0 auto;
-    display: block;
-}
-
-#carouselModal .carousel-control-prev,
-#carouselModal .carousel-control-next {
-    width: 60px;
-    height: 60px;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    top: 50%;
-    transform: translateY(-50%);
-    opacity: 0.7;
-    transition: all 0.3s ease;
-}
-
-#carouselModal .carousel-control-prev:hover,
-#carouselModal .carousel-control-next:hover {
-    background: var(--principal);
-    opacity: 1;
-}
-
-#carouselModal .carousel-control-prev {
-    left: 20px;
-}
-
-#carouselModal .carousel-control-next {
-    right: 20px;
-}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -948,24 +787,38 @@ if (isset($action[1])) {
     }
     
     /* Galería responsive */
-    .main-image-wrapper {
-        aspect-ratio: 4/3;
+    .gallery-grid {
+        height: 300px;
+        border-radius: 12px;
+        gap: 4px;
     }
     
-    .nav-btn-gallery {
-        width: 40px;
-        height: 40px;
-        opacity: 1;
+    /* En móvil, siempre mostrar layout simple */
+    .gallery-grid.layout-3,
+    .gallery-grid.layout-4,
+    .gallery-grid.layout-5plus {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
     }
     
-    .thumbnail-item {
-        width: 65px;
-        height: 50px;
+    .gallery-grid.layout-3 .gallery-item:first-child,
+    .gallery-grid.layout-4 .gallery-item:first-child,
+    .gallery-grid.layout-5plus .gallery-item:first-child {
+        grid-row: auto;
     }
     
-    .image-counter {
-        font-size: 0.75rem;
-        padding: 0.4rem 0.8rem;
+    .gallery-counter {
+        font-size: 12px;
+        padding: 6px 12px;
+        top: 12px;
+        left: 12px;
+    }
+    
+    .gallery-view-all {
+        font-size: 13px;
+        padding: 8px 16px;
+        bottom: 12px;
+        right: 12px;
     }
     
     .info-card {
@@ -1017,50 +870,11 @@ if (isset($action[1])) {
 <!-- Contenido Principal -->
 <div class="container cafeteria-main-content" <?= $hidden ?>>
     <div class="row g-4">
-        <!-- Galería de Imágenes -->
+        <!-- Galería de Imágenes Profesional -->
         <div class="col-lg-6">
-            <div class="modern-card gallery-container">
-                <!-- Imagen Principal -->
-                <div class="main-image-wrapper" id="mainImageWrapper">
-                    <!-- Contador -->
-                    <div class="image-counter">
-                        <i class="fas fa-images"></i>
-                        <span id="imageCounter">1 / 0</span>
-                    </div>
-                    
-                    <!-- Botón expandir -->
-                    <button class="btn-expand" onclick="openGalleryModal()" title="Ver en pantalla completa">
-                        <i class="fas fa-expand"></i>
-                    </button>
-                    
-                    <!-- Overlay -->
-                    <div class="image-overlay"></div>
-                    
-                    <!-- Imagen -->
-                    <img src="" alt="Imagen de la cafetería" class="main-image" id="mainGalleryImage">
-                    
-                    <!-- Navegación -->
-                    <button class="nav-btn-gallery prev" onclick="changeMainImage(-1)">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="nav-btn-gallery next" onclick="changeMainImage(1)">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                
-                <!-- Miniaturas -->
-                <div class="thumbnails-wrapper">
-                    <button class="thumb-scroll-btn left" onclick="scrollThumbnails(-1)">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    
-                    <div class="thumbnails-container carousel_imagenes" id="thumbnailsContainer">
-                        <!-- Las miniaturas se cargan dinámicamente -->
-                    </div>
-                    
-                    <button class="thumb-scroll-btn right" onclick="scrollThumbnails(1)">
-                        <i class="fas fa-chevron-right"></i>
-                    </button>
+            <div class="modern-card" style="padding: 0; overflow: visible;">
+                <div id="galleryContainer">
+                    <!-- La galería se genera aquí -->
                 </div>
             </div>
         </div>
@@ -1157,13 +971,13 @@ if (isset($action[1])) {
                 <h3>Reseñas de Clientes</h3>
             </div>
             
-            <div class="rating-summary coment-ocultar">
+            <!-- <div class="rating-summary coment-ocultar">
                 <div class="rating-big">4.5</div>
                 <div class="rating-details">
                     <div class="stars-display">★★★★☆</div>
                     <div class="rating-count"><span id="total_coment"></span> reseñas</div>
                 </div>
-            </div>
+            </div> -->
             
             <button type="button" class="btn-add-review" id="btn_agregar_comentario">
                 <i class="fas fa-plus"></i>
@@ -1204,182 +1018,144 @@ if (isset($action[1])) {
     </div>
 </div>
 
-<!-- Modal para ver imágenes en pantalla completa -->
-<div class="modal fade" id="carouselModal" tabindex="-1" aria-labelledby="carouselModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="carouselModalLabel">
-                    <i class="fas fa-images me-2"></i>Galería
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <div id="carouselExampleIntervalModal" class="carousel slide" data-bs-ride="false">
-                    <div class="carousel-inner carousel_imageness">
-                        <!-- Las imágenes se cargan dinámicamente desde JavaScript -->
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIntervalModal" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Anterior</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIntervalModal" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Siguiente</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
-// ========== GALERÍA DE IMÁGENES ==========
-let galleryImages = [];
-let currentImageIndex = 0;
+// ========== GALERÍA PROFESIONAL ESTILO GOOGLE MAPS/AIRBNB ==========
 
-// Inicializar galería con imágenes
+let galleryLightbox = null;
+
+/**
+ * Inicializa la galería con el layout apropiado según cantidad de imágenes
+ * @param {Array} images - Array de URLs de imágenes
+ */
 function initGallery(images) {
-    galleryImages = images;
-    if (images.length > 0) {
-        currentImageIndex = 0;
-        updateMainImage();
-        renderThumbnails();
-    }
-}
-
-// Actualizar imagen principal
-function updateMainImage() {
-    const mainImg = document.getElementById('mainGalleryImage');
-    const counter = document.getElementById('imageCounter');
+    const container = document.getElementById('galleryContainer');
     
-    if (galleryImages.length > 0 && mainImg) {
-        // Efecto de transición
-        mainImg.style.opacity = '0';
-        mainImg.style.transform = 'scale(1.05)';
-        
-        setTimeout(() => {
-            mainImg.src = galleryImages[currentImageIndex];
-            mainImg.style.opacity = '1';
-            mainImg.style.transform = 'scale(1)';
-        }, 200);
-        
-        // Actualizar contador
-        if (counter) {
-            counter.textContent = `${currentImageIndex + 1} / ${galleryImages.length}`;
-        }
-        
-        // Actualizar thumbnail activo
-        updateActiveThumbnail();
-    }
-}
-
-// Cambiar imagen principal
-function changeMainImage(direction) {
-    if (galleryImages.length === 0) return;
-    
-    currentImageIndex += direction;
-    
-    if (currentImageIndex >= galleryImages.length) {
-        currentImageIndex = 0;
-    } else if (currentImageIndex < 0) {
-        currentImageIndex = galleryImages.length - 1;
+    if (!images || images.length === 0) {
+        container.innerHTML = `
+            <div class="gallery-empty">
+                <i class="fas fa-image"></i>
+                <p>No hay imágenes disponibles</p>
+            </div>
+        `;
+        return;
     }
     
-    updateMainImage();
-    scrollToActiveThumbnail();
-}
-
-// Seleccionar imagen desde thumbnail
-function selectImage(index) {
-    currentImageIndex = index;
-    updateMainImage();
-}
-
-// Renderizar miniaturas
-function renderThumbnails() {
-    const container = document.getElementById('thumbnailsContainer');
-    if (!container) return;
+    // Determinar layout según cantidad de imágenes
+    let layoutClass = 'layout-1';
+    let visibleImages = images.length;
     
-    container.innerHTML = '';
+    if (images.length === 2) {
+        layoutClass = 'layout-2';
+    } else if (images.length === 3) {
+        layoutClass = 'layout-3';
+    } else if (images.length === 4) {
+        layoutClass = 'layout-4';
+    } else if (images.length >= 5) {
+        layoutClass = 'layout-5plus';
+        visibleImages = 5; // Mostrar solo 5 en el grid
+    }
     
-    galleryImages.forEach((img, index) => {
-        const thumb = document.createElement('div');
-        thumb.className = `thumbnail-item ${index === 0 ? 'active' : ''}`;
-        thumb.onclick = () => selectImage(index);
-        thumb.innerHTML = `<img src="${img}" alt="Miniatura ${index + 1}">`;
-        container.appendChild(thumb);
-    });
-}
-
-// Actualizar thumbnail activo
-function updateActiveThumbnail() {
-    const thumbnails = document.querySelectorAll('.thumbnail-item');
-    thumbnails.forEach((thumb, index) => {
-        if (index === currentImageIndex) {
-            thumb.classList.add('active');
-        } else {
-            thumb.classList.remove('active');
-        }
-    });
-}
-
-// Scroll a thumbnail activo
-function scrollToActiveThumbnail() {
-    const container = document.getElementById('thumbnailsContainer');
-    const activeThumb = container?.querySelector('.thumbnail-item.active');
+    // Construir HTML del grid
+    let gridHTML = `<div class="gallery-grid ${layoutClass}">`;
     
-    if (activeThumb && container) {
-        const containerRect = container.getBoundingClientRect();
-        const thumbRect = activeThumb.getBoundingClientRect();
+    // Agregar contador solo si hay más de 1 imagen
+    if (images.length > 1) {
+        gridHTML += `
+            <div class="gallery-counter">
+                <i class="fas fa-images"></i>
+                <span>${images.length} fotos</span>
+            </div>
+        `;
+    }
+    
+    // Agregar imágenes visibles
+    for (let i = 0; i < Math.min(visibleImages, images.length); i++) {
+        const isLast = i === visibleImages - 1 && images.length > visibleImages;
+        const hasMoreClass = isLast ? 'has-more' : '';
+        const remainingCount = isLast ? `+${images.length - visibleImages}` : '';
         
-        if (thumbRect.left < containerRect.left || thumbRect.right > containerRect.right) {
-            activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        gridHTML += `
+            <div class="gallery-item ${hasMoreClass}" 
+                 ${isLast ? `data-remaining="${remainingCount}"` : ''} 
+                 onclick="openGallery(${i})">
+                <img src="${images[i]}" alt="Imagen ${i + 1}" loading="${i === 0 ? 'eager' : 'lazy'}">
+            </div>
+        `;
+    }
+    
+    // Agregar botón "Ver todas" solo si hay más de 4 imágenes
+    if (images.length > 4) {
+        gridHTML += `
+            <button class="gallery-view-all" onclick="openGallery(0)">
+                <i class="fas fa-th"></i>
+                <span>Ver todas las fotos</span>
+            </button>
+        `;
+    }
+    
+    gridHTML += `</div>`;
+    
+    container.innerHTML = gridHTML;
+    
+    // Inicializar GLightbox
+    initGLightbox(images);
+}
+
+/**
+ * Inicializa GLightbox con todas las imágenes
+ * @param {Array} images - Array de URLs de imágenes
+ */
+function initGLightbox(images) {
+    // Destruir instancia anterior
+    if (galleryLightbox) {
+        try {
+            galleryLightbox.destroy();
+        } catch(e) {
+            console.log('Limpiando instancia anterior');
         }
     }
-}
-
-// Scroll de miniaturas
-function scrollThumbnails(direction) {
-    const container = document.getElementById('thumbnailsContainer');
-    if (container) {
-        const scrollAmount = 200;
-        container.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
-    }
-}
-
-// Abrir modal de galería
-function openGalleryModal() {
-    const modal = new bootstrap.Modal(document.getElementById('carouselModal'));
     
-    // Actualizar imagen del modal
-    const modalContainer = document.querySelector('.carousel_imageness');
-    if (modalContainer && galleryImages.length > 0) {
-        modalContainer.innerHTML = '';
-        galleryImages.forEach((img, index) => {
-            const item = document.createElement('div');
-            item.className = `carousel-item ${index === currentImageIndex ? 'active' : ''}`;
-            item.innerHTML = `<img src="${img}" class="d-block w-100" alt="Imagen ${index + 1}">`;
-            modalContainer.appendChild(item);
+    // Crear elementos GLightbox (ocultos)
+    const lightboxElements = images.map((img, index) => ({
+        href: img,
+        type: 'image',
+        alt: `Imagen ${index + 1}`,
+        description: `Imagen ${index + 1} de ${images.length}`
+    }));
+    
+    // Inicializar GLightbox si está disponible
+    if (typeof GLightbox !== 'undefined') {
+        galleryLightbox = GLightbox({
+            elements: lightboxElements,
+            touchNavigation: true,
+            loop: true,
+            autoplayVideos: false,
+            openEffect: 'zoom',
+            closeEffect: 'fade',
+            slideEffect: 'slide',
+            closeButton: true,
+            touchFollowAxis: true,
+            keyboardNavigation: true,
+            closeOnOutsideClick: true,
+            zoomable: true,
+            draggable: true,
+            dragToleranceX: 40,
+            dragToleranceY: 65
         });
+    } else {
+        console.warn('GLightbox no está disponible. Asegúrate de incluir la librería.');
     }
-    
-    modal.show();
 }
 
-// Navegación con teclado
-document.addEventListener('keydown', function(e) {
-    const modal = document.getElementById('carouselModal');
-    const isModalOpen = modal?.classList.contains('show');
-    
-    if (!isModalOpen) {
-        if (e.key === 'ArrowLeft') {
-            changeMainImage(-1);
-        } else if (e.key === 'ArrowRight') {
-            changeMainImage(1);
-        }
+/**
+ * Abre la galería en un índice específico
+ * @param {number} index - Índice de la imagen a mostrar
+ */
+function openGallery(index = 0) {
+    if (galleryLightbox) {
+        galleryLightbox.openAt(index);
     }
-});
+}
 
 // ========== COMENTARIOS ==========
 function toggleCommentArea() {

@@ -1,6 +1,6 @@
 <?php
 
-require_once "conexion.php";
+require_once __DIR__ . '/../config/conexion.php';
 
 class MenuProductosModel extends Conexion
 {
@@ -197,4 +197,123 @@ class MenuProductosModel extends Conexion
     }
 
     /* EDITAR PRODUCTO */
+
+
+    /* OBTENER CATEGORIAS DE INGREDIENTES BASE */
+
+    static public function obtenerCategoriasIngredientesBaseModel($id_producto = null)
+    {
+        $filtro_tipo = '';
+        
+        // Si se proporciona un id_producto, filtrar según el tipo de producto
+        if ($id_producto) {
+            // Primero obtener si el producto es bebida o alimento
+            $stmt_producto = Conexion::conectar()->prepare("SELECT
+                menu_categorias.es_bebida
+                FROM
+                    menu_productos
+                INNER JOIN menu_subcategorias ON menu_productos.id_subcategoria = menu_subcategorias.id
+                INNER JOIN menu_categorias ON menu_subcategorias.id_categoria = menu_categorias.id
+                WHERE menu_productos.id = :id_producto
+                ");
+            
+            $stmt_producto->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+            $stmt_producto->execute();
+            $producto = $stmt_producto->fetch();
+            
+            if ($producto) {
+                $es_bebida = ($producto['es_bebida'] == 'Si');
+                
+                // Filtrar según el tipo de producto
+                // Si es bebida, mostrar solo categorías donde para_bebidas = 'Si'
+                // Si es alimento, mostrar solo categorías donde para_alimentos = 'Si'
+                if ($es_bebida) {
+                    $filtro_tipo = "AND menu_ingredientes_categorias.para_bebidas = 'Si'";
+                } else {
+                    $filtro_tipo = "AND menu_ingredientes_categorias.para_alimentos = 'Si'";
+                }
+            }
+        }
+        
+        $stmt = Conexion::conectar()->prepare("SELECT
+            menu_ingredientes_categorias.*
+            FROM
+                menu_ingredientes_categorias
+            WHERE menu_ingredientes_categorias.estado != 2
+            $filtro_tipo
+            ORDER BY menu_ingredientes_categorias.nombre
+            ");
+
+        $stmt->execute();
+
+        return $stmt->fetchAll();
+
+        $stmt = null;
+    }
+
+    /* OBTENER CATEGORIAS DE INGREDIENTES BASE */
+
+
+    /* OBTENER CATEGORIAS BASE DE UN PRODUCTO */
+
+    static public function obtenerBasesProductoModel($id_producto)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT
+            menu_productos_bases.id_ingrediente_categoria
+            FROM
+                menu_productos_bases
+            WHERE menu_productos_bases.id_producto = :id_producto
+            ");
+
+        $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $resultados = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        
+        $stmt = null;
+        
+        return $resultados ? $resultados : [];
+    }
+
+    /* OBTENER CATEGORIAS BASE DE UN PRODUCTO */
+
+
+    /* GUARDAR CATEGORIAS BASE DE PRODUCTO */
+
+    static public function guardarBasesProductoModel($datos)
+    {
+        $conexion = Conexion::conectar();
+        
+        try {
+            $conexion->beginTransaction();
+            
+            // Eliminar las categorías base existentes del producto
+            $stmt = $conexion->prepare("DELETE FROM menu_productos_bases WHERE id_producto = :id_producto");
+            $stmt->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
+            $stmt->execute();
+            
+            // Insertar las nuevas categorías base seleccionadas
+            if (!empty($datos['categorias'])) {
+                $stmt = $conexion->prepare("INSERT INTO menu_productos_bases (id_producto, id_ingrediente_categoria) VALUES (:id_producto, :id_ingrediente_categoria)");
+                
+                foreach ($datos['categorias'] as $id_categoria) {
+                    $stmt->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
+                    $stmt->bindParam(':id_ingrediente_categoria', $id_categoria, PDO::PARAM_INT);
+                    $stmt->execute();
+                }
+            }
+            
+            $conexion->commit();
+            return 'success';
+            
+        } catch (Exception $e) {
+            $conexion->rollBack();
+            return 'error';
+        }
+        
+        $stmt = null;
+    }
+
+    /* GUARDAR CATEGORIAS BASE DE PRODUCTO */
 }

@@ -1,6 +1,6 @@
 <?php
 
-require_once "conexion.php";
+require_once __DIR__ . '/../config/conexion.php';
 
 class CafeteriasMenuModel extends Conexion
 {
@@ -93,24 +93,36 @@ class CafeteriasMenuModel extends Conexion
 
     static public function obtenerProductosModel($subcategoria, $cafeteria)
     {
+        // Obtener id_propietario desde la cafetería
+        $stmt_propietario = Conexion::conectar()->prepare("SELECT id_usuario AS id_propietario FROM cafeterias WHERE id = :id_cafeteria");
+        $stmt_propietario->bindParam(':id_cafeteria', $cafeteria, PDO::PARAM_INT);
+        $stmt_propietario->execute();
+        $cafeteria_data = $stmt_propietario->fetch();
+        
+        if (!$cafeteria_data) {
+            return array();
+        }
+        
+        $id_propietario = $cafeteria_data['id_propietario'];
 
         $stmt = Conexion::conectar()->prepare("SELECT
         menu_productos.id,
         menu_productos.nombre,
-        COALESCE(propietarios_menu_cafeterias.estado, 'No') AS estado,
+        propietarios_productos.estado,
         menu_productos.imagen
         FROM
             menu_productos
-        LEFT JOIN propietarios_menu_cafeterias ON propietarios_menu_cafeterias.id_producto = menu_productos.id
-            AND propietarios_menu_cafeterias.id_cafeteria = :id
-            AND id_tamano = 0
+        INNER JOIN propietarios_productos ON propietarios_productos.id_producto = menu_productos.id
+            AND propietarios_productos.id_propietario = :id_propietario
+            AND propietarios_productos.id_cafeteria = :id_cafeteria
+            AND propietarios_productos.estado = 1
         WHERE menu_productos.estado = 0
         AND menu_productos.id_subcategoria = :subcategoria
-        AND propietarios_menu_cafeterias.estado = 1
         ");
 
         $stmt->bindParam(':subcategoria', $subcategoria, PDO::PARAM_INT);
-        $stmt->bindParam(':id', $cafeteria, PDO::PARAM_INT);
+        $stmt->bindParam(':id_propietario', $id_propietario, PDO::PARAM_INT);
+        $stmt->bindParam(':id_cafeteria', $cafeteria, PDO::PARAM_INT);
 
         $stmt->execute();
         $productos = $stmt->fetchAll();
@@ -121,18 +133,48 @@ class CafeteriasMenuModel extends Conexion
 
     static public function buscarProductoModel($datos)
     {
+        // Obtener id_propietario desde la cafetería
+        $stmt_propietario = Conexion::conectar()->prepare("SELECT id_usuario AS id_propietario FROM cafeterias WHERE id = :id_cafeteria");
+        $stmt_propietario->bindParam(':id_cafeteria', $datos['id_cafeteria'], PDO::PARAM_INT);
+        $stmt_propietario->execute();
+        $cafeteria_data = $stmt_propietario->fetch();
+        
+        if (!$cafeteria_data) {
+            return null;
+        }
+        
+        $id_propietario = $cafeteria_data['id_propietario'];
+        
+        // Obtener el id_propietario_producto
+        $stmt_producto = Conexion::conectar()->prepare("SELECT id FROM propietarios_productos
+        WHERE id_producto = :id_producto
+        AND id_propietario = :id_propietario
+        AND id_cafeteria = :id_cafeteria");
+        
+        $stmt_producto->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
+        $stmt_producto->bindParam(':id_propietario', $id_propietario, PDO::PARAM_INT);
+        $stmt_producto->bindParam(':id_cafeteria', $datos['id_cafeteria'], PDO::PARAM_INT);
+        $stmt_producto->execute();
+        $producto = $stmt_producto->fetch();
+        
+        if (!$producto) {
+            return null;
+        }
 
+        // Obtener datos del producto y precio_base (para alimentos sin tamaño)
         $stmt = Conexion::conectar()->prepare("SELECT
         mp.id, 
         mp.nombre, 
         mp.imagen,
-        pmc.precio
-        FROM propietarios_menu_cafeterias pmc
-        INNER JOIN menu_productos mp ON pmc.id_producto = mp.id
-        WHERE pmc.id_producto = :id_producto
-        AND pmc.id_cafeteria = :id_cafeteria");
+        pp.precio_base AS precio
+        FROM propietarios_productos pp
+        INNER JOIN menu_productos mp ON pp.id_producto = mp.id
+        WHERE pp.id_producto = :id_producto
+        AND pp.id_propietario = :id_propietario
+        AND pp.id_cafeteria = :id_cafeteria");
 
         $stmt->bindParam(":id_producto", $datos['id_producto'], PDO::PARAM_INT);
+        $stmt->bindParam(":id_propietario", $id_propietario, PDO::PARAM_INT);
         $stmt->bindParam(":id_cafeteria", $datos['id_cafeteria'], PDO::PARAM_INT);
 
         $stmt->execute();
@@ -143,54 +185,96 @@ class CafeteriasMenuModel extends Conexion
 
     static public function buscarCategoriasIngredientesModel($datos)
     {
+        // Obtener id_propietario desde la cafetería
+        $stmt_propietario = Conexion::conectar()->prepare("SELECT id_usuario AS id_propietario FROM cafeterias WHERE id = :id_cafeteria");
+        $stmt_propietario->bindParam(':id_cafeteria', $datos['id_cafeteria'], PDO::PARAM_INT);
+        $stmt_propietario->execute();
+        $cafeteria_data = $stmt_propietario->fetch();
+        
+        if (!$cafeteria_data) {
+            return array();
+        }
+        
+        $id_propietario = $cafeteria_data['id_propietario'];
+        
+        // Obtener el id_propietario_producto
+        $stmt_producto = Conexion::conectar()->prepare("SELECT id FROM propietarios_productos
+        WHERE id_producto = :id_producto
+        AND id_propietario = :id_propietario
+        AND id_cafeteria = :id_cafeteria");
+        
+        $stmt_producto->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
+        $stmt_producto->bindParam(':id_propietario', $id_propietario, PDO::PARAM_INT);
+        $stmt_producto->bindParam(':id_cafeteria', $datos['id_cafeteria'], PDO::PARAM_INT);
+        $stmt_producto->execute();
+        $producto = $stmt_producto->fetch();
+        
+        if (!$producto) {
+            return array();
+        }
+        
+        $id_propietario_producto = $producto['id'];
+
+        // Obtener el id_producto desde el id_propietario_producto
+        $stmt_producto_id = Conexion::conectar()->prepare("SELECT id_producto FROM propietarios_productos WHERE id = :id_propietario_producto");
+        $stmt_producto_id->bindParam(":id_propietario_producto", $id_propietario_producto, PDO::PARAM_INT);
+        $stmt_producto_id->execute();
+        $producto_data = $stmt_producto_id->fetch();
+        
+        if (!$producto_data) {
+            return array();
+        }
+        
+        $id_producto = $producto_data['id_producto'];
 
         $stmt = Conexion::conectar()->prepare("SELECT 
         mic.id, 
         mic.nombre,
-        mic.obligatoria
-        FROM propietarios_menu_ingredientes pmi 
-            JOIN menu_ingredientes mi ON mi.id = pmi.id_ingrediente
+        CASE 
+            WHEN mpb.id_ingrediente_categoria IS NOT NULL THEN 'Si'
+            ELSE 'No'
+        END AS obligatoria
+        FROM propietarios_ingredientes pi
+            JOIN menu_ingredientes mi ON mi.id = pi.id_ingrediente
             JOIN menu_ingredientes_categorias mic ON mic.id = mi.id_ingrediente_categoria
+            LEFT JOIN menu_productos_bases mpb ON mpb.id_producto = :id_producto 
+                AND mpb.id_ingrediente_categoria = mic.id
         WHERE mi.estado = 0
             AND mic.estado = 0
-            AND pmi.estado = 1
-            AND pmi.id_cafeteria = :id_cafeteria
-            AND pmi.id_producto = :id_producto
+            AND pi.estado = 1
+            AND pi.id_propietario_producto = :id_propietario_producto
         GROUP BY mic.id");
 
-        $stmt->bindParam(":id_producto", $datos['id_producto'], PDO::PARAM_INT);
-        $stmt->bindParam(":id_cafeteria", $datos['id_cafeteria'], PDO::PARAM_INT);
+        $stmt->bindParam(":id_propietario_producto", $id_propietario_producto, PDO::PARAM_INT);
+        $stmt->bindParam(":id_producto", $id_producto, PDO::PARAM_INT);
 
         $stmt->execute();
 
         $categorias = $stmt->fetchAll();
 
         foreach ($categorias as &$cat) {
-            $cat['ingredientes'] = self::buscarIngredientesModel($datos, $cat['id']);
+            $cat['ingredientes'] = self::buscarIngredientesModel($datos, $cat['id'], $id_propietario_producto);
         }
 
         return $categorias;
     }
 
-    static public function buscarIngredientesModel($datos, $categoria)
+    static public function buscarIngredientesModel($datos, $categoria, $id_propietario_producto)
     {
-
         $stmt = Conexion::conectar()->prepare("SELECT 
         mi.id, 
         mi.nombre, 
-        pmi.costo_extra, 
-        pmi.cantidad_gratis, 
-        pmi.precio
-        FROM propietarios_menu_ingredientes pmi 
-            JOIN menu_ingredientes mi ON mi.id = pmi.id_ingrediente
+        pi.costo_extra, 
+        pi.cantidad_gratis, 
+        pi.precio
+        FROM propietarios_ingredientes pi 
+            JOIN menu_ingredientes mi ON mi.id = pi.id_ingrediente
         WHERE mi.estado = 0
-            AND pmi.estado = 1
-            AND pmi.id_cafeteria = :id_cafeteria
-            AND pmi.id_producto = :id_producto
+            AND pi.estado = 1
+            AND pi.id_propietario_producto = :id_propietario_producto
             AND mi.id_ingrediente_categoria = :id_categoria");
 
-        $stmt->bindParam(":id_producto", $datos['id_producto'], PDO::PARAM_INT);
-        $stmt->bindParam(":id_cafeteria", $datos['id_cafeteria'], PDO::PARAM_INT);
+        $stmt->bindParam(":id_propietario_producto", $id_propietario_producto, PDO::PARAM_INT);
         $stmt->bindParam(":id_categoria", $categoria, PDO::PARAM_INT);
 
         $stmt->execute();
@@ -201,24 +285,50 @@ class CafeteriasMenuModel extends Conexion
 
     static public function buscarTamanosModel($datos)
     {
+        // Obtener id_propietario desde la cafetería
+        $stmt_propietario = Conexion::conectar()->prepare("SELECT id_usuario AS id_propietario FROM cafeterias WHERE id = :id_cafeteria");
+        $stmt_propietario->bindParam(':id_cafeteria', $datos['id_cafeteria'], PDO::PARAM_INT);
+        $stmt_propietario->execute();
+        $cafeteria_data = $stmt_propietario->fetch();
+        
+        if (!$cafeteria_data) {
+            return array();
+        }
+        
+        $id_propietario = $cafeteria_data['id_propietario'];
+        
+        // Obtener el id_propietario_producto
+        $stmt_producto = Conexion::conectar()->prepare("SELECT id FROM propietarios_productos
+        WHERE id_producto = :id_producto
+        AND id_propietario = :id_propietario
+        AND id_cafeteria = :id_cafeteria");
+        
+        $stmt_producto->bindParam(':id_producto', $datos['id_producto'], PDO::PARAM_INT);
+        $stmt_producto->bindParam(':id_propietario', $id_propietario, PDO::PARAM_INT);
+        $stmt_producto->bindParam(':id_cafeteria', $datos['id_cafeteria'], PDO::PARAM_INT);
+        $stmt_producto->execute();
+        $producto = $stmt_producto->fetch();
+        
+        if (!$producto) {
+            return array();
+        }
+        
+        $id_propietario_producto = $producto['id'];
 
         $stmt = Conexion::conectar()->prepare("SELECT 
         pt.id,
         pt.nombre, 
         pt.unidad_medida, 
         pt.medida,
-        pm.precio
-        FROM propietarios_menu_cafeterias pm 
-            JOIN menu_productos_tamanos pt ON pt.id = pm.id_tamano
-        WHERE pm.id_tamano != 0
-            AND pm.estado = 1
+        ppt.precio
+        FROM propietarios_productos_tamanos ppt 
+            JOIN menu_productos_tamanos pt ON pt.id = ppt.id_tamano
+        WHERE ppt.estado = 1
             AND pt.estado = 0
-            AND pm.id_cafeteria = :id_cafeteria
-            AND pm.id_producto = :id_producto
+            AND ppt.id_propietario_producto = :id_propietario_producto
         ORDER BY pt.id ASC");
 
-        $stmt->bindParam(":id_producto", $datos['id_producto'], PDO::PARAM_INT);
-        $stmt->bindParam(":id_cafeteria", $datos['id_cafeteria'], PDO::PARAM_INT);
+        $stmt->bindParam(":id_propietario_producto", $id_propietario_producto, PDO::PARAM_INT);
 
         $stmt->execute();
 

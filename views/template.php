@@ -65,6 +65,7 @@ $v = "1.0.11";
 
     <!-- Splide.js (para los carouseles) -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
 </head>
 
@@ -245,6 +246,7 @@ $v = "1.0.11";
 
     <!-- Splide.js (para los carouseles) -->
     <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/js/splide.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/glightbox/dist/js/glightbox.min.js"></script>
 </body>
 
 </html>

@@ -1,6 +1,6 @@
 <?php
 
-require_once "conexion.php";
+require_once __DIR__ . '/../config/conexion.php';
 
 class CafeteriaPedidosModel extends Conexion
 {
@@ -31,6 +31,25 @@ class CafeteriaPedidosModel extends Conexion
 
         if ($estado_pedido !== null) {
             $sql .= " AND v.estado_pedido = :estado_pedido";
+            
+            // Filtrar por fecha según el estado del pedido
+            if ($estado_pedido == 4) {
+                // Entregados: solo los entregados hoy
+                $sql .= " AND DATE(v.fecha_entragado) = CURDATE()";
+            } elseif ($estado_pedido == 3) {
+                // Rechazados: solo los rechazados hoy
+                $sql .= " AND DATE(v.fecha_rechazo) = CURDATE()";
+            } else {
+                // Pendientes (1) y En preparación (2): solo los creados hoy
+                $sql .= " AND DATE(v.fecha_alta) = CURDATE()";
+            }
+        } else {
+            // Si no se especifica estado, filtrar todos los pedidos de hoy según su estado
+            $sql .= " AND (
+                (v.estado_pedido IN (1, 2) AND DATE(v.fecha_alta) = CURDATE()) OR
+                (v.estado_pedido = 3 AND DATE(v.fecha_rechazo) = CURDATE()) OR
+                (v.estado_pedido = 4 AND DATE(v.fecha_entragado) = CURDATE())
+            )";
         }
 
         $sql .= " ORDER BY v.fecha_alta DESC";
@@ -50,8 +69,8 @@ class CafeteriaPedidosModel extends Conexion
     static public function obtenerContadoresPedidosModel($id_cafeteria)
     {
         $stmt = Conexion::conectar()->prepare("SELECT 
-            SUM(CASE WHEN estado_pedido = 1 THEN 1 ELSE 0 END) AS pendientes,
-            SUM(CASE WHEN estado_pedido = 2 THEN 1 ELSE 0 END) AS preparando,
+            SUM(CASE WHEN estado_pedido = 1 AND DATE(fecha_alta) = CURDATE() THEN 1 ELSE 0 END) AS pendientes,
+            SUM(CASE WHEN estado_pedido = 2 AND DATE(fecha_alta) = CURDATE() THEN 1 ELSE 0 END) AS preparando,
             SUM(CASE WHEN estado_pedido = 4 AND DATE(fecha_entragado) = CURDATE() THEN 1 ELSE 0 END) AS entregados_hoy,
             SUM(CASE WHEN estado_pedido = 3 AND DATE(fecha_rechazo) = CURDATE() THEN 1 ELSE 0 END) AS rechazados_hoy
         FROM ventas

@@ -30,13 +30,38 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = "agregarProductosController";
 
+    }else if(isset($_GET['obtener_categorias_bases'])){
+
+        $id_producto = isset($_GET['id_producto']) ? $_GET['id_producto'] : null;
+        echo json_encode(MenuProductosController::obtenerCategoriasIngredientesBaseController($id_producto));
+
+    }else if(isset($_GET['obtener_bases_producto'])){
+
+        $id_producto = $_GET['id_producto'];
+        echo json_encode(MenuProductosController::obtenerBasesProductoController($id_producto));
+
+    }else if(isset($_POST['guardar_bases_producto'])){
+
+        $categorias = [];
+        if(isset($_POST['categorias']) && is_array($_POST['categorias'])){
+            $categorias = $_POST['categorias'];
+        }
+        
+        $datos = array(
+            'id_producto' => $_POST['id_producto'],
+            'categorias' => $categorias
+        );
+        echo MenuProductosController::guardarBasesProductoController($datos);
+
     }else{
 
         $datos = false;
 
     }
 
-    echo ($datos) ? MenuProductosController::$controller($datos) : "error";
+    if(isset($controller)){
+        echo ($datos) ? MenuProductosController::$controller($datos) : "error";
+    }
 
 }else{
     echo "session_expired";

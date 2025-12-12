@@ -202,6 +202,7 @@ function actualizarCantidadItem(id_item, cambio) {
       success: function (resp) {
         if (resp === "success") {
           buscarCarrito();
+          actualizarContadorCarrito();
         } else {
           swal("Error", "No se pudo eliminar el producto", "error");
         }

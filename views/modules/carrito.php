@@ -1,8 +1,16 @@
 <input type="hidden" id="id_carrito_cafeteria" value="<?= $action[1] ?? "" ?>">
 <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasCarrito" aria-labelledby="offcanvasCarritoLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasCarritoLabel">Mi carrito</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    
+<div class="offcanvas-header filtros-offcanvas-header">
+        <div class="filtros-header-content">
+            <h5 id="offcanvasFiltrosLabel" class="offcanvas-title-filtros">
+            <i class="fa-solid fa-cart-shopping fa-3x"></i>
+                <span>Mi carrito</span>
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+               
+            </button>
+        </div>
     </div>
     <div class="offcanvas-body p-0">
         <div id="" class="h-100 d-flex flex-column overflow-hidden">

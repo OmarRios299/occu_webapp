@@ -25,22 +25,32 @@ class CafeteriasListaController{
             }
 
             $html .= '
-            <div class="col-12 col-md-6 col-lg-4 mb-4">
-                <div class="card h-100">
-                    <a href="' . $url . 'cafeterias_lista/' . $cafeteria['id'] . '">
-                        <img src="' . htmlspecialchars($cafeteria['imagen']) . '" class="card-img-top" alt="' . htmlspecialchars($cafeteria['nombre']) . '">
+            <div class="cafeteria-card-wrapper">
+                <div class="cafeteria-card">
+                    <a href="' . $url . 'cafeterias_lista/' . $cafeteria['id'] . '" class="cafeteria-card-link">
+                        <div class="cafeteria-card-image">
+                            <img src="' . htmlspecialchars($cafeteria['imagen']) . '" alt="' . htmlspecialchars($cafeteria['nombre']) . '">
+                            <div class="cafeteria-card-overlay">
+                                <span class="status-badge ' . ($isOpen ? 'status-open' : 'status-closed') . '">
+                                    <i class="bi bi-' . ($isOpen ? 'check-circle' : 'x-circle') . '"></i>
+                                    ' . ($isOpen ? 'Abierto' : 'Cerrado') . '
+                                </span>
+                            </div>
+                        </div>
+                        <div class="cafeteria-card-content">
+                            <h3 class="cafeteria-card-title">' . htmlspecialchars($cafeteria['nombre']) . '</h3>
+                            <p class="cafeteria-card-address">
+                                <i class="bi bi-geo-alt"></i>
+                                ' . htmlspecialchars($cafeteria['direccion']) . '
+                            </p>
+                            <div class="cafeteria-card-footer">
+                                <span class="cafeteria-card-schedule">
+                                    <i class="bi bi-clock"></i>
+                                    ' . htmlspecialchars($horarioDiaActual) . '
+                                </span>
+                            </div>
+                        </div>
                     </a>
-                    <div class="card-body">
-                        <div class="card-header">
-                            <h5 class="card-title mt-1">' . htmlspecialchars($cafeteria['nombre']) . '</h5>
-                            <i class="bi bi-heart favorite-icon"></i>
-                        </div>
-                        <p class="card-text">' . htmlspecialchars($cafeteria['direccion']) . '</p>
-                        <div class="d-flex justify-content-between">
-                            <span class="' . $statusClass . '">' . ($isOpen ? 'Abierto' : 'Cerrado') . '</span>
-                            <span class="' . $statusClass . '">' . htmlspecialchars($horarioDiaActual) . '</span>
-                        </div>
-                    </div>
                 </div>
             </div>';
         }

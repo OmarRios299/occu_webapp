@@ -1,6 +1,6 @@
 <?php 
 
-require_once "conexion.php";
+require_once __DIR__ . '/../config/conexion.php';
 
 class CarritoModel extends Conexion {
 
@@ -27,6 +27,29 @@ class CarritoModel extends Conexion {
 
     
     static public function buscarCarritoItemsModel($datos){
+        // Obtener id_propietario desde la cafetería del carrito
+        $stmt_carrito = Conexion::conectar()->prepare("SELECT id_cafeteria FROM ventas_carrito WHERE id = :id_carrito");
+        $stmt_carrito->bindParam(':id_carrito', $datos['id_carrito'], PDO::PARAM_INT);
+        $stmt_carrito->execute();
+        $carrito_data = $stmt_carrito->fetch();
+        
+        if (!$carrito_data) {
+            return array();
+        }
+        
+        $id_cafeteria = $carrito_data['id_cafeteria'];
+        
+        // Obtener id_propietario desde la cafetería
+        $stmt_propietario = Conexion::conectar()->prepare("SELECT id_usuario AS id_propietario FROM cafeterias WHERE id = :id_cafeteria");
+        $stmt_propietario->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+        $stmt_propietario->execute();
+        $cafeteria_data = $stmt_propietario->fetch();
+        
+        if (!$cafeteria_data) {
+            return array();
+        }
+        
+        $id_propietario = $cafeteria_data['id_propietario'];
     
         $stmt = Conexion::conectar()->prepare("SELECT 
         vci.id AS id_item,
@@ -37,18 +60,27 @@ class CarritoModel extends Conexion {
         mpt.nombre AS tamano,
         mpt.medida,
         mpt.unidad_medida,
-        pmc.precio
+        CASE 
+            WHEN vci.id_tamano = 0 THEN pp.precio_base
+            ELSE ppt.precio
+        END AS precio
         FROM ventas_carrito_items vci
         INNER JOIN ventas_carrito vc ON vc.id = vci.id_carrito
         INNER JOIN menu_productos mp ON mp.id = vci.id_producto
-        LEFT JOIN propietarios_menu_cafeterias pmc ON pmc.id_producto = vci.id_producto
-        AND pmc.id_tamano = vci.id_tamano AND pmc.id_cafeteria = vc.id_cafeteria 
+        INNER JOIN propietarios_productos pp ON pp.id_producto = vci.id_producto
+            AND pp.id_propietario = :id_propietario
+            AND pp.id_cafeteria = :id_cafeteria
+        LEFT JOIN propietarios_productos_tamanos ppt ON ppt.id_propietario_producto = pp.id
+            AND ppt.id_tamano = vci.id_tamano
+            AND ppt.estado = 1
         LEFT JOIN menu_productos_tamanos mpt ON mpt.id = vci.id_tamano
         WHERE vci.estado = 0
         AND vci.id_carrito = :id_carrito
         ;");
     
         $stmt->bindParam(':id_carrito', $datos['id_carrito'],PDO::PARAM_INT);
+        $stmt->bindParam(':id_propietario', $id_propietario,PDO::PARAM_INT);
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria,PDO::PARAM_INT);
 
         $stmt -> execute();
     
@@ -58,28 +90,84 @@ class CarritoModel extends Conexion {
     
 
     static public function buscarCarritoItemsIngredientesModel($datos){
+        // Obtener id_producto y id_cafeteria desde el item del carrito
+        $stmt_item = Conexion::conectar()->prepare("SELECT vci.id_producto, vc.id_cafeteria 
+        FROM ventas_carrito_items vci
+        INNER JOIN ventas_carrito vc ON vc.id = vci.id_carrito
+        WHERE vci.id = :id_carrito_item");
+        $stmt_item->bindParam(':id_carrito_item', $datos['id_item'], PDO::PARAM_INT);
+        $stmt_item->execute();
+        $item_data = $stmt_item->fetch();
+        
+        if (!$item_data) {
+            return array();
+        }
+        
+        // Obtener id_propietario desde la cafetería
+        $stmt_propietario = Conexion::conectar()->prepare("SELECT id_usuario AS id_propietario FROM cafeterias WHERE id = :id_cafeteria");
+        $stmt_propietario->bindParam(':id_cafeteria', $item_data['id_cafeteria'], PDO::PARAM_INT);
+        $stmt_propietario->execute();
+        $cafeteria_data = $stmt_propietario->fetch();
+        
+        if (!$cafeteria_data) {
+            return array();
+        }
+        
+        $id_propietario = $cafeteria_data['id_propietario'];
+        
+        // Obtener el id_propietario_producto
+        $stmt_producto = Conexion::conectar()->prepare("SELECT id FROM propietarios_productos
+        WHERE id_producto = :id_producto
+        AND id_propietario = :id_propietario
+        AND id_cafeteria = :id_cafeteria");
+        
+        $stmt_producto->bindParam(':id_producto', $item_data['id_producto'], PDO::PARAM_INT);
+        $stmt_producto->bindParam(':id_propietario', $id_propietario, PDO::PARAM_INT);
+        $stmt_producto->bindParam(':id_cafeteria', $item_data['id_cafeteria'], PDO::PARAM_INT);
+        $stmt_producto->execute();
+        $producto = $stmt_producto->fetch();
+        
+        if (!$producto) {
+            return array();
+        }
+        
+        $id_propietario_producto = $producto['id'];
     
         $stmt = Conexion::conectar()->prepare("SELECT 
         ii.id AS id_item_ingre, 
         ii.id_ingrediente, 
         mi.nombre,
+        mi.id_ingrediente_categoria,
         ii.cantidad,
         CASE 
-            WHEN pmi.costo_extra = 'Si' 
-                THEN (ii.cantidad * pmi.precio) - (pmi.cantidad_gratis * pmi.precio)
+            WHEN pi.precio > 0 AND pi.cantidad_gratis > 0 THEN
+                -- Solo aplicar cantidad_gratis si es el primer ingrediente insertado de su categoría (menor ID)
+                CASE 
+                    WHEN ii.id = (
+                        SELECT MIN(ii2.id)
+                        FROM ventas_carrito_items_ingredientes ii2
+                        INNER JOIN menu_ingredientes mi2 ON mi2.id = ii2.id_ingrediente
+                        WHERE ii2.id_carrito_item = :id_carrito_item
+                        AND ii2.estado = 0
+                        AND mi2.id_ingrediente_categoria = mi.id_ingrediente_categoria
+                    )
+                    THEN GREATEST(0, (ii.cantidad - pi.cantidad_gratis)) * pi.precio
+                    ELSE ii.cantidad * pi.precio
+                END
+            WHEN pi.precio > 0 AND pi.cantidad_gratis = 0
+                THEN ii.cantidad * pi.precio
             ELSE 0
         END AS total
         FROM ventas_carrito_items_ingredientes ii
         INNER JOIN menu_ingredientes mi ON mi.id = ii.id_ingrediente
-        INNER JOIN ventas_carrito_items vci ON vci.id = ii.id_carrito_item
-        INNER JOIN ventas_carrito vc ON vc.id = vci.id_carrito
-        INNER JOIN propietarios_menu_ingredientes pmi ON pmi.id_cafeteria = vc.id_cafeteria
-        AND pmi.id_producto = vci.id_producto AND pmi.id_ingrediente = ii.id_ingrediente
+        INNER JOIN propietarios_ingredientes pi ON pi.id_propietario_producto = :id_propietario_producto
+            AND pi.id_ingrediente = ii.id_ingrediente
         WHERE ii.estado = 0
         AND ii.id_carrito_item = :id_carrito_item
         ;");
     
         $stmt->bindParam(':id_carrito_item', $datos['id_item'],PDO::PARAM_INT);
+        $stmt->bindParam(':id_propietario_producto', $id_propietario_producto,PDO::PARAM_INT);
 
         $stmt -> execute();
     
@@ -163,22 +251,41 @@ class CarritoModel extends Conexion {
     // Obtener items con precio calculado para la venta
     static public function obtenerItemsParaVentaModel($id_carrito, $id_cafeteria)
     {
+        // Obtener id_propietario desde la cafetería
+        $stmt_propietario = Conexion::conectar()->prepare("SELECT id_usuario AS id_propietario FROM cafeterias WHERE id = :id_cafeteria");
+        $stmt_propietario->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+        $stmt_propietario->execute();
+        $cafeteria_data = $stmt_propietario->fetch();
+        
+        if (!$cafeteria_data) {
+            return array();
+        }
+        
+        $id_propietario = $cafeteria_data['id_propietario'];
+        
         $stmt = Conexion::conectar()->prepare("SELECT 
             vci.id AS id_item,
             vci.id_producto,
             vci.id_tamano,
             vci.cantidad,
             mp.nombre AS nombre_producto,
-            COALESCE(pmc.precio, 0) AS precio_unitario
+            CASE 
+                WHEN vci.id_tamano = 0 THEN COALESCE(pp.precio_base, 0)
+                ELSE COALESCE(ppt.precio, 0)
+            END AS precio_unitario
         FROM ventas_carrito_items vci
         INNER JOIN menu_productos mp ON mp.id = vci.id_producto
-        LEFT JOIN propietarios_menu_cafeterias pmc ON pmc.id_producto = vci.id_producto
-            AND pmc.id_tamano = vci.id_tamano 
-            AND pmc.id_cafeteria = :id_cafeteria
+        INNER JOIN propietarios_productos pp ON pp.id_producto = vci.id_producto
+            AND pp.id_propietario = :id_propietario
+            AND pp.id_cafeteria = :id_cafeteria
+        LEFT JOIN propietarios_productos_tamanos ppt ON ppt.id_propietario_producto = pp.id
+            AND ppt.id_tamano = vci.id_tamano
+            AND ppt.estado = 1
         WHERE vci.estado = 0
         AND vci.id_carrito = :id_carrito");
 
         $stmt->bindParam(':id_carrito', $id_carrito, PDO::PARAM_INT);
+        $stmt->bindParam(':id_propietario', $id_propietario, PDO::PARAM_INT);
         $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
         $stmt->execute();
 
@@ -188,30 +295,73 @@ class CarritoModel extends Conexion {
     // Obtener ingredientes con costo calculado para un item
     static public function obtenerIngredientesParaVentaModel($id_item, $id_producto, $id_cafeteria)
     {
+        // Obtener id_propietario desde la cafetería
+        $stmt_propietario = Conexion::conectar()->prepare("SELECT id_usuario AS id_propietario FROM cafeterias WHERE id = :id_cafeteria");
+        $stmt_propietario->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+        $stmt_propietario->execute();
+        $cafeteria_data = $stmt_propietario->fetch();
+        
+        if (!$cafeteria_data) {
+            return array();
+        }
+        
+        $id_propietario = $cafeteria_data['id_propietario'];
+        
+        // Obtener el id_propietario_producto
+        $stmt_producto = Conexion::conectar()->prepare("SELECT id FROM propietarios_productos
+        WHERE id_producto = :id_producto
+        AND id_propietario = :id_propietario
+        AND id_cafeteria = :id_cafeteria");
+        
+        $stmt_producto->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
+        $stmt_producto->bindParam(':id_propietario', $id_propietario, PDO::PARAM_INT);
+        $stmt_producto->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+        $stmt_producto->execute();
+        $producto = $stmt_producto->fetch();
+        
+        if (!$producto) {
+            return array();
+        }
+        
+        $id_propietario_producto = $producto['id'];
+        
         $stmt = Conexion::conectar()->prepare("SELECT 
             vcii.id AS id_item_ingrediente,
             vcii.id_ingrediente,
             mi.nombre AS nombre_ingrediente,
+            mi.id_ingrediente_categoria,
             vcii.cantidad,
-            pmi.costo_extra,
-            pmi.cantidad_gratis,
-            COALESCE(pmi.precio, 0) AS precio,
+            pi.costo_extra,
+            pi.cantidad_gratis,
+            COALESCE(pi.precio, 0) AS precio,
             CASE 
-                WHEN pmi.costo_extra = 'Si' 
-                    THEN GREATEST(0, (vcii.cantidad - pmi.cantidad_gratis)) * pmi.precio
+                WHEN pi.precio > 0 AND pi.cantidad_gratis > 0 THEN
+                    -- Solo aplicar cantidad_gratis si es el primer ingrediente insertado de su categoría (menor ID)
+                    CASE 
+                        WHEN vcii.id = (
+                            SELECT MIN(vcii2.id)
+                            FROM ventas_carrito_items_ingredientes vcii2
+                            INNER JOIN menu_ingredientes mi2 ON mi2.id = vcii2.id_ingrediente
+                            WHERE vcii2.id_carrito_item = :id_item
+                            AND vcii2.estado = 0
+                            AND mi2.id_ingrediente_categoria = mi.id_ingrediente_categoria
+                        )
+                        THEN GREATEST(0, (vcii.cantidad - pi.cantidad_gratis)) * pi.precio
+                        ELSE vcii.cantidad * pi.precio
+                    END
+                WHEN pi.precio > 0 AND pi.cantidad_gratis = 0
+                    THEN vcii.cantidad * pi.precio
                 ELSE 0
             END AS monto_total
         FROM ventas_carrito_items_ingredientes vcii
         INNER JOIN menu_ingredientes mi ON mi.id = vcii.id_ingrediente
-        INNER JOIN propietarios_menu_ingredientes pmi ON pmi.id_cafeteria = :id_cafeteria
-            AND pmi.id_producto = :id_producto 
-            AND pmi.id_ingrediente = vcii.id_ingrediente
+        INNER JOIN propietarios_ingredientes pi ON pi.id_propietario_producto = :id_propietario_producto
+            AND pi.id_ingrediente = vcii.id_ingrediente
         WHERE vcii.estado = 0
         AND vcii.id_carrito_item = :id_item");
 
         $stmt->bindParam(':id_item', $id_item, PDO::PARAM_INT);
-        $stmt->bindParam(':id_producto', $id_producto, PDO::PARAM_INT);
-        $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+        $stmt->bindParam(':id_propietario_producto', $id_propietario_producto, PDO::PARAM_INT);
         $stmt->execute();
 
         return $stmt->fetchAll();

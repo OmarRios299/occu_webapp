@@ -119,6 +119,23 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = "agregarPropietarioIngredienteController";
 
+    }else if(isset($_GET['obtener_precio_alimento'])){
+
+        $datos = array(
+            "id_producto"               => $_GET['id_producto'],
+            "cafeteria"                => isset($_GET['cafeteria'])? $_GET['cafeteria'] : false,
+        );
+        $controller = "obtenerPrecioAlimentoController";
+
+    }else if(isset($_POST['guardar_precio_alimento'])){
+
+        $datos = array(
+            "id_producto"             => $_POST['id_producto'],
+            "precio"                  => $_POST['precio'],
+            "cafeteria"               => isset($_POST['cafeteria'])? $_POST['cafeteria'] : false,
+        );
+        $controller = "guardarPrecioAlimentoController";
+
     }
     
     else{
