@@ -19,7 +19,8 @@ class RegistrarmeModel extends Conexion {
         imagen,
         id_alta, 
         fecha_alta,
-        pin) 
+        pin,
+        proveedor) 
         VALUES (
         :nombre, 
         :apellido, 
@@ -30,7 +31,8 @@ class RegistrarmeModel extends Conexion {
         'views/assets/img/usuario_default.png',
         :id_alta, 
         :fecha_alta,
-        :pin)");
+        :pin,
+        'Interno')");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':apellido', $datos['apellido'], PDO::PARAM_STR);

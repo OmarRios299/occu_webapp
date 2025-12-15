@@ -39,13 +39,30 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = "agregarEditarCiudadController";
 
+    }else if(isset($_POST['obtener_info_ciudad'])){
+
+        $datos = $_POST['id_ciudad'];
+        $controller = "obtenerInfoCiudadController";
+
+    }else if(isset($_POST['guardar_coordenadas_ciudad'])){
+
+        $datos = array(
+            "id" => $_POST['id_ciudad'],
+            "coordenadas" => $_POST['coordenadas']
+        );
+        $controller = "guardarCoordenadasCiudadController";
+
     }else{
 
         $datos = false;
 
     }
 
-    echo ($datos) ? AdminPaisesController::$controller($datos) : "error";
+    if($datos !== false){
+        echo AdminPaisesController::$controller($datos);
+    }else{
+        echo "error";
+    }
 
 }else{
     echo "session_expired";

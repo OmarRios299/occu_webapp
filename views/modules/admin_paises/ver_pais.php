@@ -80,7 +80,7 @@
                         <td>
                             <!-- <button type="button" class="btn btn-icono btn-lista btn_mostrar_cafeterias" ciudad='<?= $ciudad['id']; ?>' ></button>
                             <button type="button" class="btn btn-icono btn-ver"></button> -->
-                            <button type="button" class="btn btn-icono btn-editar editar_ciudad" estado='<?=$ciudad['id_entidad_federativa']?>' coordenadas='<?= $ciudad['coordenadas']; ?>' nombre='<?= $ciudad['nombre']; ?>' idRegistro='<?= $ciudad['id']; ?>'></button>
+                            <button type="button" class="btn btn-icono btn-editar editar_ciudad" idCiudad='<?= $ciudad['id']; ?>'></button>
                             <button type="button" class="btn btn-icono btn-eliminar eliminarRegistro" tabla='ciudades' idRegistro='<?=$ciudad['id']?>'></button>
                         </td>
                         <td>
@@ -115,7 +115,7 @@
             <form onsubmit="return false;" id="form_agregar_ciudad">
                 <div class="modal-body">
 
-                    <input type="hidden" class="input_pais" id="id_pais">
+                    <input type="hidden" class="input_pais" id="id_ciudad">
                     <div class="row">
                         <div class="col-md-12">
                             <div class="form-group">
@@ -166,7 +166,7 @@
             <div class="modal-footer">
                 <button class="btn btn-eliminar" id="btn_eliminar_poligono">Eliminar poligono</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary" id="btn_guardar_ubicacion" data-bs-dismiss="modal">Aceptar</button>
+                <button type="button" class="btn btn-primary" id="btn_guardar_ubicacion">Aceptar</button>
             </div>
         </div>
     </div>

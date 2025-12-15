@@ -19,6 +19,23 @@ class General{
 
 session_start();
 
+// Endpoints públicos (sin sesión requerida)
+if(isset($_GET['obtenerCiudadesPublico'])){
+	require_once "../../controllers/controller_general.php";
+	require_once "../../models/model_general.php";
+	$datos = array("pais" => isset($_GET['pais']) ? $_GET['pais'] : 1, "estado" => '', "opcion_todos" => '');
+	GeneralController::obtenerEstadosPorPaisController($datos);
+	exit;
+}
+
+if(isset($_GET['obtenerNivelesPublico'])){
+	require_once "../../controllers/controller_general.php";
+	require_once "../../models/model_general.php";
+	$niveles = GeneralController::obtenerNivelesUsuarioControler();
+	echo json_encode(['niveles' => $niveles]);
+	exit;
+}
+
 if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
 	
 	if(isset($_POST['estadoSwitch'])){

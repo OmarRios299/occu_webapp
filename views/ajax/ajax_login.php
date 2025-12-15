@@ -41,3 +41,39 @@ if(isset($_POST['usuarioIngreso'])){
 
 /*=====  End of INGRESO  ======*/
 
+/*===============================
+=       INGRESO CON GOOGLE      =
+===============================*/
+
+if(isset($_POST['googleLogin']) && isset($_POST['googleToken'])){
+
+	$googleToken = $_POST['googleToken'];
+	
+	$respuesta = LoginController::ingresoGoogleController($googleToken);
+	
+	echo $respuesta;
+
+}
+
+/*=====  End of INGRESO CON GOOGLE  ======*/
+
+/*===============================
+=  COMPLETAR INFO USUARIO GOOGLE  =
+===============================*/
+
+if(isset($_POST['completarInfoGoogle'])){
+
+	$datos = array(
+		"id_usuario" => $_POST['id_usuario'],
+		"id_ciudad" => $_POST['id_ciudad'],
+		"nivel" => $_POST['nivel']
+	);
+	
+	$respuesta = LoginController::completarInfoUsuarioGoogleController($datos);
+	
+	echo $respuesta;
+
+}
+
+/*=====  End of COMPLETAR INFO USUARIO GOOGLE  ======*/
+

@@ -7,17 +7,17 @@ include "cafeterias/tabla_cafeterias.php";
         if (isset($action[3]) && $action[3]=='imagenes') {
             include "cafeterias/imagenes_cafeteria.php";
         } else {
-            include "cafeterias/agregar_cafeteria.php";
+            // Modo agregar - no hay $cafeteria definido
+            $cafeteria = null;
+            include "cafeterias/form_cafeteria.php";
         }
-        
-        
     }else if(is_numeric($action[1])){
-        // var_dump($action[1]);
         $cafeteria=CafeteriasController::obtenerDatosCafeteriaController($action[1]);
         if($cafeteria){
-            if(isset($action[2]) && $action[2]=="editar")
-                include "cafeterias/editar_cafeteria.php";
-            else{
+            if(isset($action[2]) && $action[2]=="editar"){
+                // Modo edición - $cafeteria está definido
+                include "cafeterias/form_cafeteria.php";
+            }else{
                 include "cafeterias/ver_cafeteria.php";
             }
         }else{

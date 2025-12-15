@@ -1,24 +1,31 @@
-let googleApiKey;
+// Variables para Leaflet
 let map_registrar;
 let currentMarker_registrar = null;
-let allowedPolygon_registrar;
+let allowedPolygon_registrar = null;
+let initialized_map = false;
+
+// Función para verificar que Leaflet esté cargado
+function waitForLeaflet(callback, maxAttempts = 50) {
+    let attempts = 0;
+    const checkLeaflet = () => {
+        if (typeof L !== 'undefined') {
+            callback();
+        } else {
+            attempts++;
+            if (attempts < maxAttempts) {
+                setTimeout(checkLeaflet, 100);
+            } else {
+                console.error('Leaflet no se pudo cargar después de varios intentos');
+            }
+        }
+    };
+    checkLeaflet();
+}
 
 $(document).ready(function () {
-    // optione la api key
-    fetch(`${url}/config/googleApiKey.php`)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error al obtener la clave de API');
-        }
-        return response.json();
-    })
-    .then(data => {
-        googleApiKey = data.apiKey;
-    })
-    .catch(error => console.error(error));
-
     if (moduloActual == 'cafeterias' && $('#ciudad_select').length) {
-        initializePolygonAndMap(); // Inicializa el mapa y el polígono
+        // Inicializar polígono cuando se carga la página
+        initializePolygonAndMap();
 
         // Escuchar el cambio del select para actualizar el polígono y centrar el mapa
         $("#ciudad_select").change(function () {
@@ -27,10 +34,16 @@ $(document).ready(function () {
 
         // Evento para mostrar el modal y cargar el mapa
         $('#modal_ubicacion').on('shown.bs.modal', function () {
-            if (!map_registrar) {
-                initializeMap();
+            if (!initialized_map) {
+                waitForLeaflet(() => {
+                    initializeMap();
+                });
             } else {
-                setTimeout(() => google.maps.event.trigger(map_registrar, 'resize'), 10);
+                setTimeout(() => {
+                    if (map_registrar) {
+                        map_registrar.invalidateSize();
+                    }
+                }, 300);
             }
         });
     }
@@ -56,68 +69,151 @@ $(document).ready(function () {
     }
 });
 
-// Función para inicializar el polígono y el mapa
+// Función para inicializar el polígono (sin mapa aún)
 function initializePolygonAndMap() {
-    let polygonCoordinates = JSON.parse($("#ciudad_select option:selected").attr('coordenadas'));
-    allowedPolygon_registrar = new google.maps.Polygon({ paths: polygonCoordinates });
-
-    if (!map_registrar) {
-        initializeMap();
+    const coordenadasAttr = $("#ciudad_select option:selected").attr('coordenadas');
+    if (coordenadasAttr && coordenadasAttr.trim() !== '' && coordenadasAttr !== 'null') {
+        try {
+            const polygonCoordinates = JSON.parse(coordenadasAttr);
+            // Guardar las coordenadas para usar cuando se inicialice el mapa
+            allowedPolygon_registrar = polygonCoordinates;
+        } catch (e) {
+            console.error('Error al parsear coordenadas:', e);
+            allowedPolygon_registrar = null;
+        }
+    } else {
+        allowedPolygon_registrar = null;
     }
 }
 
-// Función para inicializar el mapa
+// Función para inicializar el mapa con Leaflet
 function initializeMap() {
-    const latitud = parseFloat($('#latitud_cafeteria').val()) || 32.624538;
-    const longitud = parseFloat($('#longitud_cafeteria').val()) || -115.452263;
+    if (typeof L === 'undefined') {
+        console.error('Leaflet no está disponible');
+        waitForLeaflet(() => {
+            initializeMap();
+        });
+        return;
+    }
 
-    map_registrar = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: latitud, lng: longitud },
-        zoom: 13,
-        disableDefaultUI: false
+    // Asegurarse de que el polígono esté cargado antes de inicializar
+    if (!allowedPolygon_registrar) {
+        initializePolygonAndMap();
+    }
+
+    const latitud = parseFloat($('#latitud_cafeteria').val()) || null;
+    const longitud = parseFloat($('#longitud_cafeteria').val()) || null;
+
+    // Determinar el centro inicial
+    let centerLat, centerLng;
+    if (latitud && longitud) {
+        centerLat = latitud;
+        centerLng = longitud;
+    } else if (allowedPolygon_registrar && allowedPolygon_registrar.length > 0) {
+        const centroid = getGeographicCentroid(allowedPolygon_registrar);
+        centerLat = centroid[0];
+        centerLng = centroid[1];
+    } else {
+        centerLat = 32.624538;
+        centerLng = -115.452263;
+    }
+
+    // Inicializar el mapa de Leaflet
+    map_registrar = L.map('map', {
+        center: [centerLat, centerLng],
+        zoom: latitud && longitud ? 15 : 13,
+        zoomControl: true
     });
 
-    //allowedPolygon_registrar.setMap(map_registrar); // Mostrar el polígono en el mapa
+    // Agregar capa de tiles (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(map_registrar);
 
+    // El polígono se mantiene en memoria para validación pero NO se muestra visualmente
+    // Centrar el mapa basado en el polígono si existe, pero sin mostrarlo
+    if (allowedPolygon_registrar && allowedPolygon_registrar.length > 0) {
+        const latlngs = allowedPolygon_registrar.map(coord => [coord.lat, coord.lng]);
+        // Crear polígono temporal solo para calcular bounds, pero NO agregarlo al mapa
+        const tempPolygon = L.polygon(latlngs);
+        
+        // Si hay marcador, ajustar vista para mostrar el marcador y el área del polígono
+        if (latitud && longitud) {
+            const markerBounds = L.latLngBounds([[latitud, longitud]]);
+            const polygonBounds = tempPolygon.getBounds();
+            map_registrar.fitBounds(markerBounds.extend(polygonBounds).pad(0.1));
+        } else {
+            // Centrar en el polígono sin mostrarlo
+            map_registrar.fitBounds(tempPolygon.getBounds());
+        }
+    }
+
+    // Agregar marcador si hay coordenadas guardadas
     if (latitud && longitud) {
-        currentMarker_registrar = new google.maps.Marker({
-            position: { lat: latitud, lng: longitud },
-            map: map_registrar
-        });
+        currentMarker_registrar = L.marker([latitud, longitud]).addTo(map_registrar);
     }
 
     // Agregar evento click al mapa para seleccionar ubicación
-    map_registrar.addListener('click', function (e) {
-        placeMarkerAndSaveData(e.latLng);
+    map_registrar.on('click', function (e) {
+        placeMarkerAndSaveData(e.latlng);
     });
+
+    initialized_map = true;
+    console.log('Mapa inicializado con Leaflet');
 }
 
 // Función para actualizar el polígono y centrar el mapa al cambiar de ciudad
 function updatePolygonAndMap() {
-    // Obtener nuevas coordenadas del polígono basado en la ciudad seleccionada
-    let polygonCoordinates = JSON.parse($("#ciudad_select option:selected").attr('coordenadas'));
+    const coordenadasAttr = $("#ciudad_select option:selected").attr('coordenadas');
+    
+    if (coordenadasAttr && coordenadasAttr.trim() !== '' && coordenadasAttr !== 'null') {
+        try {
+            const polygonCoordinates = JSON.parse(coordenadasAttr);
+            allowedPolygon_registrar = polygonCoordinates;
 
-    // Eliminar el polígono anterior si existe
-    if (allowedPolygon_registrar) {
-        allowedPolygon_registrar.setMap(null);
-    }
+            // Si el mapa ya está inicializado, actualizar el centro sin mostrar el polígono
+            if (map_registrar && initialized_map) {
+                // Eliminar polígonos anteriores si existen (por si acaso)
+                map_registrar.eachLayer(function(layer) {
+                    if (layer instanceof L.Polygon) {
+                        map_registrar.removeLayer(layer);
+                    }
+                });
 
-    // Crear un nuevo polígono con las nuevas coordenadas
-    allowedPolygon_registrar = new google.maps.Polygon({ paths: polygonCoordinates });
-   // allowedPolygon_registrar.setMap(map_registrar); // Mostrar el nuevo polígono en el mapa
-
-    // Calcular el centroide del polígono usando la función para el centroide geográfico
-    let center = getGeographicCentroid(polygonCoordinates);
-
-    // Centrar el mapa en el centroide calculado
-    if (map_registrar && center) {
-        map_registrar.setCenter(center);
-        map_registrar.setZoom(10); // Opcional: Ajustar el nivel de zoom si es necesario
+                // Centrar el mapa en el polígono sin mostrarlo visualmente
+                if (polygonCoordinates.length > 0) {
+                    const latlngs = polygonCoordinates.map(coord => [coord.lat, coord.lng]);
+                    const tempPolygon = L.polygon(latlngs);
+                    
+                    // Si hay marcador, ajustar vista para mostrar ambos
+                    const latitud = parseFloat($('#latitud_cafeteria').val());
+                    const longitud = parseFloat($('#longitud_cafeteria').val());
+                    
+                    if (latitud && longitud && currentMarker_registrar) {
+                        const markerBounds = L.latLngBounds([[latitud, longitud]]);
+                        const polygonBounds = tempPolygon.getBounds();
+                        map_registrar.fitBounds(markerBounds.extend(polygonBounds).pad(0.1));
+                    } else {
+                        map_registrar.fitBounds(tempPolygon.getBounds());
+                    }
+                }
+            }
+        } catch (e) {
+            console.error('Error al parsear coordenadas:', e);
+            allowedPolygon_registrar = null;
+        }
+    } else {
+        allowedPolygon_registrar = null;
     }
 }
 
 // Función para calcular el centroide geográfico de un conjunto de coordenadas
 function getGeographicCentroid(coordinates) {
+    if (!coordinates || coordinates.length === 0) {
+        return [32.624538, -115.452263]; // Coordenadas por defecto
+    }
+    
     let latSum = 0;
     let lngSum = 0;
     let numPoints = coordinates.length;
@@ -130,57 +226,95 @@ function getGeographicCentroid(coordinates) {
     let centroidLat = latSum / numPoints;
     let centroidLng = lngSum / numPoints;
 
-    return { lat: centroidLat, lng: centroidLng };
+    return [centroidLat, centroidLng];
+}
+
+// Función para verificar si un punto está dentro de un polígono (algoritmo ray casting)
+function isPointInPolygon(point, polygon) {
+    if (!polygon || polygon.length < 3) return false;
+    
+    let x = point.lat;
+    let y = point.lng;
+    let inside = false;
+
+    for (let i = 0, j = polygon.length - 1; i < polygon.length; j = i++) {
+        let xi = polygon[i].lat, yi = polygon[i].lng;
+        let xj = polygon[j].lat, yj = polygon[j].lng;
+
+        let intersect = ((yi > y) !== (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+    }
+
+    return inside;
 }
 
 // Función para colocar el marcador y guardar los datos
 function placeMarkerAndSaveData(latlng) {
-    if (currentMarker_registrar) {
-        currentMarker_registrar.setMap(null); // Elimina el marcador anterior
-    }
-
     // Verificar si la ubicación está dentro del polígono permitido
-    if (!google.maps.geometry.poly.containsLocation(latlng, allowedPolygon_registrar)) {
-        alert('La ubicación seleccionada está fuera del área permitida. Por favor, selecciona una ubicación dentro de los límites.');
-        return; // Detener la función si está fuera del polígono
+    if (allowedPolygon_registrar && allowedPolygon_registrar.length > 0) {
+        const point = { lat: latlng.lat, lng: latlng.lng };
+        if (!isPointInPolygon(point, allowedPolygon_registrar)) {
+            alert('La ubicación seleccionada está fuera del área permitida. Por favor, selecciona una ubicación dentro de los límites.');
+            return;
+        }
     }
 
-    // Crear un nuevo marcador usando google.maps.Marker
-    currentMarker_registrar = new google.maps.Marker({
-        position: latlng,
-        map: map_registrar
-    });
+    // Eliminar marcador anterior si existe
+    if (currentMarker_registrar) {
+        map_registrar.removeLayer(currentMarker_registrar);
+    }
 
-    // Obtener y guardar la dirección
-    fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${latlng.lat()},${latlng.lng()}&key=` + googleApiKey)
+    // Crear nuevo marcador
+    currentMarker_registrar = L.marker([latlng.lat, latlng.lng]).addTo(map_registrar);
+
+    // Obtener dirección usando Nominatim (geocodificación inversa de OpenStreetMap)
+    fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latlng.lat}&lon=${latlng.lng}&zoom=18&addressdetails=1`)
         .then(response => response.json())
         .then(data => {
-            if (data.results[0]) {
-                const direccion = data.results[0].formatted_address;
-                let country = "";
+            if (data && data.address) {
+                // Construir dirección formateada
+                let direccion = '';
+                if (data.address.road) direccion += data.address.road;
+                if (data.address.house_number) direccion += ' ' + data.address.house_number;
+                if (data.address.suburb) direccion += ', ' + data.address.suburb;
+                if (data.address.city || data.address.town || data.address.village) {
+                    direccion += ', ' + (data.address.city || data.address.town || data.address.village);
+                }
+                if (data.address.state) direccion += ', ' + data.address.state;
+                if (data.address.country) direccion += ', ' + data.address.country;
+                
+                // Si no hay dirección construida, usar display_name
+                if (!direccion || direccion.trim() === '') {
+                    direccion = data.display_name || '';
+                }
+
+                let country = data.address.country || '';
                 let city = $("#ciudad_select option:selected").text();
                 let id_city = $("#ciudad_select option:selected").val();
 
-                data.results[0].address_components.forEach(component => {
-                    const types = component.types;
-                    if (types.includes("country")) {
-                        country = component.long_name
-                    }
-                });
-
                 // Guardar los datos en los campos correspondientes
                 $("#direccion_cafeteria").val(direccion);
-                $("#latitud_cafeteria").val(latlng.lat());
-                $("#longitud_cafeteria").val(latlng.lng());
+                $("#latitud_cafeteria").val(latlng.lat);
+                $("#longitud_cafeteria").val(latlng.lng);
                 $("#pais_cafeteria").val(country);
-                $("#ciudad_cafeteria").val(city);
-                $("#ciudad_cafeteria").attr('id_ciudad', id_city);
-
+                
                 console.log('Dirección guardada:', direccion);
                 console.log('Ciudad:', city, 'País:', country, 'ID Ciudad:', id_city);
+            } else {
+                // Si no se puede obtener la dirección, al menos guardar las coordenadas
+                $("#latitud_cafeteria").val(latlng.lat);
+                $("#longitud_cafeteria").val(latlng.lng);
+                $("#direccion_cafeteria").val(`Lat: ${latlng.lat}, Lng: ${latlng.lng}`);
+                console.log('No se pudo obtener la dirección, guardando solo coordenadas');
             }
         })
-        .catch(error => console.error('Error al obtener la dirección:', error));
+        .catch(error => {
+            console.error('Error al obtener la dirección:', error);
+            // Guardar coordenadas aunque falle la geocodificación
+            $("#latitud_cafeteria").val(latlng.lat);
+            $("#longitud_cafeteria").val(latlng.lng);
+            $("#direccion_cafeteria").val(`Lat: ${latlng.lat}, Lng: ${latlng.lng}`);
+        });
 }
 
 $(document).on("submit", "#form_agregar_cafeteria", function (e) {
@@ -301,7 +435,15 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
 
 // Mostrar el modal cuando se hace clic en el botón
 $("#btn_seleccionar_ubicacion").on("click", function () {
+    // Asegurarse de que el polígono esté actualizado antes de abrir el modal
+    initializePolygonAndMap();
     $("#modal_ubicacion").modal('show');
+});
+
+// Evento para el botón de guardar ubicación en el modal
+$(document).on("click", "#btn_guardar_ubicacion", function () {
+    // El modal se cierra automáticamente, las coordenadas ya están guardadas
+    // No necesitamos hacer nada adicional aquí
 });
 
 function toggleFields(checkbox, dia) {

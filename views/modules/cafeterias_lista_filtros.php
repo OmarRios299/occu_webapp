@@ -6,9 +6,7 @@
                 <i class="bi bi-funnel-fill"></i>
                 <span>Filtros de Búsqueda</span>
             </h5>
-            <button type="button" class="btn-close-offcanvas" data-bs-dismiss="offcanvas" aria-label="Cerrar">
-                <i class="bi bi-x-lg"></i>
-            </button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
         </div>
     </div>
     <div class="offcanvas-body filtros-offcanvas-body">
@@ -140,9 +138,7 @@
             <i class="bi bi-funnel-fill"></i>
             <span>Filtros</span>
         </h5>
-        <button type="button" class="btn-close-modern" data-bs-dismiss="offcanvas" aria-label="Cerrar">
-            <i class="bi bi-x-lg"></i>
-        </button>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
     </div>
     <div class="offcanvas-body-modern">
         <form onsubmit="return false;" id="aplicar_filtros_mobile">

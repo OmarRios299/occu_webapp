@@ -15,7 +15,7 @@ if (isset($action[1])) {
     border-radius: 0 0 40px 40px;
     padding: 2rem 1.5rem 3rem;
     margin-bottom: -2rem;
-    margin-top: -1rem;
+    margin-top: -0rem;
     overflow: hidden;
 }
 
@@ -912,16 +912,18 @@ if (isset($action[1])) {
 
                 <div class="info-item">
                     <div class="info-icon">
-                        <i class="fas fa-clock"></i>
+                        <i class="fas fa-phone-alt"></i>
                     </div>
                     <div class="info-content">
-                        <div class="info-label">Horario de Atención</div>
+                        <div class="info-label">Correo Electrónico</div>
                         <p class="info-value" id="info3"></p>
-                        <span id="copy-feedback-email" class="copy-feedback">
+                        <span id="copy-feedback-tel" class="copy-feedback">
                             <i class="fas fa-check-circle"></i> ¡Copiado!
                         </span>
                     </div>
                 </div>
+
+
 
                 <div class="info-item">
                     <div class="info-icon">
@@ -938,7 +940,7 @@ if (isset($action[1])) {
                         <i class="fas fa-location-arrow"></i>
                         Ir a Ubicación
                     </button>
-                    <a class="btn-action btn-menu-link" href="<?=$url?>cafeterias_menu/<?= $action[1] ?>">
+                    <a class="btn-action btn-menu-link" href="<?=$url?>cafeterias_menu/<?= $action[1] ?>" target="_blank" rel="noopener noreferrer">
                         <i class="fas fa-utensils"></i>
                         Ver Menú
                     </a>
@@ -995,7 +997,7 @@ if (isset($action[1])) {
                     placeholder="Comparte tu experiencia en esta cafetería..."></textarea>
             </div>
             <div class="comment-actions">
-                <button type="button" class="btn btn-light" onclick="toggleCommentArea()">
+                <button type="button" class="btn btn-light btn-cancelar-comentario">
                     Cancelar
                 </button>
                 <button type="button" class="btn btn-success" id="btn_aceptar_comentario">
@@ -1007,6 +1009,13 @@ if (isset($action[1])) {
 
         <!-- Lista de comentarios -->
         <div class="coment-ocultar">
+            <!-- Mensaje cuando no hay reseñas -->
+            <div id="mensaje-sin-resenas" class="text-center" style="display: none;">
+                <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                <h5 class="text-muted">Sé el primero en dejar una reseña</h5>
+                <p class="text-muted" style="font-size: 14px;">Comparte tu experiencia y ayuda a otros usuarios.</p>
+            </div>
+            
             <ul id="comentariosLista" class="comments-list lista-comentarios">
                 <!-- Los comentarios se cargan dinámicamente -->
             </ul>
@@ -1158,18 +1167,6 @@ function openGallery(index = 0) {
 }
 
 // ========== COMENTARIOS ==========
-function toggleCommentArea() {
-    const area = document.getElementById('comment-form-area');
-    area.classList.toggle('show');
-}
-
-// Activar toggle con el botón de agregar reseña
-document.addEventListener('DOMContentLoaded', function() {
-    const btnAgregar = document.getElementById('btn_agregar_comentario');
-    if (btnAgregar) {
-        btnAgregar.addEventListener('click', function() {
-            toggleCommentArea();
-        });
-    }
-});
+// Los eventos de comentarios se manejan con delegación de eventos en cafeterias_lista.js
+// para evitar conflictos y asegurar que funcionen correctamente
 </script>

@@ -26,6 +26,16 @@
 
     <!-- MENÚ DE USUARIO -->
     <ul class="dropdown-menu dropdown-menu-end shadow">
+
+      <li>
+        <a class="dropdown-item d-flex align-items-center text-danger fw-semibold"
+          href="<?= $url ?>mis_pedidos">
+          <i class="fas fa-list me-2"></i> Mis pedidos
+        </a>
+      </li>
+      <li>
+        <hr>
+      </li>
       <li>
         <a class="dropdown-item d-flex align-items-center text-danger fw-semibold"
           href="<?= $url ?>salir">
@@ -96,6 +106,15 @@
           <a class="dropdown-item d-flex align-items-center text-danger fw-semibold"
             href="<?= $url ?>salir">
             <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+          </a>
+        </li>
+        <li>
+          <hr>
+        </li>
+        <li>
+          <a class="dropdown-item d-flex align-items-center text-danger fw-semibold"
+            href="<?= $url ?>mis_pedidos">
+            <i class="fas fa-list me-2"></i> Mis pedidos
           </a>
         </li>
       </ul>

@@ -153,18 +153,38 @@ function CargarVerCafeteria() {
                             },
                         },
                     }).mount();
-                $("#info1").html(respuesta.data.direccion);
-                $("#info2").html('<a id="copiar_num" href="#">' + respuesta.data.telefono + '</a>');
-                $("#info3").html('<a id="copiar_correo" href="#">' + respuesta.data.correo + '</a>');
-                $("#info4").html(respuesta.data.horario + ' &bull; ' + respuesta.data.status);
+                $("#info1").html(respuesta.data.direccion || '');
+                $("#info2").html(respuesta.data.telefono ? '<a id="copiar_num" href="#">' + respuesta.data.telefono + '</a>' : '');
+                $("#info3").html(respuesta.data.correo ? '<a id="copiar_correo" href="#">' + respuesta.data.correo + '</a>' : '');
+                $("#info4").html((respuesta.data.horario || '') + (respuesta.data.horario && respuesta.data.status ? ' &bull; ' : '') + (respuesta.data.status || ''));
                 $(".ir_googlemaps").attr("latitud", respuesta.data.latitud).attr('longitud', respuesta.data.longitud);
-                $("#descripcion").html(respuesta.data.descripcion);
+                $("#descripcion").html(respuesta.data.descripcion || '');
+                
+                // Ocultar items vacíos en información general
+                ocultarItemsVacios();
             }
         }
     });
 
 
-};
+}
+
+// Función para ocultar items vacíos en información general
+function ocultarItemsVacios() {
+    // Verificar cada item de información
+    $('#info1').closest('.info-item').toggle($('#info1').text().trim() !== '');
+    $('#info2').closest('.info-item').toggle($('#info2').text().trim() !== '');
+    $('#info3').closest('.info-item').toggle($('#info3').text().trim() !== '');
+    $('#info4').closest('.info-item').toggle($('#info4').text().trim() !== '');
+    
+    // Ocultar descripción si está vacía
+    const $descripcionCard = $('#descripcion').closest('.modern-card');
+    if ($descripcionCard.length && $('#descripcion').text().trim() === '') {
+        $descripcionCard.hide();
+    } else if ($descripcionCard.length) {
+        $descripcionCard.show();
+    }
+}
 
 // $(document).on("click", "#abrir_filtros", function () {
 //     $('#filtros_div').toggle();
@@ -185,9 +205,15 @@ function cargarComentarios(pagina) {
         method: "GET",
         success: function (response) {
             response = JSON.parse(response);
-            if (response.comentarios == '') {
-                $(".coment-ocultar").hide();
+            if (response.comentarios == '' || !response.comentarios || response.comentarios.length === 0) {
+                // Mostrar mensaje cuando no hay reseñas
+                $(".coment-ocultar").show();
+                $("#mensaje-sin-resenas").show();
+                $("#comentariosLista").html('');
+                $("#paginacionComentarios").html('');
             } else {
+                // Ocultar mensaje y mostrar comentarios
+                $("#mensaje-sin-resenas").hide();
                 // Llenar la lista de comentarios con los datos recibidos
                 var comentariosHtml = '';
                 response.comentarios.forEach(function (comentario) {
@@ -220,8 +246,19 @@ function actualizarPaginacion(totalPaginas, paginaActual) {
         cargarComentarios(pagina);
     });
 }
+// Evento para mostrar/ocultar el área de comentarios
 $(document).on("click", "#btn_agregar_comentario", function () {
-    $(".comentario-area").toggle();
+    $("#comment-form-area").toggle();
+    // Limpiar el textarea cuando se oculta
+    if (!$("#comment-form-area").is(":visible")) {
+        $("#agregar_comentario").val('');
+    }
+});
+
+// Evento para cancelar y cerrar el área de comentarios
+$(document).on("click", ".btn-cancelar-comentario", function () {
+    $("#comment-form-area").hide();
+    $("#agregar_comentario").val('');
 });
 
 $(document).on("click", "#btn_aceptar_comentario", function () {
@@ -252,7 +289,7 @@ $(document).on("click", "#btn_aceptar_comentario", function () {
                     button: "Aceptar",
                 }).then(function () {
                     $("#agregar_comentario").val('');
-                    $(".comentario-area").toggle();
+                    $("#comment-form-area").hide();
                     cargarComentarios(1);
                 });
             }else if(respuesta == 'sesion'){

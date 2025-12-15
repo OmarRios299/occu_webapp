@@ -97,4 +97,23 @@ class AdminPaisesController{
     /* OBTENER INFO GRAFICA Y CONTADORES */
     
     
+    /* OBTENER INFO DE CIUDAD */
+    
+    static public function obtenerInfoCiudadController($id){
+        $ciudad = AdminPaisesModel::obtenerInfoCiudadModel($id);
+        return json_encode($ciudad);
+    }
+    
+    /* OBTENER INFO DE CIUDAD */
+    
+    
+    /* GUARDAR COORDENADAS DE CIUDAD */
+    
+    static public function guardarCoordenadasCiudadController($datos){
+        return AdminPaisesModel::actualizarCoordenadasCiudadModel($datos);
+    }
+    
+    /* GUARDAR COORDENADAS DE CIUDAD */
+    
+    
 }

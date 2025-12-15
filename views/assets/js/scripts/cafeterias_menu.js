@@ -39,7 +39,7 @@ function cargarIngredientesProducto(id_producto) {
       if (response.tamanos.length > 0) {
         // ===== TAMAÑOS =====
         htmlOpciones += `
-              <div class="opcion-producto mb-4" <div class="opcion-producto mb-4" data-tipo="tamano" data-obligatorio="1">
+              <div class="opcion-producto mb-4" data-tipo="tamano" data-obligatorio="1">
                   <div class="d-flex justify-content-between align-items-center">
                       <h6 class="mb-1"><b>Elige el tamaño</b></h6>
                       <span class="badge bg-dark rounded-pill">Obligatorio</span>
@@ -261,14 +261,8 @@ $(document).on("change", ".radio-tamano", function () {
 
 // Manejar cambio de radio para ingredientes (selección única)
 $(document).on("change", ".radio-ingrediente-categoria", function () {
-  const categoriaId = $(this).data("categoria-id");
-  
-  // Resetear TODOS los extras de esta categoría a 0 al cambiar de opción
-  // El usuario debe presionar + manualmente si quiere agregar extras
-  $(`.extras-categoria[data-categoria-id='${categoriaId}'] .extra_cantidad`).each(function() {
-    $(this).text(0);
-  });
-  
+  // No resetear extras al cambiar de ingrediente
+  // Los extras con costo adicional son independientes y deben mantenerse
   actualizarTotal();
 });
 

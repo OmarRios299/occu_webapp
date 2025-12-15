@@ -29,6 +29,6 @@
         <p class="text-muted mb-4">
             Esta cafetería todavía no ha configurado su menú. Pronto podrás ver sus productos disponibles aquí.
         </p>
-        <a href="<?= $url ?>" class="btn btn-outline-primary">Volver al inicio</a>
+        <button type="button" class="btn btn-outline-primary" onclick="window.close();">Cerrar pestaña y volver</button>
     </div>
 </div>

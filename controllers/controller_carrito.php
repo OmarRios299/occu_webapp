@@ -115,6 +115,18 @@ class CarritoController
         $id_usuario = $_SESSION['id'];
         $fecha_actual = date("Y-m-d H:i:s");
 
+        // Verificar si tiene un pedido en proceso
+        require_once __DIR__ . '/../models/model_mis_pedidos.php';
+        $tiene_pedido = MisPedidosModel::tienePedidoEnProcesoModel($id_usuario);
+        
+        if ($tiene_pedido) {
+            return json_encode([
+                "error" => true,
+                "message" => "Tienes un pedido en proceso. No puedes realizar otro pedido hasta que se complete o cancele el actual.",
+                "tiene_pedido_en_proceso" => true
+            ]);
+        }
+
         // Obtener datos del carrito
         $carrito = CarritoModel::obtenerResumenCarritoModel($id_usuario);
 

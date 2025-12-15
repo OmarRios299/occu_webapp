@@ -43,6 +43,25 @@ static public function obtenerInfoPaisModel($pais){
 /* OBTENER INFO DE PAIS */
 
 
+/* OBTENER INFO DE CIUDAD */
+
+static public function obtenerInfoCiudadModel($id){
+
+    $stmt = Conexion::conectar()->prepare("SELECT ciudades.*, entidades_federativas.nombre AS entidad_federativa FROM ciudades INNER JOIN entidades_federativas ON ciudades.id_entidad_federativa = entidades_federativas.id WHERE ciudades.id=:id");
+
+    $stmt->bindParam(':id', $id,PDO::PARAM_INT);
+
+    $stmt -> execute();
+
+    return $stmt -> fetch();
+
+    $stmt = null;
+
+}
+
+/* OBTENER INFO DE CIUDAD */
+
+
 
 /* AGREGAR PAIS */
 
@@ -146,7 +165,10 @@ static public function agregarCiudadModel($datos) {
 
     $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
     $stmt->bindParam(':id_entidad_federativa', $datos['entidad_federativa'], PDO::PARAM_INT);
-    $stmt->bindParam(':coordenadas', $datos['coordenadas'], PDO::PARAM_STR);
+    
+    // Manejar coordenadas vacías o null
+    $coordenadas = !empty($datos['coordenadas']) ? $datos['coordenadas'] : null;
+    $stmt->bindParam(':coordenadas', $coordenadas, PDO::PARAM_STR);
     $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
     $stmt->bindParam(':fecha_alta', $datos['fecha_alta'], PDO::PARAM_STR);
 
@@ -171,8 +193,11 @@ static public function editarCiudadModel($datos){
 
     $stmt->bindParam(":id", $datos['id'], PDO::PARAM_INT);
     $stmt->bindParam(":nombre", $datos['nombre'], PDO::PARAM_STR);
-    $stmt->bindParam(":entidad_federativa", $datos['entidad_federativa'], PDO::PARAM_STR);
-    $stmt->bindParam(":coordenadas", $datos['coordenadas'], PDO::PARAM_STR);
+    $stmt->bindParam(":entidad_federativa", $datos['entidad_federativa'], PDO::PARAM_INT);
+    
+    // Manejar coordenadas vacías o null
+    $coordenadas = !empty($datos['coordenadas']) ? $datos['coordenadas'] : null;
+    $stmt->bindParam(":coordenadas", $coordenadas, PDO::PARAM_STR);
 
     if($stmt->execute()){
         return 'success';
@@ -185,6 +210,31 @@ static public function editarCiudadModel($datos){
 }
 
 /* EDITAR CIUDAD  */
+
+
+/* ACTUALIZAR COORDENADAS DE CIUDAD */
+
+static public function actualizarCoordenadasCiudadModel($datos){
+
+    $stmt = Conexion::conectar()->prepare("UPDATE ciudades SET coordenadas=:coordenadas WHERE id = :id");
+
+    $stmt->bindParam(":id", $datos['id'], PDO::PARAM_INT);
+    
+    // Manejar coordenadas vacías o null
+    $coordenadas = !empty($datos['coordenadas']) ? $datos['coordenadas'] : null;
+    $stmt->bindParam(":coordenadas", $coordenadas, PDO::PARAM_STR);
+
+    if($stmt->execute()){
+        return 'success';
+    }else{
+        return 'error';
+    }
+
+    $stmt = null;
+
+}
+
+/* ACTUALIZAR COORDENADAS DE CIUDAD */
 
 
 /* OBTENER CAFETERíAS */

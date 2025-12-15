@@ -27,6 +27,10 @@ class TemplateController{
 		return getenv('GOOGLE_API');
 	}
 	
+	static public function obtenerGoogleClientId(){
+		require_once __DIR__ . '/../config/env.php';
+		return obtenerGoogleClientId();
+	}
 	
 	
 }

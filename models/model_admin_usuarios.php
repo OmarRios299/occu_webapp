@@ -173,7 +173,8 @@ class AdminUsuariosModel extends Conexion
         telefono, 
         imagen,
         id_alta, 
-        fecha_alta) 
+        fecha_alta,
+        proveedor) 
         VALUES (
         :nombre, 
         :apellido, 
@@ -184,7 +185,8 @@ class AdminUsuariosModel extends Conexion
         :telefono, 
         'views/assets/img/usuario_default.png',
         :id_alta, 
-        :fecha_alta)");
+        :fecha_alta,
+        'Interno')");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':apellido', $datos['apellido'], PDO::PARAM_STR);

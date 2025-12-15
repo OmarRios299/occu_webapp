@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 10-12-2025 a las 05:03:29
+-- Tiempo de generación: 13-12-2025 a las 05:34:58
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -86,7 +86,8 @@ INSERT INTO `admin_niveles_usuario_modulos` (`id`, `id_nivel`, `id_modulo`) VALU
 (22, 2, 15),
 (23, 2, 16),
 (24, 1, 17),
-(25, 1, 18);
+(25, 1, 18),
+(26, 2, 19);
 
 -- --------------------------------------------------------
 
@@ -104,9 +105,9 @@ CREATE TABLE `admin_usuarios` (
   `nivel` text NOT NULL,
   `telefono` text NOT NULL,
   `imagen` text NOT NULL,
-  `token_sesion` text NOT NULL,
   `pin` text NOT NULL,
   `verificado` text NOT NULL,
+  `token_sesion` text NOT NULL,
   `estado` int(11) NOT NULL,
   `id_alta` int(11) NOT NULL,
   `fecha_alta` datetime NOT NULL
@@ -116,19 +117,12 @@ CREATE TABLE `admin_usuarios` (
 -- Volcado de datos para la tabla `admin_usuarios`
 --
 
-INSERT INTO `admin_usuarios` (`id`, `nombre`, `apellido`, `id_ciudad`, `correo_electronico`, `contrasena`, `nivel`, `telefono`, `imagen`, `token_sesion`, `pin`, `verificado`, `estado`, `id_alta`, `fecha_alta`) VALUES
-(1, 'Omar', 'Rios', 1, 'admin@admin.com', '$2a$07$asxx54ahjppf45sd87a5auXBm1Vr2M1NV5t/zNQtGHGpS5fFirrbG', 'Administrador', '6865706609', 'views/assets/img/admin_usuarios/664_imagen_usuario_1.webp', '693672962fce7', '', 'Si', 0, 1, '2022-07-21 00:28:03'),
-(4, 'Usuario', 'Prueba1', 1, 'user@user.com', '$2a$07$asxx54ahjppf45sd87a5augtYQ5l0YJxtJ.sls/VjJvJD4Oq/Jqk2', 'Propietario', '7412589636', 'views/assets/img/admin_usuarios/725_imagen_usuario_4.webp', '69323cf95ef52', '', 'Si', 0, 1, '2024-08-16 21:21:43'),
-(5, 'Usuario', 'Prueba1', 1, 'user2@user.com', '$2a$07$asxx54ahjppf45sd87a5augtYQ5l0YJxtJ.sls/VjJvJD4Oq/Jqk2', 'Propietario', '7412589636', 'views/assets/img/admin_usuarios/166_imagen_usuario_5.webp', '6881bed36554f', '', 'Si', 0, 1, '2024-08-16 21:23:12'),
-(6, 'barista', 'numero1', 0, 'barista@bar.com', '$2a$07$asxx54ahjppf45sd87a5auGZEtGHuyZwm.Ur.FJvWLCql3nmsMbXy', 'Barista', 'undefined', 'views/assets/img/usuario_default.png', '670aabb699594', '', 'Si', 0, 1, '2024-10-11 21:44:44'),
-(7, 'Cliente', 'numero1', 0, 'cliente@cliente.com', '$2a$07$asxx54ahjppf45sd87a5augtYQ5l0YJxtJ.sls/VjJvJD4Oq/Jqk2', 'Cliente', '', 'views/assets/img/usuario_default.png', '69325087904ad', '', 'Si', 0, 0, '2024-10-11 21:58:25'),
-(8, 'Usuario', 'numero1', 0, 'f', '$2a$07$asxx54ahjppf45sd87a5auGZEtGHuyZwm.Ur.FJvWLCql3nmsMbXy', 'Cliente', '', 'views/assets/img/usuario_default.png', '', '330885', 'Si', 0, 0, '2024-10-24 00:49:59'),
-(9, 'Usuario', 'Prueba1', 0, '', '$2a$07$asxx54ahjppf45sd87a5auXBm1Vr2M1NV5t/zNQtGHGpS5fFirrbG', 'Barista', '', 'views/assets/img/usuario_default.png', '671c6c5c3d36d', '955416', '', 0, 0, '2024-10-24 00:50:43'),
-(10, 'Jose', 'Rios', 0, 'sdf', '$2a$07$asxx54ahjppf45sd87a5auGZEtGHuyZwm.Ur.FJvWLCql3nmsMbXy', 'Cliente', '', 'views/assets/img/usuario_default.png', '', '905657', '', 0, 0, '2024-11-08 21:26:54'),
-(13, 'Omar', 'Rios', 0, 'omarrios299@gmail.com', '$2a$07$asxx54ahjppf45sd87a5auGZEtGHuyZwm.Ur.FJvWLCql3nmsMbXy', 'Cliente', '', 'views/assets/img/usuario_default.png', '', '316229', '', 0, 0, '2025-04-30 22:20:13'),
-(14, 'Omar', 'Rios', 1, 'a1173344@uabc.edu.mxd', '$2a$07$asxx54ahjppf45sd87a5auXBm1Vr2M1NV5t/zNQtGHGpS5fFirrbG', 'Propietario', '', 'views/assets/img/usuario_default.png', '681fb358cc126', '338946', 'Si', 0, 0, '2025-05-01 15:07:12'),
-(15, 'Cecy', 'Rios', 1, '', '$2a$07$asxx54ahjppf45sd87a5auXBm1Vr2M1NV5t/zNQtGHGpS5fFirrbG', 'Cliente', '', 'views/assets/img/usuario_default.png', '682150ddd183a', '982651', 'Si', 0, 0, '2025-05-11 17:15:07'),
-(16, 'Cecy', 'Rios', 1, 'a1173344@uabc.edu.mx', '$2a$07$asxx54ahjppf45sd87a5auXBm1Vr2M1NV5t/zNQtGHGpS5fFirrbG', 'Cliente', '', 'views/assets/img/usuario_default.png', '6833b62ccf674', '955729', 'Si', 0, 0, '2025-05-11 18:42:46');
+INSERT INTO `admin_usuarios` (`id`, `nombre`, `apellido`, `id_ciudad`, `correo_electronico`, `contrasena`, `nivel`, `telefono`, `imagen`, `pin`, `verificado`, `token_sesion`, `estado`, `id_alta`, `fecha_alta`) VALUES
+(1, 'Omar', 'Rios', 1, 'admin@admin.com', '$2a$07$asxx54ahjppf45sd87a5auXBm1Vr2M1NV5t/zNQtGHGpS5fFirrbG', 'Administrador', '6865706609', 'views/assets/img/admin_usuarios/664_imagen_usuario_1.webp', '261857', 'Si', '693ceae606c72', 0, 0, '2022-07-21 00:28:03'),
+(2, 'Omar', 'Rios', 0, 'user@user.com', '$2a$07$asxx54ahjppf45sd87a5auXBm1Vr2M1NV5t/zNQtGHGpS5fFirrbG', 'Propietario', '', 'views/assets/img/usuario_default.png', '', 'Si', '', 0, 0, '2024-10-19 12:43:37'),
+(3, 'Ian', 'Arvizu', 1, 'frat@gmail.com', '$2a$07$asxx54ahjppf45sd87a5aufYGGivbsnLy93A5O7siTeN420NWHjKy', 'Administrador', '', 'views/assets/img/usuario_default.png', '809560', 'Si', '693108c220639', 0, 0, '2024-10-19 12:44:42'),
+(4, 'IANMARCUS', 'ARVIZU', 0, 'IANA@gmail.com', '$2a$07$asxx54ahjppf45sd87a5aufYGGivbsnLy93A5O7siTeN420NWHjKy', 'Cliente', '', 'views/assets/img/usuario_default.png', '223139', 'Si', '68167213cb562', 0, 0, '2025-05-03 12:43:30'),
+(5, 'Elieth', 'Viramontes', 0, 'eli@gmail.com', '$2a$07$asxx54ahjppf45sd87a5auI5z/cXoLaZ/jqxFYzg1/3kheSqyITm.', 'Cliente', '', 'views/assets/img/usuario_default.png', '862886', 'Si', '681672c6b45e8', 0, 0, '2025-05-03 12:46:49');
 
 -- --------------------------------------------------------
 
@@ -156,22 +150,6 @@ CREATE TABLE `cafeterias` (
   `fecha_alta` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
---
--- Volcado de datos para la tabla `cafeterias`
---
-
-INSERT INTO `cafeterias` (`id`, `nombre`, `imagen`, `descripcion`, `id_ciudad`, `direccion`, `telefono`, `correo_electronico`, `latitud`, `longitud`, `horario_apertura`, `horario_cierre`, `horario_diferente`, `id_usuario`, `estado`, `id_alta`, `fecha_alta`) VALUES
-(1, 'cafetaFCA', 'views/assets/img/cafeterias/905_imagen_cafeteria_1.webp', 'rf', 1, 'Av. Morelia 21', '', '', '', '', '18:44', '18:46', 'NO', 4, 0, 4, '2025-05-02 03:41:03'),
-(2, 'cafetaFCA1', 'views/assets/img/cafeteria_default.png', '', 1, 'Av. Morelia 21', '', '', '', '', NULL, NULL, 'SI', 14, 0, 21, '2025-05-03 23:31:10'),
-(3, 'cafetaFCA1215', 'views/assets/img/cafeteria_default.png', '', 1, 'Av. Morelia 21', '', '', '', '', '05:31', '19:31', 'NO', 14, 0, 21, '2025-05-03 23:32:06'),
-(4, 'cafeta', 'views/assets/img/cafeteria_default.png', '', 1, 'Av. Morelia 21', '', '', '', '', '16:44', '16:46', 'NO', 21, 0, 21, '2025-05-04 01:40:21'),
-(5, 'cafe chico', 'views/assets/img/cafeteria_default.png', '', 1, 'Av. Morelia 21', '', '', '', '', '', '', 'NO', 14, 2, 14, '2025-05-04 01:56:07'),
-(6, 'cafe chico2', 'views/assets/img/cafeteria_default.png', '', 1, 'Av. Morelia 21', '', '', '', '', '', '', 'NO', 14, 2, 14, '2025-05-04 02:01:43'),
-(7, 'cafetaFCA18', 'views/assets/img/cafeteria_default.png', '', 1, 'Av. Morelia 21', '', '', '', '', '', '', 'NO', 14, 2, 14, '2025-05-04 02:02:10'),
-(8, 'Café punta del cielo', 'views/assets/img/cafeteria_default.png', '', 1, 'Av. Morelia 21', '', '', '', '', '', '', 'NO', 14, 2, 14, '2025-05-04 02:02:41'),
-(9, 'CAfe 090', 'views/assets/img/cafeteria_default.png', 'cdcdcdcdc', 1, 'Av. Morelia 21', '6666666666', 'ca212feta@gmail.com', '', '', '08:07', '22:07', 'NO', 14, 2, 14, '2025-05-04 02:05:09'),
-(10, 'CAfe 2', 'views/assets/img/cafeterias/431_imagen_cafeteria_10.webp', '', 1, '.', '', '', '', '', '06:45', '23:01', 'NO', 4, 0, 4, '2025-07-27 12:28:03');
-
 -- --------------------------------------------------------
 
 --
@@ -188,14 +166,6 @@ CREATE TABLE `cafeterias_comentarios` (
   `fecha_alta` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
---
--- Volcado de datos para la tabla `cafeterias_comentarios`
---
-
-INSERT INTO `cafeterias_comentarios` (`id`, `comentario`, `estrellas`, `id_usuario`, `id_cafeteria`, `estado`, `fecha_alta`) VALUES
-(1, 'Buen sabor en el cafe', '', 16, 1, 0, '2025-05-17 13:01:42'),
-(2, 'Comentario', '', 4, 1, 0, '2025-12-04 19:01:42');
-
 -- --------------------------------------------------------
 
 --
@@ -210,16 +180,6 @@ CREATE TABLE `cafeterias_imagenes` (
   `estado` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
---
--- Volcado de datos para la tabla `cafeterias_imagenes`
---
-
-INSERT INTO `cafeterias_imagenes` (`id`, `id_cafeteria`, `imagen`, `descripcion`, `estado`) VALUES
-(1, 9, 'views/assets/img/cafeterias_imagenes/103_cafeteria_9_2.webp', '', 0),
-(2, 1, 'views/assets/img/cafeterias_imagenes/159_cafeteria_1_2.webp', '', 0),
-(3, 1, 'views/assets/img/cafeterias_imagenes/616_cafeteria_1_2.webp', '', 0),
-(4, 1, 'views/assets/img/cafeterias_imagenes/255_cafeteria_1_2.webp', '', 0);
-
 -- --------------------------------------------------------
 
 --
@@ -232,29 +192,6 @@ CREATE TABLE `cafeterias_servicios` (
   `id_cafeteria` int(11) NOT NULL,
   `estado` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `cafeterias_servicios`
---
-
-INSERT INTO `cafeterias_servicios` (`id`, `id_servicio`, `id_cafeteria`, `estado`) VALUES
-(1, 1, 1, 2),
-(2, 2, 1, 2),
-(3, 3, 1, 2),
-(4, 4, 1, 2),
-(5, 5, 1, 2),
-(6, 6, 1, 2),
-(7, 1, 1, 2),
-(8, 2, 1, 2),
-(9, 3, 1, 2),
-(10, 4, 1, 2),
-(11, 5, 1, 2),
-(12, 1, 1, 0),
-(13, 2, 1, 0),
-(14, 3, 1, 0),
-(15, 4, 1, 0),
-(16, 5, 1, 0),
-(17, 6, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -271,19 +208,6 @@ CREATE TABLE `cafeteria_horarios` (
   `cerrado` text DEFAULT NULL,
   `fin_de_semana` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `cafeteria_horarios`
---
-
-INSERT INTO `cafeteria_horarios` (`id`, `id_cafeteria`, `dia`, `hora_apertura`, `hora_cierre`, `cerrado`, `fin_de_semana`) VALUES
-(43, 2, 'Lunes', '07:00', '20:00', 'NO', NULL),
-(44, 2, 'Martes', '07:00', '19:00', 'NO', NULL),
-(45, 2, 'Miércoles', '07:00', '19:00', 'NO', NULL),
-(46, 2, 'Jueves', '07:00', '19:00', 'NO', NULL),
-(47, 2, 'Viernes', '07:00', '21:00', 'NO', NULL),
-(48, 2, 'Sábado', NULL, NULL, 'SI', NULL),
-(49, 2, 'Domingo', NULL, NULL, 'SI', NULL);
 
 -- --------------------------------------------------------
 
@@ -416,103 +340,73 @@ CREATE TABLE `menu_ingredientes` (
 --
 
 INSERT INTO `menu_ingredientes` (`id`, `id_ingrediente_categoria`, `nombre`, `registro_occu`, `estado`, `id_alta`, `fecha_alta`) VALUES
-(1, 1, 'Espresso', 1, 0, 1, '2025-11-26 23:13:58'),
-(2, 1, 'Americano', 1, 0, 1, '2025-11-26 23:13:58'),
-(3, 1, 'Cold Brew', 1, 0, 1, '2025-11-26 23:13:58'),
-(4, 1, 'Café de Olla', 1, 0, 1, '2025-11-26 23:13:58'),
-(5, 1, 'Descafeinado', 1, 0, 1, '2025-11-26 23:13:58'),
-(6, 2, 'Leche Entera', 1, 0, 1, '2025-11-26 23:13:58'),
-(7, 2, 'Leche Light', 1, 0, 1, '2025-11-26 23:13:58'),
-(8, 2, 'Leche Deslactosada', 1, 0, 1, '2025-11-26 23:13:58'),
-(9, 2, 'Leche de Almendra', 1, 0, 1, '2025-11-26 23:13:58'),
-(10, 2, 'Leche de Coco', 1, 0, 1, '2025-11-26 23:13:58'),
-(11, 2, 'Leche de Soya', 1, 0, 1, '2025-11-26 23:13:58'),
-(12, 2, 'Leche de Avena', 1, 0, 1, '2025-11-26 23:13:58'),
-(13, 3, 'Azúcar Blanca', 1, 0, 1, '2025-11-26 23:13:58'),
-(14, 3, 'Azúcar Morena', 1, 0, 1, '2025-11-26 23:13:58'),
-(15, 3, 'Miel', 1, 0, 1, '2025-11-26 23:13:58'),
-(16, 3, 'Jarabe Simple', 1, 0, 1, '2025-11-26 23:13:58'),
-(17, 3, 'Stevia', 1, 0, 1, '2025-11-26 23:13:58'),
-(18, 4, 'Vainilla', 1, 0, 1, '2025-11-26 23:13:58'),
-(19, 4, 'Avellana', 1, 0, 1, '2025-11-26 23:13:58'),
-(20, 4, 'Caramelo', 1, 0, 1, '2025-11-26 23:13:58'),
-(21, 4, 'Chocolate Blanco', 1, 0, 1, '2025-11-26 23:13:58'),
-(22, 4, 'Menta', 1, 0, 1, '2025-11-26 23:13:58'),
-(23, 4, 'Chai', 1, 0, 1, '2025-11-26 23:13:58'),
-(24, 4, 'Matcha', 1, 0, 1, '2025-11-26 23:13:58'),
-(25, 4, 'Almendra Dulce', 1, 0, 1, '2025-11-26 23:13:58'),
-(26, 5, 'Crema Batida', 1, 0, 1, '2025-11-26 23:13:58'),
-(27, 5, 'Canela', 1, 0, 1, '2025-11-26 23:13:58'),
-(28, 5, 'Cocoa en Polvo', 1, 0, 1, '2025-11-26 23:13:58'),
-(29, 5, 'Chispas de Chocolate', 1, 0, 1, '2025-11-26 23:13:58'),
-(30, 5, 'Caramelo Líquido', 1, 0, 1, '2025-11-26 23:13:58'),
-(31, 5, 'Chocolate Líquido', 1, 0, 1, '2025-11-26 23:13:58'),
-(32, 9, 'Caliente', 1, 2, 1, '2025-11-26 23:13:58'),
-(33, 9, 'Frío', 1, 2, 1, '2025-11-26 23:13:58'),
-(34, 9, 'Frappe', 1, 2, 1, '2025-11-26 23:13:58'),
-(35, 7, 'Té Negro', 1, 0, 1, '2025-11-26 23:13:58'),
-(36, 7, 'Té Verde', 1, 0, 1, '2025-11-26 23:13:58'),
-(37, 7, 'Té Blanco', 1, 0, 1, '2025-11-26 23:13:58'),
-(38, 7, 'Té Chai', 1, 0, 1, '2025-11-26 23:13:58'),
-(39, 7, 'Infusión Frutal', 1, 0, 1, '2025-11-26 23:13:58'),
-(40, 8, 'Chocolate Oscuro', 1, 0, 1, '2025-11-26 23:13:58'),
-(41, 8, 'Chocolate Blanco', 1, 0, 1, '2025-11-26 23:13:58'),
-(42, 8, 'Cocoa Natural', 1, 0, 1, '2025-11-26 23:13:58'),
-(43, 8, 'Cocoa Especial Premium', 1, 0, 1, '2025-11-26 23:13:58'),
-(44, 6, 'Base de Café', 1, 2, 1, '2025-11-26 23:13:58'),
-(45, 6, 'Base de Vainilla', 1, 2, 1, '2025-11-26 23:13:58'),
-(46, 6, 'Base de Chocolate', 1, 2, 1, '2025-11-26 23:13:58'),
-(47, 6, 'Base Natural Smoothie', 1, 2, 1, '2025-11-26 23:13:58'),
-(48, 10, 'Baguette', 1, 0, 1, '2025-11-26 23:13:58'),
-(49, 10, 'Pan Integral', 1, 0, 1, '2025-11-26 23:13:58'),
-(50, 10, 'Bolillo', 1, 0, 1, '2025-11-26 23:13:58'),
-(51, 10, 'Croissant', 1, 0, 1, '2025-11-26 23:13:58'),
-(52, 11, 'Pollo', 1, 0, 1, '2025-11-26 23:13:58'),
-(53, 11, 'Pavo', 1, 0, 1, '2025-11-26 23:13:58'),
-(54, 11, 'Jamón', 1, 0, 1, '2025-11-26 23:13:58'),
-(55, 11, 'Atún', 1, 0, 1, '2025-11-26 23:13:58'),
-(56, 11, 'Huevo', 1, 0, 1, '2025-11-26 23:13:58'),
-(57, 12, 'Lechuga', 1, 0, 1, '2025-11-26 23:13:58'),
-(58, 12, 'Tomate', 1, 0, 1, '2025-11-26 23:13:58'),
-(59, 12, 'Cebolla', 1, 0, 1, '2025-11-26 23:13:58'),
-(60, 12, 'Espinaca', 1, 0, 1, '2025-11-26 23:13:58'),
-(61, 12, 'Pepino', 1, 0, 1, '2025-11-26 23:13:58'),
-(62, 13, 'Mayonesa', 1, 0, 1, '2025-11-26 23:13:58'),
-(63, 13, 'Aderezo Ranch', 1, 0, 1, '2025-11-26 23:13:58'),
-(64, 13, 'Aderezo Chipotle', 1, 0, 1, '2025-11-26 23:13:58'),
-(65, 13, 'Mostaza', 1, 0, 1, '2025-11-26 23:13:58'),
-(66, 14, 'Queso Cheddar', 1, 0, 1, '2025-11-26 23:13:58'),
-(67, 14, 'Queso Panela', 1, 0, 1, '2025-11-26 23:13:58'),
-(68, 14, 'Queso Manchego', 1, 0, 1, '2025-11-26 23:13:58'),
-(69, 14, 'Queso Mozzarella', 1, 0, 1, '2025-11-26 23:13:58'),
-(70, 15, 'Pesto', 1, 0, 1, '2025-11-26 23:13:58'),
-(71, 15, 'Aceitunas', 1, 0, 1, '2025-11-26 23:13:58'),
-(72, 15, 'Pepperoni', 1, 0, 1, '2025-11-26 23:13:58'),
-(73, 15, 'Aguacate', 1, 0, 1, '2025-11-26 23:13:58'),
-(74, 16, 'Masa de Hojaldre', 1, 0, 1, '2025-11-26 23:13:58'),
-(75, 16, 'Masa de Pan Dulce', 1, 0, 1, '2025-11-26 23:13:58'),
-(76, 16, 'Masa de Galleta', 1, 0, 1, '2025-11-26 23:13:58'),
-(77, 17, 'Chocolate', 1, 0, 1, '2025-11-26 23:13:58'),
-(78, 17, 'Queso Crema', 1, 0, 1, '2025-11-26 23:13:58'),
-(79, 17, 'Cajeta', 1, 0, 1, '2025-11-26 23:13:58'),
-(80, 17, 'Fresa', 1, 0, 1, '2025-11-26 23:13:58'),
-(81, 18, 'Azúcar Glass', 1, 0, 1, '2025-11-26 23:13:58'),
-(82, 18, 'Glaseado', 1, 0, 1, '2025-11-26 23:13:58'),
-(83, 18, 'Chispas de Colores', 1, 0, 1, '2025-11-26 23:13:58'),
-(84, 19, 'Proteína Vegana', 1, 0, 1, '2025-11-26 23:13:58'),
-(85, 19, 'Crema Vegana', 1, 0, 1, '2025-11-26 23:13:58'),
-(86, 19, 'Mayonesa Vegana', 1, 0, 1, '2025-11-26 23:13:58'),
-(87, 20, 'Jarabe Sin Azúcar', 1, 0, 1, '2025-11-26 23:13:58'),
-(88, 20, 'Chocolate Sin Azúcar', 1, 0, 1, '2025-11-26 23:13:58'),
-(89, 20, 'Vainilla Sin Azúcar', 1, 0, 1, '2025-11-26 23:13:58'),
-(90, 21, 'Queso Sin Lactosa', 1, 0, 1, '2025-11-26 23:13:58'),
-(91, 21, 'Crema Sin Lactosa', 1, 0, 1, '2025-11-26 23:13:58'),
-(92, 22, 'Pan Gluten Free', 1, 0, 1, '2025-11-26 23:13:58'),
-(93, 22, 'Galleta Gluten Free', 1, 0, 1, '2025-11-26 23:13:58'),
-(94, 23, 'Piloncillo', 1, 0, 1, '2025-11-26 23:13:58'),
-(95, 23, 'Canela Mexicana', 1, 0, 1, '2025-11-26 23:13:58'),
-(96, 23, 'Atole Base', 1, 0, 1, '2025-11-26 23:13:58'),
-(97, 23, 'Vainilla de Papantla', 1, 0, 1, '2025-11-26 23:13:58');
+(1, 1, 'Descafeinado', 1, 0, 1, '2025-11-26 23:13:58'),
+(2, 1, 'Regular', 1, 0, 1, '2025-11-26 23:13:58'),
+(3, 1, 'Especialidad', 1, 0, 1, '2025-11-26 23:13:58'),
+(4, 2, 'Leche Entera', 1, 0, 1, '2025-11-26 23:13:58'),
+(5, 2, 'Leche Light', 1, 0, 1, '2025-11-26 23:13:58'),
+(6, 2, 'Leche Deslactosada', 1, 0, 1, '2025-11-26 23:13:58'),
+(7, 2, 'Leche de Almendra', 1, 0, 1, '2025-11-26 23:13:58'),
+(8, 2, 'Leche de Coco', 1, 0, 1, '2025-11-26 23:13:58'),
+(9, 2, 'Leche de Soya', 1, 0, 1, '2025-11-26 23:13:58'),
+(10, 2, 'Leche de Avena', 1, 0, 1, '2025-11-26 23:13:58'),
+(11, 3, 'Azúcar Blanca', 1, 0, 1, '2025-11-26 23:13:58'),
+(12, 3, 'Azúcar Morena', 1, 0, 1, '2025-11-26 23:13:58'),
+(13, 3, 'Miel', 1, 0, 1, '2025-11-26 23:13:58'),
+(14, 3, 'Jarabe Simple', 1, 0, 1, '2025-11-26 23:13:58'),
+(15, 3, 'Stevia', 1, 0, 1, '2025-11-26 23:13:58'),
+(16, 4, 'Vainilla', 1, 0, 1, '2025-11-26 23:13:58'),
+(17, 4, 'Avellana', 1, 0, 1, '2025-11-26 23:13:58'),
+(18, 4, 'Caramelo', 1, 0, 1, '2025-11-26 23:13:58'),
+(19, 4, 'Chocolate Blanco', 1, 0, 1, '2025-11-26 23:13:58'),
+(20, 4, 'Menta', 1, 0, 1, '2025-11-26 23:13:58'),
+(21, 4, 'Chai', 1, 0, 1, '2025-11-26 23:13:58'),
+(22, 4, 'Matcha', 1, 0, 1, '2025-11-26 23:13:58'),
+(23, 4, 'Almendra Dulce', 1, 0, 1, '2025-11-26 23:13:58'),
+(24, 5, 'Crema Batida', 1, 0, 1, '2025-11-26 23:13:58'),
+(25, 5, 'Canela', 1, 0, 1, '2025-11-26 23:13:58'),
+(26, 5, 'Cocoa en Polvo', 1, 0, 1, '2025-11-26 23:13:58'),
+(27, 5, 'Chispas de Chocolate', 1, 0, 1, '2025-11-26 23:13:58'),
+(28, 5, 'Caramelo Líquido', 1, 0, 1, '2025-11-26 23:13:58'),
+(29, 5, 'Chocolate Líquido', 1, 0, 1, '2025-11-26 23:13:58'),
+(30, 6, 'Base de Café', 1, 2, 1, '2025-11-26 23:13:58'),
+(31, 6, 'Base de Vainilla', 1, 2, 1, '2025-11-26 23:13:58'),
+(32, 6, 'Base de Chocolate', 1, 2, 1, '2025-11-26 23:13:58'),
+(33, 6, 'Base Natural Smoothie', 1, 2, 1, '2025-11-26 23:13:58'),
+(34, 10, 'Baguette', 1, 0, 1, '2025-11-26 23:13:58'),
+(35, 10, 'Pan Integral', 1, 0, 1, '2025-11-26 23:13:58'),
+(36, 10, 'Bolillo', 1, 0, 1, '2025-11-26 23:13:58'),
+(37, 10, 'Croissant', 1, 0, 1, '2025-11-26 23:13:58'),
+(38, 11, 'Pollo', 1, 0, 1, '2025-11-26 23:13:58'),
+(39, 11, 'Pavo', 1, 0, 1, '2025-11-26 23:13:58'),
+(40, 11, 'Jamón', 1, 0, 1, '2025-11-26 23:13:58'),
+(41, 11, 'Atún', 1, 0, 1, '2025-11-26 23:13:58'),
+(42, 11, 'Huevo', 1, 0, 1, '2025-11-26 23:13:58'),
+(43, 12, 'Lechuga', 1, 0, 1, '2025-11-26 23:13:58'),
+(44, 12, 'Tomate', 1, 0, 1, '2025-11-26 23:13:58'),
+(45, 12, 'Cebolla', 1, 0, 1, '2025-11-26 23:13:58'),
+(46, 12, 'Espinaca', 1, 0, 1, '2025-11-26 23:13:58'),
+(47, 12, 'Pepino', 1, 0, 1, '2025-11-26 23:13:58'),
+(48, 13, 'Mayonesa', 1, 0, 1, '2025-11-26 23:13:58'),
+(49, 13, 'Aderezo Ranch', 1, 0, 1, '2025-11-26 23:13:58'),
+(50, 13, 'Aderezo Chipotle', 1, 0, 1, '2025-11-26 23:13:58'),
+(51, 13, 'Mostaza', 1, 0, 1, '2025-11-26 23:13:58'),
+(52, 14, 'Queso Cheddar', 1, 0, 1, '2025-11-26 23:13:58'),
+(53, 14, 'Queso Panela', 1, 0, 1, '2025-11-26 23:13:58'),
+(54, 14, 'Queso Manchego', 1, 0, 1, '2025-11-26 23:13:58'),
+(55, 14, 'Queso Mozzarella', 1, 0, 1, '2025-11-26 23:13:58'),
+(56, 15, 'Pesto', 1, 0, 1, '2025-11-26 23:13:58'),
+(57, 15, 'Aceitunas', 1, 0, 1, '2025-11-26 23:13:58'),
+(58, 15, 'Pepperoni', 1, 0, 1, '2025-11-26 23:13:58'),
+(59, 15, 'Aguacate', 1, 0, 1, '2025-11-26 23:13:58'),
+(60, 16, 'Masa de Hojaldre', 1, 0, 1, '2025-11-26 23:13:58'),
+(61, 16, 'Masa de Pan Dulce', 1, 0, 1, '2025-11-26 23:13:58'),
+(62, 16, 'Masa de Galleta', 1, 0, 1, '2025-11-26 23:13:58'),
+(63, 17, 'Chocolate', 1, 0, 1, '2025-11-26 23:13:58'),
+(64, 17, 'Queso Crema', 1, 0, 1, '2025-11-26 23:13:58'),
+(65, 17, 'Cajeta', 1, 0, 1, '2025-11-26 23:13:58'),
+(66, 17, 'Fresa', 1, 0, 1, '2025-11-26 23:13:58'),
+(67, 18, 'Azúcar Glass', 1, 0, 1, '2025-11-26 23:13:58');
 
 -- --------------------------------------------------------
 
@@ -556,7 +450,7 @@ INSERT INTO `menu_ingredientes_categorias` (`id`, `nombre`, `para_bebidas`, `par
 (20, 'Opciones Sin Azúcar', '', 'Si', 0, 1, '2025-11-26 23:11:23'),
 (21, 'Opciones Sin Lactosa', '', 'Si', 0, 1, '2025-11-26 23:11:23'),
 (22, 'Opciones Gluten Free', '', 'Si', 0, 1, '2025-11-26 23:11:23'),
-(23, 'Especialidades Regionales', '', 'Si', 0, 1, '2025-11-26 23:11:23');
+(23, 'Especialidades', '', 'Si', 0, 1, '2025-11-26 23:11:23');
 
 -- --------------------------------------------------------
 
@@ -592,65 +486,17 @@ INSERT INTO `menu_productos` (`id`, `nombre`, `id_subcategoria`, `imagen`, `regi
 (10, 'Iced Mocha', 2, 'views/assets/img/menu_productos/10_imagen.webp', 1, 0, 1, '2025-11-26 23:20:10'),
 (11, 'Iced Chai Latte', 2, 'views/assets/img/menu_productos/11_imagen.webp', 1, 0, 1, '2025-11-26 23:20:11'),
 (12, 'Iced Matcha Latte', 2, 'views/assets/img/menu_productos/12_imagen.webp', 1, 0, 1, '2025-11-26 23:20:12'),
-(13, 'Té Negro Frío', 2, 'views/assets/img/menu_productos/13_imagen.webp', 1, 0, 1, '2025-11-26 23:20:13'),
+(13, 'Té Negro Frío', 2, 'views/assets/img/menu_productos/13_imagen.webp', 1, 2, 1, '2025-11-26 23:20:13'),
 (14, 'Frappe de Café', 3, 'views/assets/img/menu_productos/14_imagen.webp', 1, 0, 1, '2025-11-26 23:20:14'),
 (15, 'Frappe de Oreo', 3, 'views/assets/img/menu_productos/15_imagen.webp', 1, 0, 1, '2025-11-26 23:20:15'),
 (16, 'Frappe de Matcha', 3, 'views/assets/img/menu_productos/16_imagen.webp', 1, 0, 1, '2025-11-26 23:20:16'),
-(17, 'Cold Brew', 4, 'views/assets/img/menu_productos/17_imagen.webp', 1, 0, 1, '2025-11-26 23:20:17'),
-(18, 'Nitro Cold Brew', 4, 'views/assets/img/menu_productos/18_imagen.webp', 1, 0, 1, '2025-11-26 23:20:18'),
-(19, 'Smoothie de Fresa', 5, 'views/assets/img/menu_productos/19_imagen.webp', 1, 0, 1, '2025-11-26 23:20:19'),
-(20, 'Jugó Verde Detox', 5, 'views/assets/img/menu_productos/20_imagen.webp', 1, 0, 1, '2025-11-26 23:20:20'),
-(21, 'Limonada Natural', 6, 'views/assets/img/menu_productos/21_imagen.webp', 1, 0, 1, '2025-11-26 23:20:21'),
-(22, 'Naranjada', 6, 'views/assets/img/menu_productos/22_imagen.webp', 1, 0, 1, '2025-11-26 23:20:22'),
-(23, 'Huevos al Gusto', 7, 'views/assets/img/menu_productos/23_imagen.webp', 1, 0, 1, '2025-11-26 23:20:23'),
-(24, 'Hot Cakes', 7, 'views/assets/img/menu_productos/24_imagen.webp', 1, 0, 1, '2025-11-26 23:20:24'),
-(25, 'Sandwich de Pavo', 8, 'views/assets/img/menu_productos/25_imagen.webp', 1, 0, 1, '2025-11-26 23:20:25'),
-(26, 'Sandwich de Jamón y Queso', 8, 'views/assets/img/menu_productos/26_imagen.webp', 1, 0, 1, '2025-11-26 23:20:26'),
-(27, 'Panini Caprese', 9, 'views/assets/img/menu_productos/27_imagen.webp', 1, 0, 1, '2025-11-26 23:20:27'),
-(28, 'Wrap de Pollo', 10, 'views/assets/img/menu_productos/28_imagen.webp', 1, 0, 1, '2025-11-26 23:20:28'),
-(29, 'Ensalada César', 11, 'views/assets/img/menu_productos/29_imagen.webp', 1, 0, 1, '2025-11-26 23:20:29'),
-(30, 'Pastel de Chocolate', 16, 'views/assets/img/menu_productos/30_imagen.webp', 1, 0, 1, '2025-11-26 23:20:30'),
-(31, 'Cheesecake', 16, 'views/assets/img/menu_productos/31_imagen.webp', 1, 0, 1, '2025-11-26 23:20:31'),
-(32, 'Galleta Chocochip', 18, 'views/assets/img/menu_productos/32_imagen.webp', 1, 0, 1, '2025-11-26 23:20:32'),
-(33, 'Brownie Tradicional', 20, 'views/assets/img/menu_productos/33_imagen.webp', 1, 0, 1, '2025-11-26 23:20:33'),
-(34, 'Papas Fritas', 24, 'views/assets/img/menu_productos/34_imagen.webp', 1, 0, 1, '2025-11-26 23:20:34'),
-(35, 'Mix de Nueces', 23, 'views/assets/img/menu_productos/35_imagen.webp', 1, 0, 1, '2025-11-26 23:20:35'),
-(36, 'Extra Queso', 25, 'views/assets/img/menu_productos/36_imagen.webp', 1, 0, 1, '2025-11-26 23:20:36'),
-(37, 'Café en Grano House Blend', 26, 'views/assets/img/menu_productos/37_imagen.webp', 1, 0, 1, '2025-11-26 23:20:37'),
-(38, 'Té Verde en Hoja', 27, 'views/assets/img/menu_productos/38_imagen.webp', 1, 0, 1, '2025-11-26 23:20:38'),
-(39, 'Pumpkin Spice Latte', 29, 'views/assets/img/menu_productos/39_imagen.webp', 1, 0, 1, '2025-11-26 23:20:39'),
-(40, 'Pan de Muerto', 30, 'views/assets/img/menu_productos/40_imagen.webp', 1, 0, 1, '2025-11-26 23:20:40'),
-(41, 'Bowl de Pollo y Quinoa', 12, 'views/assets/img/menu_productos/41_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(42, 'Bowl Verde Detox', 12, 'views/assets/img/menu_productos/42_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(43, 'Bowl Mediterráneo', 12, 'views/assets/img/menu_productos/43_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(44, 'Hamburguesa de Pavo Ligera', 13, 'views/assets/img/menu_productos/44_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(45, 'Hamburguesa de Pollo a la Parrilla', 13, 'views/assets/img/menu_productos/45_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(46, 'Hamburguesa Veggie', 13, 'views/assets/img/menu_productos/46_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(47, 'Tiramisú Clásico', 17, 'views/assets/img/menu_productos/47_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(48, 'Milhojas', 17, 'views/assets/img/menu_productos/48_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(49, 'Flan Napolitano', 17, 'views/assets/img/menu_productos/49_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(50, 'Helado de Vainilla', 21, 'views/assets/img/menu_productos/50_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(51, 'Helado de Chocolate', 21, 'views/assets/img/menu_productos/51_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(52, 'Sundae de Caramelo', 21, 'views/assets/img/menu_productos/52_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(53, 'Termo de Acero Inoxidable', 28, 'views/assets/img/menu_productos/53_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(54, 'Vaso Reutilizable de Plástico', 28, 'views/assets/img/menu_productos/54_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(55, 'Taza Cerámica Edición Especial', 28, 'views/assets/img/menu_productos/55_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(56, 'Combo Café + Pan Dulce', 31, 'views/assets/img/menu_productos/56_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(57, 'Combo Desayuno', 31, 'views/assets/img/menu_productos/57_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(58, 'Descuento 2x1 en Frappé', 31, 'views/assets/img/menu_productos/58_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
-(59, 'Croissant Salado', 15, 'views/assets/img/menu_productos/59_imagen.webp', 1, 0, 1, '2025-11-26 23:01:24'),
-(60, 'Baguette Individual', 15, 'views/assets/img/menu_productos/60_imagen.webp', 1, 0, 1, '2025-11-26 23:01:24'),
-(61, 'Pan Ciabatta', 15, 'views/assets/img/menu_productos/61_imagen.webp', 1, 0, 1, '2025-11-26 23:01:24'),
-(62, 'Pretzels Salados', 22, 'views/assets/img/menu_productos/62_imagen.webp', 1, 0, 1, '2025-11-26 23:01:24'),
-(63, 'Palomitas Mantequilla', 22, 'views/assets/img/menu_productos/63_imagen.webp', 1, 0, 1, '2025-11-26 23:01:24'),
-(64, 'Barra de Granola', 22, 'views/assets/img/menu_productos/64_imagen.webp', 1, 0, 1, '2025-11-26 23:01:24'),
-(65, 'Muffin de Blueberry', 19, 'views/assets/img/menu_productos/65_imagen.webp', 1, 0, 1, '2025-11-26 23:01:24'),
-(66, 'Muffin de Chocolate', 19, 'views/assets/img/menu_productos/66_imagen.webp', 1, 0, 1, '2025-11-26 23:01:24'),
-(67, 'Cupcake de Vainilla', 19, 'views/assets/img/menu_productos/67_imagen.webp', 1, 0, 1, '2025-11-26 23:01:24'),
-(68, 'Concha Tradicional', 14, 'views/assets/img/menu_productos/68_imagen.webp', 1, 0, 1, '2025-11-26 23:01:46'),
-(69, 'Rol de Canela', 14, 'views/assets/img/menu_productos/69_imagen.webp', 1, 0, 1, '2025-11-26 23:01:46'),
-(70, 'Cuernito Dulce', 14, 'views/assets/img/menu_productos/70_imagen.webp', 1, 0, 1, '2025-11-26 23:01:46'),
-(71, 'Cafe lco', 2, 'views/assets/img/cafeteria_default.png', 2, 0, 4, '2025-12-07 13:09:09');
+(17, 'Cold Brew', 2, 'views/assets/img/menu_productos/17_imagen.webp', 1, 0, 1, '2025-11-26 23:20:17'),
+(18, 'Limonada Natural', 5, 'views/assets/img/menu_productos/21_imagen.webp', 1, 0, 1, '2025-11-26 23:20:21'),
+(19, 'Naranjada', 5, 'views/assets/img/menu_productos/22_imagen.webp', 1, 0, 1, '2025-11-26 23:20:22'),
+(20, 'Huevos al Gusto', 6, 'views/assets/img/menu_productos/23_imagen.webp', 1, 0, 1, '2025-11-26 23:20:23'),
+(21, 'Hot Cakes', 6, 'views/assets/img/menu_productos/24_imagen.webp', 1, 0, 1, '2025-11-26 23:20:24'),
+(22, 'Helado de Vainilla', 19, 'views/assets/img/menu_productos/50_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49'),
+(23, 'Helado de Chocolate', 19, 'views/assets/img/menu_productos/51_imagen.webp', 1, 0, 1, '2025-11-26 22:56:49');
 
 -- --------------------------------------------------------
 
@@ -663,14 +509,6 @@ CREATE TABLE `menu_productos_bases` (
   `id_producto` int(11) NOT NULL,
   `id_ingrediente_categoria` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `menu_productos_bases`
---
-
-INSERT INTO `menu_productos_bases` (`id`, `id_producto`, `id_ingrediente_categoria`) VALUES
-(1, 3, 2),
-(2, 3, 1);
 
 -- --------------------------------------------------------
 
@@ -719,37 +557,34 @@ CREATE TABLE `menu_subcategorias` (
 --
 
 INSERT INTO `menu_subcategorias` (`id`, `nombre`, `id_categoria`, `estado`, `registro_occu`, `id_propietario`, `fecha_alta`) VALUES
-(1, 'Bebidas Calientes', 1, 0, 1, 0, '2025-11-26 23:00:01'),
-(2, 'Bebidas Frías', 1, 0, 1, 0, '2025-11-26 23:00:02'),
-(3, 'Frappés / Frozen', 1, 0, 1, 0, '2025-11-26 23:00:03'),
-(4, 'Cold Brew', 1, 0, 1, 0, '2025-11-26 23:00:04'),
-(5, 'Jugos & Smoothies', 1, 0, 1, 0, '2025-11-26 23:00:05'),
-(6, 'Aguas Frescas & Limonadas', 1, 0, 1, 0, '2025-11-26 23:00:06'),
-(7, 'Desayunos', 2, 0, 1, 0, '2025-11-26 23:00:07'),
-(8, 'Sandwiches', 2, 0, 1, 0, '2025-11-26 23:00:08'),
-(9, 'Paninis', 2, 0, 1, 0, '2025-11-26 23:00:09'),
-(10, 'Wraps & Bagels', 2, 0, 1, 0, '2025-11-26 23:00:10'),
-(11, 'Ensaladas', 2, 0, 1, 0, '2025-11-26 23:00:11'),
-(12, 'Bowls / Comida Ligera', 2, 0, 1, 0, '2025-11-26 23:00:12'),
-(13, 'Hamburguesas Ligeras', 2, 0, 1, 0, '2025-11-26 23:00:13'),
-(14, 'Pan Dulce', 3, 0, 1, 0, '2025-11-26 23:00:14'),
-(15, 'Pan Salado', 3, 0, 1, 0, '2025-11-26 23:00:15'),
-(16, 'Pasteles', 3, 0, 1, 0, '2025-11-26 23:00:16'),
-(17, 'Repostería Fina', 3, 0, 1, 0, '2025-11-26 23:00:17'),
-(18, 'Galletas', 3, 0, 1, 0, '2025-11-26 23:00:18'),
-(19, 'Muffins & Cupcakes', 3, 0, 1, 0, '2025-11-26 23:00:19'),
-(20, 'Brownies', 3, 0, 1, 0, '2025-11-26 23:00:20'),
-(21, 'Helados / Postres Fríos', 3, 0, 1, 0, '2025-11-26 23:00:21'),
-(22, 'Botanas', 4, 0, 1, 0, '2025-11-26 23:00:22'),
-(23, 'Fruta & Mix de Nueces', 4, 0, 1, 0, '2025-11-26 23:00:23'),
-(24, 'Papas & Nachos', 4, 0, 1, 0, '2025-11-26 23:00:24'),
-(25, 'Extras & Toppings', 4, 0, 1, 0, '2025-11-26 23:00:25'),
-(26, 'Café en Grano', 5, 0, 1, 0, '2025-11-26 23:00:26'),
-(27, 'Té en Hoja', 5, 0, 1, 0, '2025-11-26 23:00:27'),
-(28, 'Merchandising / Accesorios', 5, 0, 1, 0, '2025-11-26 23:00:28'),
-(29, 'Bebidas de Temporada', 6, 0, 1, 0, '2025-11-26 23:00:29'),
-(30, 'Comida de Temporada', 6, 0, 1, 0, '2025-11-26 23:00:30'),
-(31, 'Promociones Especiales', 6, 0, 1, 0, '2025-11-26 23:00:31');
+(1, 'Cafés Calientes', 1, 0, 1, 0, '2025-11-26 23:00:01'),
+(2, 'Cafés Fríos', 1, 0, 1, 0, '2025-11-26 23:00:02'),
+(3, 'Frappés', 1, 0, 1, 0, '2025-11-26 23:00:03'),
+(4, 'Jugos & Smoothies', 1, 0, 1, 0, '2025-11-26 23:00:05'),
+(5, 'Aguas Frescas & Limonadas', 1, 0, 1, 0, '2025-11-26 23:00:06'),
+(6, 'Desayunos', 2, 0, 1, 0, '2025-11-26 23:00:07'),
+(7, 'Sandwiches', 2, 0, 1, 0, '2025-11-26 23:00:08'),
+(8, 'Paninis', 2, 0, 1, 0, '2025-11-26 23:00:09'),
+(9, 'Wraps & Bagels', 2, 0, 1, 0, '2025-11-26 23:00:10'),
+(10, 'Ensaladas', 2, 0, 1, 0, '2025-11-26 23:00:11'),
+(11, 'Postres', 3, 0, 1, 0, '2025-11-26 23:00:18'),
+(12, 'Pan', 3, 0, 1, 0, '2025-11-26 23:00:14'),
+(13, 'Pan Dulce', 3, 0, 1, 0, '2025-11-26 23:00:15'),
+(14, 'Pan Salado', 3, 0, 1, 0, '2025-11-26 23:00:16'),
+(15, 'Pasteles', 3, 0, 1, 0, '2025-11-26 23:00:17'),
+(16, 'Galletas', 3, 0, 1, 0, '2025-11-26 23:00:19'),
+(17, 'Muffins & Cupcakes', 3, 0, 1, 0, '2025-11-26 23:00:20'),
+(18, 'Brownies', 3, 0, 1, 0, '2025-11-26 23:00:21'),
+(19, 'Helados / Postres Fríos', 3, 0, 1, 0, '2025-11-26 23:00:22'),
+(20, 'Botanas', 4, 0, 1, 0, '2025-11-26 23:00:23'),
+(21, 'Fruta & Mix de Nueces', 4, 0, 1, 0, '2025-11-26 23:00:24'),
+(22, 'Papas & Nachos', 4, 0, 1, 0, '2025-11-26 23:00:25'),
+(23, 'Extras & Toppings', 4, 0, 1, 0, '2025-11-26 23:00:26'),
+(24, 'Café en Grano', 5, 0, 1, 0, '2025-11-26 23:00:27'),
+(25, 'Té en Hoja', 5, 0, 1, 0, '2025-11-26 23:00:28'),
+(26, 'Merchandising / Accesorios', 5, 0, 1, 0, '2025-11-26 23:00:29'),
+(27, 'Bebidas de Temporada', 6, 0, 1, 0, '2025-11-26 23:00:30'),
+(28, 'Comida de Temporada', 6, 0, 1, 0, '2025-11-26 23:00:31');
 
 -- --------------------------------------------------------
 
@@ -773,10 +608,12 @@ CREATE TABLE `pagina_inicial` (
 --
 
 INSERT INTO `pagina_inicial` (`id`, `area`, `titulo`, `imagen`, `descripcion`, `enlace`, `nombre_enlace`, `estado`) VALUES
-(1, 'carousel', 'Una frase de ejemplo.', 'views/assets/img/imagen1.jpg', 'Si deseas encontrar el mejor lugar para tomar un rico café.', '', 'registrame', 0),
-(2, 'card', 'Espresso', 'views/assets/img/cafe.jpg', 'Encuentra las mejores cafeterías de la ciudad', 'cafeterias_mapa', 'registrame', 0),
-(3, 'carousel', 'Titulo de prueba 2', 'views/assets/img/admin_usuarios/881_imagen_usuario_3.webp', 'asdad', 'cafeterias_lista', 'cafeterias', 2),
-(4, 'card', 'Titulo de prueba card', 'views/assets/img/admin_usuarios/107_imagen_usuario_4.webp', 'descri', 'cafeterias_lista', 'card', 2);
+(1, 'carousel', ' ¡Comprar café nunca ha sido tan fácil! ', 'views/assets/img/admin_usuarios/218_imagen_usuario_1.webp', 'Encuentra la cafetería ideal para compartir', 'cafeterias_lista', 'Cafeterías', 0),
+(2, 'card', '#Cafedegrano', 'views/assets/img/admin_usuarios/178_imagen_usuario_2.webp', 'Encuentra las mejores cafeterías de la ciudad', 'cafeterias_lista', '', 0),
+(3, '', 'Café 100% méxicano', 'views/assets/img/admin_usuarios/830_imagen_usuario_3.webp', '#cafemexico', '', '', 0),
+(4, 'card', '#cafemexico', 'views/assets/img/admin_usuarios/396_imagen_usuario_4.webp', 'Café 100% mexicano', '', '', 0),
+(5, 'card', '#artelatte', 'views/assets/img/admin_usuarios/852_imagen_usuario_5.webp', 'El café como te gusta', '', '', 0),
+(6, 'carousel', 'Donde encuentras a los mejores baristas', 'views/assets/img/admin_usuarios/505_imagen_usuario_6.webp', 'El café preparado por las mejores manos de méxico', 'cafeterias_mapa', 'Ver ubicaciones', 0);
 
 -- --------------------------------------------------------
 
@@ -862,7 +699,8 @@ INSERT INTO `permisos_modulos` (`id`, `id_area`, `id_subarea`, `nombre`, `ruta`,
 (15, 2, 0, 'Productos OCCU', 'propietarios_menu_productos', '', 0),
 (16, 2, 0, 'QR de menú', 'propietarios_menu_qr', '', 2),
 (17, 2, 0, 'Ingredientes', 'menu_ingredientes', '', 0),
-(18, 2, 0, 'Categorías de ingredientes', 'menu_ingredientes_categorias', '', 0);
+(18, 2, 0, 'Categorías de ingredientes', 'menu_ingredientes_categorias', '', 0),
+(19, 2, 0, 'Pedidos del día', 'cafeteria_pedidos', '', 0);
 
 -- --------------------------------------------------------
 
@@ -892,37 +730,6 @@ CREATE TABLE `propietarios_menu_subcategorias` (
   `id_propietario` int(11) NOT NULL,
   `estado` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `propietarios_menu_subcategorias`
---
-
-INSERT INTO `propietarios_menu_subcategorias` (`id`, `id_subcategoria`, `id_propietario`, `estado`) VALUES
-(1, 2, 14, 1),
-(2, 4, 14, 1),
-(3, 10, 14, 1),
-(4, 5, 14, 1),
-(5, 2, 4, 1),
-(6, 4, 4, 1),
-(7, 10, 4, 1),
-(8, 8, 4, 1),
-(9, 5, 4, 1),
-(10, 6, 4, 1),
-(11, 7, 4, 1),
-(12, 9, 4, 0),
-(13, 17, 4, 1),
-(14, 3, 4, 1),
-(15, 19, 4, 1),
-(19, 2, 5, 1),
-(20, 4, 5, 1),
-(21, 10, 5, 1),
-(22, 22, 4, 1),
-(23, 24, 4, 1),
-(24, 16, 4, 1),
-(25, 18, 4, 1),
-(26, 20, 4, 1),
-(27, 29, 4, 1),
-(28, 1, 4, 1);
 
 -- --------------------------------------------------------
 
@@ -1006,16 +813,6 @@ CREATE TABLE `ventas` (
   `fecha_cancelado` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
---
--- Volcado de datos para la tabla `ventas`
---
-
-INSERT INTO `ventas` (`id`, `id_cafeteria`, `id_cliente`, `monto_total`, `estado_pedido`, `estado`, `id_alta`, `fecha_alta`, `id_aceptado`, `fecha_aceptado`, `id_rechazo`, `fecha_rechazo`, `motivo_rechazo`, `id_entregado`, `fecha_entragado`, `id_cancelado`, `fecha_cancelado`) VALUES
-(1, 1, 7, '130', 4, 0, 7, '2025-11-25 21:17:25', 4, '2025-11-25 22:07:25', 0, '0000-00-00 00:00:00', '', 4, '2025-11-25 22:08:01', 0, '0000-00-00 00:00:00'),
-(2, 1, 7, '80', 4, 0, 7, '2025-11-26 17:56:34', 4, '2025-11-26 17:57:20', 0, '0000-00-00 00:00:00', '', 4, '2025-11-26 17:57:51', 0, '0000-00-00 00:00:00'),
-(3, 1, 7, '215', 4, 0, 7, '2025-12-03 19:43:26', 4, '2025-12-03 19:44:20', 0, '0000-00-00 00:00:00', '', 4, '2025-12-03 19:44:34', 0, '0000-00-00 00:00:00'),
-(4, 1, 7, '110', 3, 0, 7, '2025-12-03 19:55:07', 0, '0000-00-00 00:00:00', 4, '2025-12-03 20:22:06', 'sjofgso\'', 0, '0000-00-00 00:00:00', 0, '0000-00-00 00:00:00');
-
 -- --------------------------------------------------------
 
 --
@@ -1029,27 +826,6 @@ CREATE TABLE `ventas_carrito` (
   `id_usuario` int(11) NOT NULL,
   `fecha_alta` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `ventas_carrito`
---
-
-INSERT INTO `ventas_carrito` (`id`, `id_cafeteria`, `estado`, `id_usuario`, `fecha_alta`) VALUES
-(1, 1, 2, 7, '2025-11-23 00:08:11'),
-(2, 2, 2, 7, '2025-11-23 21:11:53'),
-(3, 1, 2, 7, '2025-11-23 21:15:08'),
-(4, 2, 2, 7, '2025-11-23 21:16:56'),
-(5, 1, 2, 7, '2025-11-23 21:17:11'),
-(6, 2, 2, 7, '2025-11-23 21:25:11'),
-(7, 1, 2, 7, '2025-11-23 21:25:53'),
-(8, 2, 2, 7, '2025-11-23 21:39:17'),
-(9, 1, 2, 7, '2025-11-24 17:44:41'),
-(10, 2, 2, 7, '2025-11-24 18:01:41'),
-(11, 1, 2, 7, '2025-11-24 18:59:21'),
-(12, 1, 2, 7, '2025-11-25 22:46:08'),
-(13, 1, 2, 7, '2025-11-28 21:08:00'),
-(14, 1, 2, 7, '2025-12-03 19:54:16'),
-(15, 1, 0, 1, '2025-12-07 22:40:03');
 
 -- --------------------------------------------------------
 
@@ -1067,52 +843,6 @@ CREATE TABLE `ventas_carrito_items` (
   `fecha_alta` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
---
--- Volcado de datos para la tabla `ventas_carrito_items`
---
-
-INSERT INTO `ventas_carrito_items` (`id`, `id_carrito`, `id_producto`, `id_tamano`, `cantidad`, `estado`, `fecha_alta`) VALUES
-(1, 1, 1, 5, 1, 2, '2025-11-23 00:08:11'),
-(2, 1, 5, 3, 1, 2, '2025-11-23 16:33:11'),
-(3, 1, 9, 3, 1, 2, '2025-11-23 16:49:55'),
-(4, 1, 1, 1, 1, 2, '2025-11-23 20:59:38'),
-(5, 1, 1, 1, 1, 2, '2025-11-23 21:00:22'),
-(6, 1, 1, 5, 1, 2, '2025-11-23 21:10:30'),
-(7, 1, 1, 5, 1, 0, '2025-11-23 21:11:53'),
-(8, 2, 1, 5, 1, 2, '2025-11-23 21:13:13'),
-(9, 3, 1, 1, 1, 2, '2025-11-23 21:15:08'),
-(10, 4, 1, 1, 1, 2, '2025-11-23 21:16:56'),
-(11, 5, 1, 3, 1, 2, '2025-11-23 21:17:11'),
-(12, 6, 1, 5, 1, 2, '2025-11-23 21:25:11'),
-(13, 7, 1, 3, 1, 2, '2025-11-23 21:25:53'),
-(14, 8, 1, 5, 1, 2, '2025-11-23 21:39:17'),
-(15, 9, 1, 5, 3, 2, '2025-11-24 17:44:41'),
-(16, 10, 15, 0, 1, 2, '2025-11-24 18:01:41'),
-(17, 11, 1, 5, 1, 2, '2025-11-24 18:59:21'),
-(18, 11, 4, 0, 1, 2, '2025-11-24 18:59:26'),
-(19, 11, 1, 3, 2, 2, '2025-11-24 19:40:04'),
-(20, 11, 5, 5, 1, 2, '2025-11-24 20:24:36'),
-(21, 11, 1, 3, 1, 2, '2025-11-24 20:24:54'),
-(22, 11, 9, 5, 1, 2, '2025-11-24 21:00:13'),
-(23, 11, 19, 0, 1, 2, '2025-11-24 21:00:46'),
-(24, 11, 1, 1, 1, 2, '2025-11-24 21:29:06'),
-(25, 11, 1, 1, 1, 2, '2025-11-24 21:30:33'),
-(26, 11, 1, 1, 1, 2, '2025-11-24 21:32:09'),
-(27, 11, 1, 1, 1, 2, '2025-11-24 21:35:36'),
-(28, 11, 1, 1, 1, 2, '2025-11-24 21:53:41'),
-(29, 11, 1, 1, 1, 2, '2025-11-24 21:55:32'),
-(30, 11, 1, 1, 1, 2, '2025-11-24 21:58:18'),
-(31, 11, 1, 1, 3, 2, '2025-11-24 22:39:42'),
-(32, 11, 1, 1, 1, 2, '2025-11-24 22:45:54'),
-(33, 12, 1, 3, 1, 2, '2025-11-25 22:46:08'),
-(34, 12, 1, 3, 1, 2, '2025-11-26 17:56:27'),
-(35, 13, 9, 1, 1, 2, '2025-11-28 21:08:00'),
-(36, 13, 9, 3, 1, 2, '2025-12-02 19:18:50'),
-(37, 13, 9, 3, 3, 2, '2025-12-03 19:42:45'),
-(38, 13, 1, 3, 1, 2, '2025-12-03 19:43:01'),
-(39, 14, 9, 3, 2, 2, '2025-12-03 19:54:16'),
-(40, 15, 9, 0, 1, 0, '2025-12-07 22:40:03');
-
 -- --------------------------------------------------------
 
 --
@@ -1127,98 +857,6 @@ CREATE TABLE `ventas_carrito_items_ingredientes` (
   `estado` int(11) NOT NULL,
   `fecha_alta` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `ventas_carrito_items_ingredientes`
---
-
-INSERT INTO `ventas_carrito_items_ingredientes` (`id`, `id_carrito_item`, `id_ingrediente`, `cantidad`, `estado`, `fecha_alta`) VALUES
-(1, 1, 2, 1, 2, '2025-11-23 00:08:11'),
-(2, 1, 5, 1, 2, '2025-11-23 00:08:11'),
-(3, 1, 1, 1, 2, '2025-11-23 00:08:11'),
-(4, 1, 16, 1, 2, '2025-11-23 00:08:11'),
-(5, 2, 1, 1, 2, '2025-11-23 16:33:11'),
-(6, 2, 4, 1, 2, '2025-11-23 16:33:11'),
-(7, 2, 6, 1, 2, '2025-11-23 16:33:11'),
-(8, 2, 11, 1, 2, '2025-11-23 16:33:11'),
-(9, 6, 3, 1, 2, '2025-11-23 21:10:30'),
-(10, 6, 5, 1, 2, '2025-11-23 21:10:30'),
-(11, 6, 8, 1, 2, '2025-11-23 21:10:30'),
-(12, 6, 10, 1, 2, '2025-11-23 21:10:30'),
-(13, 6, 1, 1, 2, '2025-11-23 21:10:30'),
-(14, 6, 2, 1, 2, '2025-11-23 21:10:30'),
-(15, 6, 9, 1, 2, '2025-11-23 21:10:30'),
-(16, 15, 3, 1, 2, '2025-11-24 17:44:41'),
-(17, 15, 1, 1, 2, '2025-11-24 17:44:41'),
-(18, 17, 4, 1, 2, '2025-11-24 18:59:21'),
-(19, 17, 5, 1, 2, '2025-11-24 18:59:21'),
-(20, 17, 7, 1, 2, '2025-11-24 18:59:21'),
-(21, 17, 1, 1, 2, '2025-11-24 18:59:21'),
-(22, 17, 2, 1, 2, '2025-11-24 18:59:21'),
-(23, 17, 9, 1, 2, '2025-11-24 18:59:21'),
-(24, 17, 12, 1, 2, '2025-11-24 18:59:21'),
-(25, 19, 4, 1, 2, '2025-11-24 19:40:04'),
-(26, 19, 6, 1, 2, '2025-11-24 19:40:04'),
-(27, 19, 1, 1, 2, '2025-11-24 19:40:04'),
-(28, 20, 1, 1, 2, '2025-11-24 20:24:36'),
-(29, 20, 3, 1, 2, '2025-11-24 20:24:36'),
-(30, 21, 3, 1, 2, '2025-11-24 20:24:54'),
-(31, 21, 5, 1, 2, '2025-11-24 20:24:54'),
-(32, 21, 8, 1, 2, '2025-11-24 20:24:54'),
-(33, 21, 10, 1, 2, '2025-11-24 20:24:54'),
-(34, 21, 1, 1, 2, '2025-11-24 20:24:54'),
-(35, 23, 14, 1, 2, '2025-11-24 21:00:46'),
-(36, 23, 1, 1, 2, '2025-11-24 21:00:46'),
-(37, 23, 2, 1, 2, '2025-11-24 21:00:46'),
-(38, 24, 4, 1, 2, '2025-11-24 21:29:06'),
-(39, 24, 5, 1, 2, '2025-11-24 21:29:06'),
-(40, 24, 1, 1, 2, '2025-11-24 21:29:06'),
-(41, 25, 4, 1, 2, '2025-11-24 21:30:33'),
-(42, 25, 6, 1, 2, '2025-11-24 21:30:33'),
-(43, 25, 1, 1, 2, '2025-11-24 21:30:33'),
-(44, 26, 4, 1, 2, '2025-11-24 21:32:09'),
-(45, 26, 6, 1, 2, '2025-11-24 21:32:09'),
-(46, 26, 1, 1, 2, '2025-11-24 21:32:09'),
-(47, 27, 4, 1, 2, '2025-11-24 21:35:36'),
-(48, 27, 6, 1, 2, '2025-11-24 21:35:36'),
-(49, 27, 1, 1, 2, '2025-11-24 21:35:36'),
-(50, 28, 4, 1, 2, '2025-11-24 21:53:41'),
-(51, 28, 6, 1, 2, '2025-11-24 21:53:41'),
-(52, 28, 1, 1, 2, '2025-11-24 21:53:41'),
-(53, 29, 4, 1, 2, '2025-11-24 21:55:32'),
-(54, 29, 6, 1, 2, '2025-11-24 21:55:32'),
-(55, 29, 1, 1, 2, '2025-11-24 21:55:32'),
-(56, 30, 4, 1, 2, '2025-11-24 21:58:18'),
-(57, 30, 6, 1, 2, '2025-11-24 21:58:18'),
-(58, 30, 1, 1, 2, '2025-11-24 21:58:18'),
-(59, 31, 4, 1, 2, '2025-11-24 22:39:42'),
-(60, 31, 6, 1, 2, '2025-11-24 22:39:42'),
-(61, 31, 1, 1, 2, '2025-11-24 22:39:42'),
-(62, 32, 4, 1, 2, '2025-11-24 22:45:54'),
-(63, 32, 5, 1, 2, '2025-11-24 22:45:54'),
-(64, 32, 1, 1, 2, '2025-11-24 22:45:54'),
-(65, 33, 1, 1, 2, '2025-11-25 22:46:08'),
-(66, 33, 3, 1, 2, '2025-11-25 22:46:08'),
-(67, 33, 5, 1, 2, '2025-11-25 22:46:08'),
-(68, 33, 6, 1, 2, '2025-11-25 22:46:08'),
-(69, 34, 1, 1, 2, '2025-11-26 17:56:27'),
-(70, 34, 4, 1, 2, '2025-11-26 17:56:27'),
-(71, 34, 5, 3, 2, '2025-11-26 17:56:27'),
-(72, 34, 6, 1, 2, '2025-11-26 17:56:27'),
-(73, 34, 9, 1, 2, '2025-11-26 17:56:27'),
-(74, 34, 12, 1, 2, '2025-11-26 17:56:27'),
-(75, 34, 11, 1, 2, '2025-11-26 17:56:27'),
-(76, 35, 1, 1, 2, '2025-11-28 21:08:00'),
-(77, 35, 9, 1, 2, '2025-11-28 21:08:00'),
-(78, 36, 1, 1, 2, '2025-12-02 19:18:50'),
-(79, 36, 8, 1, 2, '2025-12-02 19:18:50'),
-(80, 36, 23, 1, 2, '2025-12-02 19:18:50'),
-(81, 37, 2, 1, 2, '2025-12-03 19:42:45'),
-(82, 37, 9, 1, 2, '2025-12-03 19:42:45'),
-(83, 37, 23, 1, 2, '2025-12-03 19:42:45'),
-(84, 38, 3, 1, 2, '2025-12-03 19:43:01'),
-(85, 39, 3, 1, 2, '2025-12-03 19:54:16'),
-(86, 39, 6, 1, 2, '2025-12-03 19:54:16');
 
 -- --------------------------------------------------------
 
@@ -1240,18 +878,6 @@ CREATE TABLE `ventas_items` (
   `fecha_alta` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
 
---
--- Volcado de datos para la tabla `ventas_items`
---
-
-INSERT INTO `ventas_items` (`id`, `id_venta`, `id_producto`, `id_tamano`, `monto_unitario`, `cantidad`, `monto_subtotal`, `monto_total`, `estado`, `id_alta`, `fecha_alta`) VALUES
-(1, 1, 1, 3, 50.00, 2, 100.00, 100.00, 0, 7, '2025-11-25 21:17:25'),
-(2, 1, 1, 1, 10.00, 3, 30.00, 30.00, 0, 7, '2025-11-25 21:17:25'),
-(3, 2, 1, 3, 50.00, 1, 50.00, 80.00, 0, 7, '2025-11-26 17:56:34'),
-(4, 3, 1, 3, 50.00, 1, 50.00, 50.00, 0, 7, '2025-12-03 19:43:26'),
-(5, 3, 9, 3, 55.00, 3, 165.00, 165.00, 0, 7, '2025-12-03 19:43:26'),
-(6, 4, 9, 3, 55.00, 2, 110.00, 110.00, 0, 7, '2025-12-03 19:55:07');
-
 -- --------------------------------------------------------
 
 --
@@ -1271,31 +897,6 @@ CREATE TABLE `ventas_items_ingredientes` (
   `id_alta` int(11) NOT NULL,
   `fecha_alta` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish2_ci;
-
---
--- Volcado de datos para la tabla `ventas_items_ingredientes`
---
-
-INSERT INTO `ventas_items_ingredientes` (`id`, `id_venta_item`, `id_ingrediente`, `costo_extra`, `cantidad_gratis`, `cantidad`, `precio`, `monto_total`, `estado`, `id_alta`, `fecha_alta`) VALUES
-(1, 1, 1, 0.00, 0, 1, 15.00, 0.00, 0, 7, '2025-11-25 21:17:25'),
-(2, 1, 4, 0.00, 0, 1, 0.00, 0.00, 0, 7, '2025-11-25 21:17:25'),
-(3, 1, 6, 1.00, 0, 1, 0.00, 0.00, 0, 7, '2025-11-25 21:17:25'),
-(4, 2, 1, 0.00, 0, 1, 15.00, 0.00, 0, 7, '2025-11-25 21:17:25'),
-(5, 2, 4, 0.00, 0, 1, 0.00, 0.00, 0, 7, '2025-11-25 21:17:25'),
-(6, 2, 6, 1.00, 0, 1, 0.00, 0.00, 0, 7, '2025-11-25 21:17:25'),
-(7, 3, 1, 0.00, 0, 1, 15.00, 0.00, 0, 7, '2025-11-26 17:56:34'),
-(8, 3, 4, 0.00, 0, 1, 0.00, 0.00, 0, 7, '2025-11-26 17:56:34'),
-(9, 3, 5, 1.00, 0, 3, 0.00, 0.00, 0, 7, '2025-11-26 17:56:34'),
-(10, 3, 6, 1.00, 0, 1, 0.00, 0.00, 0, 7, '2025-11-26 17:56:34'),
-(11, 3, 9, 1.00, 0, 1, 10.00, 10.00, 0, 7, '2025-11-26 17:56:34'),
-(12, 3, 12, 1.00, 0, 1, 10.00, 10.00, 0, 7, '2025-11-26 17:56:34'),
-(13, 3, 11, 1.00, 0, 1, 10.00, 10.00, 0, 7, '2025-11-26 17:56:34'),
-(14, 4, 3, 0.00, 0, 1, 12.00, 0.00, 0, 7, '2025-12-03 19:43:26'),
-(15, 5, 2, 0.00, 0, 1, 10.00, 0.00, 0, 7, '2025-12-03 19:43:26'),
-(16, 5, 23, 0.00, 0, 1, 0.00, 0.00, 0, 7, '2025-12-03 19:43:26'),
-(17, 5, 9, 0.00, 0, 1, 10.00, 0.00, 0, 7, '2025-12-03 19:43:26'),
-(18, 6, 3, 0.00, 0, 1, 12.00, 0.00, 0, 7, '2025-12-03 19:55:07'),
-(19, 6, 6, 0.00, 0, 1, 0.00, 0.00, 0, 7, '2025-12-03 19:55:07');
 
 --
 -- Índices para tablas volcadas
@@ -1507,43 +1108,43 @@ ALTER TABLE `admin_niveles_usuario`
 -- AUTO_INCREMENT de la tabla `admin_niveles_usuario_modulos`
 --
 ALTER TABLE `admin_niveles_usuario_modulos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `admin_usuarios`
 --
 ALTER TABLE `admin_usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `cafeterias`
 --
 ALTER TABLE `cafeterias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cafeterias_comentarios`
 --
 ALTER TABLE `cafeterias_comentarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cafeterias_imagenes`
 --
 ALTER TABLE `cafeterias_imagenes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cafeterias_servicios`
 --
 ALTER TABLE `cafeterias_servicios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `cafeteria_horarios`
 --
 ALTER TABLE `cafeteria_horarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ciudades`
@@ -1567,7 +1168,7 @@ ALTER TABLE `menu_categorias`
 -- AUTO_INCREMENT de la tabla `menu_ingredientes`
 --
 ALTER TABLE `menu_ingredientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=98;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=68;
 
 --
 -- AUTO_INCREMENT de la tabla `menu_ingredientes_categorias`
@@ -1579,13 +1180,13 @@ ALTER TABLE `menu_ingredientes_categorias`
 -- AUTO_INCREMENT de la tabla `menu_productos`
 --
 ALTER TABLE `menu_productos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=72;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `menu_productos_bases`
 --
 ALTER TABLE `menu_productos_bases`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `menu_productos_tamanos`
@@ -1597,13 +1198,13 @@ ALTER TABLE `menu_productos_tamanos`
 -- AUTO_INCREMENT de la tabla `menu_subcategorias`
 --
 ALTER TABLE `menu_subcategorias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `pagina_inicial`
 --
 ALTER TABLE `pagina_inicial`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `paises`
@@ -1633,7 +1234,7 @@ ALTER TABLE `propietarios_ingredientes`
 -- AUTO_INCREMENT de la tabla `propietarios_menu_subcategorias`
 --
 ALTER TABLE `propietarios_menu_subcategorias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `propietarios_productos`
@@ -1657,37 +1258,37 @@ ALTER TABLE `servicios`
 -- AUTO_INCREMENT de la tabla `ventas`
 --
 ALTER TABLE `ventas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_carrito`
 --
 ALTER TABLE `ventas_carrito`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_carrito_items`
 --
 ALTER TABLE `ventas_carrito_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_carrito_items_ingredientes`
 --
 ALTER TABLE `ventas_carrito_items_ingredientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=87;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_items`
 --
 ALTER TABLE `ventas_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ventas_items_ingredientes`
 --
 ALTER TABLE `ventas_items_ingredientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -31,7 +31,19 @@ $(document).on("click", "#ver-carrito", function () {
   const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
   offcanvas.show();
 
+  // Ocultar botón de filtros si estamos en el módulo de mapa
+  if (moduloActual == 'cafeterias_mapa') {
+    $("#btn_filtro_mapa").hide();
+  }
+
   buscarCarrito();
+  
+  // Mostrar botón de filtros cuando se cierre el carrito (solo en módulo de mapa)
+  if (moduloActual == 'cafeterias_mapa') {
+    offcanvasEl.addEventListener('hidden.bs.offcanvas', function () {
+      $("#btn_filtro_mapa").show();
+    }, { once: true });
+  }
 });
 
 function buscarCarrito() {
@@ -361,7 +373,7 @@ $(document).on("click", "#btn_confirmar_pago", function () {
         button: "Aceptar",
       }).then(() => {
         // Redirigir a lista de cafeterías o dashboard
-        window.location.href = url + "cafeterias_lista";
+        window.location.href = url + "mis_pedidos";
       });
     },
     error: function () {

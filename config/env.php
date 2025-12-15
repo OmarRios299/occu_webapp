@@ -22,3 +22,13 @@ function loadEnv($path)
         }
     }
 }
+
+function obtenerGoogleClientId()
+{
+    return getenv('GOOGLE_CLIENT_ID');
+}
+
+function obtenerGoogleApiKey()
+{
+    return getenv('GOOGLE_API');
+}

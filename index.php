@@ -33,6 +33,7 @@ require_once "controllers/controller_propietarios_menu.php";
 require_once "controllers/controller_menu_ingredientes_categorias.php";
 require_once "controllers/controller_menu_ingredientes.php";
 require_once "controllers/controller_carrito.php";
+require_once "controllers/controller_mis_pedidos.php";
 
 //Dashboard
 require_once "controllers/controller_dashboard.php";
@@ -64,6 +65,7 @@ require_once "models/model_propietarios_menu.php";
 require_once "models/model_menu_ingredientes_categorias.php";
 require_once "models/model_menu_ingredientes.php";
 require_once "models/model_carrito.php";
+require_once "models/model_mis_pedidos.php";
 
 //Dashboard
 require_once "models/model_dashboard.php";

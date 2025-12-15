@@ -6,7 +6,7 @@ if (isset($_GET['action'])) {
     $action = explode("/", $_GET['action']);
     $moduloActual = $action[0];
 } else {
-    $moduloActual = "dashboard";
+    $moduloActual = "cafeterias_lista";
 }
 
 if ($moduloActual == "salir") {
@@ -23,7 +23,7 @@ if (!isset($_SESSION['iniciarSesion']) && isset($_COOKIE['token_session'])) {
 
 $template = new TemplateController();
 $url = $template->obtenerUrlController();
-$v = "1.0.11";
+$v = "1.2.0";
 
 ?>
 <!DOCTYPE html>
@@ -67,6 +67,14 @@ $v = "1.0.11";
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
+    <?php if($moduloActual == "admin_paises" || $moduloActual == "cafeterias" || $moduloActual == "cafeterias_mapa"): ?>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <?php if($moduloActual == "admin_paises"): ?>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+    <?php endif; ?>
+    <?php endif; ?>
+
 </head>
 
 <body id="body">
@@ -80,9 +88,10 @@ $v = "1.0.11";
         // Determina si la página actual es "cafeterias_mapa" y estructura el layout en consecuencia
         if ($_SESSION['nivel'] == 'Barista'  || $_SESSION['nivel'] == 'Cliente') {
             include "modules/carrito.php";
-            if ($moduloActual == "cafeterias_mapa") {
-                echo '<div style="width: 100%; margin: 0; height:100vh;"><div>';
+            if ($moduloActual == "cafeterias_mapa") { 
                 include "modules/sections/navbar_movil.php";
+                echo '<div style="width: 100%; margin: 0; height:100vh;"><div>';
+               
             } else {
                 include "modules/sections/navbar_movil.php";
                 echo '<div id="sistema">';
@@ -113,7 +122,7 @@ $v = "1.0.11";
                 "dashboard",
                 "salir",
                 "metodo_pago",
-                "cafeteria_pedidos"
+                "mis_pedidos",
             ];
 
             if (in_array($action[0], $modulosPermitidos)) {
@@ -178,10 +187,18 @@ $v = "1.0.11";
 
         echo '</div></div></div><div class="overlay"></div>';
     } else {
-        echo '<div class="contenido">';
+        // echo '<div class="contenido">';
+        // include "modules/sections/navbar_inicio.php";
+        // echo '<div class="modulos">';
+        // include "modules/inicio.php";
+        // echo '</div></div></div><div class="overlay"></div>';
+        echo '<div id="sistema">';
+        echo '<div class="content_sin_sesion">';
         include "modules/sections/navbar_inicio.php";
         echo '<div class="modulos">';
-        include "modules/inicio.php";
+        echo '<div class="modulo-' . htmlspecialchars($moduloActual) . '">';
+        include "modules/" . htmlspecialchars($moduloActual) . ".php";
+        echo '</div>';
         echo '</div></div></div><div class="overlay"></div>';
     }
     ?>
@@ -190,6 +207,10 @@ $v = "1.0.11";
 
     <!-- jQuery     <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry,drawing&callback=initMap"></script>
 -->
+    <!-- Google Identity Services -->
+    <?php if($moduloActual == "login"): ?>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <?php endif; ?>
     <script src="<?php echo $url; ?>views/assets/js/jquery-3.7.1.min.js"></script>
 
     <!-- Mapa google -->
@@ -220,6 +241,28 @@ $v = "1.0.11";
     <script src="<?php echo $url; ?>views/assets/js/scripts/general.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/login.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/registrarme.js?v='<?php echo $v; ?>'"></script>
+    <?php if($moduloActual == "login"): ?>
+    <script>
+    // Asegurar que Google Identity Services se inicialice correctamente
+    window.addEventListener('load', function() {
+        if (typeof google !== 'undefined' && google.accounts) {
+            google.accounts.id.initialize({
+                client_id: document.getElementById('g_id_onload')?.getAttribute('data-client_id') || '',
+                callback: window.handleGoogleSignIn
+            });
+        }
+    });
+    </script>
+    <?php endif; ?>
+    
+    <?php if($moduloActual == "admin_paises" || $moduloActual == "cafeterias" || $moduloActual == "cafeterias_mapa"): ?>
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <?php if($moduloActual == "admin_paises"): ?>
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    <?php endif; ?>
+    <?php endif; ?>
+    
     <!-- Administración -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/admin_usuarios.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/admin_paises.js?v='<?php echo $v; ?>'"></script>
@@ -241,6 +284,7 @@ $v = "1.0.11";
     <script src="<?php echo $url; ?>views/assets/js/scripts/carrito.js?v='<?php echo $v; ?>'"></script>
     <!-- Pedidos -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeteria_pedidos.js?v='<?php echo $v; ?>'"></script>
+    <script src="<?php echo $url; ?>views/assets/js/scripts/mis_pedidos.js?v='<?php echo $v; ?>'"></script>
     <!-- Dashboard -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/dashboard.js?v='<?php echo $v; ?>'"></script>
 
