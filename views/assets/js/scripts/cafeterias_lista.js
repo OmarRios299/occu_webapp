@@ -1,7 +1,7 @@
 $(document).ready(function () {
     let paginaActual = 1; // Inicializar la página actual
 
-    if (moduloActual == 'cafeterias_lista') {
+    if (moduloActual == 'cafeterias_lista' || (moduloActual == 'cafeterias' && $('#div_lista_cafeterias').length && !$('#tabla_cafeterias').length)) {
 
         if ($('#titulo_cafeteria_ver').length) {
             CargarVerCafeteria();
@@ -11,6 +11,26 @@ $(document).ready(function () {
         if ($('#div_lista_cafeterias').length) {
             cargarListaCafeterias(paginaActual);
             //cargarServiciosFiltro();
+            
+            // Manejar click en las cards de cafetería para abrir offcanvas (reutilizar el del mapa)
+            $(document).on('click', '.cafeteria-card-link', function(e) {
+                e.preventDefault();
+                const idCafeteria = $(this).data('cafeteria-id');
+                if (idCafeteria) {
+                    // Reutilizar la función del mapa para cargar y mostrar la cafetería
+                    if (typeof CargarVerCafeteriaMapa === 'function') {
+                        CargarVerCafeteriaMapa(idCafeteria);
+                        // Abrir el offcanvas correspondiente según el tamaño de pantalla
+                        const isMobile = window.innerWidth < 992;
+                        const offcanvasId = isMobile ? 'offcanvasCafeteriaMobile' : 'offcanvasCafeteria';
+                        const offcanvasEl = document.getElementById(offcanvasId);
+                        if (offcanvasEl) {
+                            const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+                            offcanvas.show();
+                        }
+                    }
+                }
+            });
         }
 
         $('#boton-siguiente').on('click', function () {

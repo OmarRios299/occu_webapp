@@ -1,3 +1,6 @@
 .env
 vendor/
 vendor/composer/
+views/assets/img/cafeterias/
+views/assets/img/cafeterias_qr/
+views/assets/img/cafeterias_imagenes/

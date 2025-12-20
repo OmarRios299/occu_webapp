@@ -12,7 +12,8 @@ include "cafeterias/tabla_cafeterias.php";
             include "cafeterias/form_cafeteria.php";
         }
     }else if(is_numeric($action[1])){
-        $cafeteria=CafeteriasController::obtenerDatosCafeteriaController($action[1]);
+        $data=json_decode(CafeteriasController::obtenerDatosCafeteriaController($action[1]), true);
+        $cafeteria=$data['data'];
         if($cafeteria){
             if(isset($action[2]) && $action[2]=="editar"){
                 // Modo edición - $cafeteria está definido

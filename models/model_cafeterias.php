@@ -22,6 +22,9 @@ class CafeteriasModel extends Conexion {
         }else if($datos['estatus']=='Inactivas'){
             $estatus = ' WHERE cafeterias.estado = 1';
         }
+        else if($datos['estatus']=='propietario'){ 
+            $estatus = '';
+        }
         if (isset($datos['usuario']) && $datos['usuario']!='') {
             $usuario = ' AND cafeterias.id_usuario = :usuario';
         }

@@ -24,13 +24,13 @@
                         $clientId = TemplateController::obtenerGoogleClientId();
                         if ($clientId && !empty(trim($clientId))): 
                         ?>
-                        <div class="divider d-flex align-items-center my-4">
+                        <div class="divider d-flex align-items-center my-2">
                             <hr class="flex-grow-1">
-                            <span class="mx-3 text-muted fw-bold">O</span>
+                            <span class="mx-2 text-muted fw-bold">O</span>
                             <hr class="flex-grow-1">
                         </div>
                         
-                        <div class="d-flex justify-content-center mb-3">
+                        <div class="d-flex justify-content-center mb-2 google-signin-container">
                             <div id="g_id_onload"
                                 data-client_id="<?php echo htmlspecialchars($clientId); ?>"
                                 data-callback="handleGoogleSignIn"
@@ -47,8 +47,11 @@
                         </div>
                         <?php endif; ?>
                         
-                        <div class="text-center mt-3">
-                        <a type="button" id="btn_registrarme" href="<?=$url.'registrarme'?>">Registrarme</a>
+                        <div class="d-flex justify-content-center mt-3">
+                            <a type="button" class="btn btn-primary btn-sm px-2 py-1" id="btn_registrarme" href="<?=$url.'registrarme'?>" style="font-size: 0.85rem; width: 38%; min-width:170px;">
+                                <i class="fas fa-user-plus me-1" style="font-size: 1em;"></i>
+                                Registrarme
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -115,4 +118,5 @@
 .card-nivel-google .card-title {
     font-weight: 600;
 }
+
 </style>

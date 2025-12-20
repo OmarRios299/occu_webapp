@@ -1,3 +1,10 @@
+<?php
+// Determinar si el usuario es Administrador
+$esAdministrador = isset($_SESSION['nivel']) && $_SESSION['nivel'] == 'Administrador';
+
+if ($esAdministrador) {
+    // Vista para Administradores - DataTable
+?>
 <div class="titulo-boton">
     <h1 class="titulo-modulo">Cafeterías</h1>
     <div class="row text-end">
@@ -101,6 +108,12 @@
     </div>
 </div>
 <br>
+<?php
+} else {
+    // Vista para Propietarios - Lista simple de sus cafeterías
+    include 'tabla_cafeterias_propietario.php';
+}
+?>
 
 <div class="modal fade" id="modal_agregar_servicios" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

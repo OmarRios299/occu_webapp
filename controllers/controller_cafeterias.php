@@ -55,10 +55,39 @@ class CafeteriasController{
     /* OBTENER DATOS DE CAFETERIA */
     
     static public function obtenerDatosCafeteriaController($cafeteria){
-        return CafeteriasModel::ObtenerDatosCafeteriaModel($cafeteria);
+        $datos = CafeteriasModel::ObtenerDatosCafeteriaModel($cafeteria);
+        if ($datos) {
+            return json_encode([
+                'success' => true,
+                'data' => $datos
+            ]);
+        }
+        return json_encode([
+            'success' => false,
+            'mensaje' => 'Cafetería no encontrada'
+        ]);
     }
     
     /* OBTENER DATOS DE CAFETERIA */
+    
+    /* OBTENER CAFETERIAS PROPIETARIO */
+    
+    static public function obtenerCafeteriasPropietarioController(){
+        // Obtener cafeterías del usuario actual (propietario)
+        $datos = array();
+        $datos['usuario'] = $_SESSION['id'];
+        $datos['estatus'] = 'Propietario';
+        $datos['entidad'] = '';
+        $datos['ciudad'] = '';
+        $cafeterias = CafeteriasModel::obtenerCafeteriasModel($datos);
+        
+        return json_encode([
+            'success' => true,
+            'data' => $cafeterias
+        ]);
+    }
+    
+    /* OBTENER CAFETERIAS PROPIETARIO */
     
     
     /* OBTENER CIUDADES DE CADA PAIS */
@@ -166,7 +195,7 @@ class CafeteriasController{
                             '.$checked.'>
                             <label class="custom-control-label" for="switch'.$imagen['id'].'"></label>
                         </div>';
-            $img = '<img src="'.$url.''.$imagen['imagen'].'" alt="" style="width: 100px; heigth: auto;">';
+            $img = '<img src="'.$url.''.$imagen['imagen'].'" alt="" style="width: 100%; height: auto; max-height: 300px; object-fit: contain; display: block;">';
             $data[]=[
                 ++$i,
                 $botones,
@@ -186,7 +215,7 @@ class CafeteriasController{
     /* SUBIR IMAGEN DE CAFETERIA */
     
     static public function subirImagenCafeteriaController($datos){
-        $i = is_numeric($datos['contador']) +1;
+        $i = intval($datos['contador']) + 1;
         $nombre_imagen = "cafeteria_".$datos['id']."_".$i;
         $datos['imagen'] = GeneralController::subirImagen($datos['imagen_subir'],"cafeterias_imagenes",$nombre_imagen);
         CafeteriasModel::agregarImagenesModel($datos);

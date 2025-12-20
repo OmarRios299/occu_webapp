@@ -378,13 +378,21 @@ $(document).on('change', '.validarPdfImagen', function(){
 
 $(document).on('change', '.validarImagen', function(){
 
-	if($(this)[0].files[0].type != "image/jpeg" && $(this)[0].files[0].type != "image/png"){
-
+	let tipoArchivo = $(this)[0].files[0].type;
+	let tiposPermitidos = [
+		"image/jpeg",
+		"image/jpg", 
+		"image/png",
+		"image/webp",
+		"image/gif",
+		"image/bmp",
+		"image/svg+xml"
+	];
+	
+	if(tiposPermitidos.indexOf(tipoArchivo) === -1){
 		$(this).val("");
-
-		swal("¡Error!", "¡Solo se permiten archivos en formato JPG y PNG!", "error");
-
-    }
+		swal("¡Error!", "¡Solo se permiten archivos en formato JPG, PNG, WEBP, GIF, BMP o SVG!", "error");
+	}
 
 });
 

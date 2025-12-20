@@ -72,6 +72,16 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = 'obtenerCafeteriasController';
 
+    }else if(isset($_POST['obtener_cafeterias_propietario'])){
+
+        $datos = true;
+        $controller = 'obtenerCafeteriasPropietarioController';
+
+    }else if(isset($_POST['obtener_datos_cafeteria'])){
+
+        $datos = $_POST['id'];
+        $controller = 'obtenerDatosCafeteriaController';
+
     }else{
 
         $datos = false;

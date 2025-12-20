@@ -1,22 +1,5 @@
 <?php include 'views/modules/cafeterias_lista_filtros.php'; ?>
 
-<!-- Incluir estilos de ver_cafeteria.php para el offcanvas -->
-<?php 
-// Incluir solo los estilos CSS de ver_cafeteria.php
-$action_backup = isset($action) ? $action : null;
-$action = [1 => 'temp']; // Temporal para que los estilos se carguen
-ob_start();
-include 'cafeterias_lista/ver_cafeteria.php';
-$content = ob_get_clean();
-$action = $action_backup;
-
-// Extraer solo los estilos
-preg_match('/<style>(.*?)<\/style>/s', $content, $matches);
-if (isset($matches[1])) {
-    echo '<style>' . $matches[1] . '</style>';
-}
-?>
-
 <style>
 /* ============================================
    Z-INDEX HIERARCHY (de mayor a menor):
@@ -32,23 +15,10 @@ if (isset($matches[1])) {
     z-index: 1060 !important; /* Por encima del navbar (1055) */
 }
 
-/* Offcanvas de filtros y cafetería deben estar por encima del navbar en pantallas grandes */
+/* Offcanvas de filtros debe estar por encima del navbar en pantallas grandes */
 @media (min-width: 992px) {
     #offcanvasFiltros {
-        z-index: 1056 !important; /* Por encima del navbar (1055) en desktop */
-        top: 80px !important; /* Dejar espacio para el navbar */
-        height: calc(100vh - 80px) !important; /* Altura ajustada para no tapar navbar */
-    }
-    
-    #offcanvasCafeteria {
-        z-index: 1056 !important; /* Por encima del navbar (1055) en desktop */
-        top: 80px !important; /* Dejar espacio para el navbar */
-        height: calc(100vh - 80px) !important; /* Altura ajustada para no tapar navbar */
-        max-height: calc(100vh - 80px) !important;
-    }
-    
-    #offcanvasCafeteria .offcanvas-header {
-        padding-top: 1rem !important;
+        z-index: 1060 !important; /* Igual que el carrito y cafetería - por encima de todo */
     }
 }
 
@@ -119,66 +89,6 @@ if (isset($matches[1])) {
         min-height: calc(100vh - 120px) !important;
     }
 }
-
-/* Estilos específicos para el offcanvas de cafetería - sobrescribir estilos de filtros */
-#offcanvasCafeteria .offcanvas-body,
-#offcanvasCafeteriaMobile .offcanvas-body {
-    overflow-y: auto !important;
-    overflow-x: hidden !important;
-    height: auto !important;
-    max-height: calc(100vh - 60px) !important;
-    padding: 1rem !important;
-    display: block !important;
-    flex-direction: unset !important;
-    position: relative !important;
-}
-
-/* Offcanvas móvil - dejar espacio para el navbar */
-#offcanvasCafeteriaMobile {
-    max-height: calc(100vh - 60px) !important; /* 100vh - altura del navbar */
-    height: calc(100vh - 60px) !important;
-    top: 60px !important; /* Empezar debajo del navbar */
-    border-top-left-radius: 20px !important;
-    border-top-right-radius: 20px !important;
-}
-
-#offcanvasCafeteriaMobile .offcanvas-body {
-    max-height: calc(100vh - 120px) !important; /* 100vh - navbar - header offcanvas */
-    height: calc(100vh - 120px) !important;
-}
-
-/* Asegurar que el contenido pueda hacer scroll */
-#contenido_cafeteria_mapa,
-#contenido_cafeteria_mapa_mobile {
-    width: 100%;
-    height: auto;
-    min-height: 100%;
-    padding-bottom: 2rem;
-}
-
-/* Scrollbar personalizada para el offcanvas de cafetería */
-#offcanvasCafeteria .offcanvas-body::-webkit-scrollbar,
-#offcanvasCafeteriaMobile .offcanvas-body::-webkit-scrollbar {
-    width: 10px;
-}
-
-#offcanvasCafeteria .offcanvas-body::-webkit-scrollbar-track,
-#offcanvasCafeteriaMobile .offcanvas-body::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 5px;
-}
-
-#offcanvasCafeteria .offcanvas-body::-webkit-scrollbar-thumb,
-#offcanvasCafeteriaMobile .offcanvas-body::-webkit-scrollbar-thumb {
-    background: var(--principal);
-    border-radius: 5px;
-    border: 2px solid #f1f1f1;
-}
-
-#offcanvasCafeteria .offcanvas-body::-webkit-scrollbar-thumb:hover,
-#offcanvasCafeteriaMobile .offcanvas-body::-webkit-scrollbar-thumb:hover {
-    background: #e65a4a;
-}
 </style>
 
 <!-- Menu de mapa -->
@@ -204,40 +114,5 @@ if (isset($matches[1])) {
 
 <div id="map" style="width: 100%;"></div>
 
-<!-- Offcanvas para mostrar información de cafetería (Desktop - desde la derecha) -->
-<div class="offcanvas offcanvas-end filtros-offcanvas filtros-offcanvas-desktop" tabindex="-1" id="offcanvasCafeteria" aria-labelledby="offcanvasCafeteriaLabel" style="width: 650px; max-width: 90vw; top: 80px; height: calc(100vh - 80px);">
-    <div class="offcanvas-header filtros-offcanvas-header">
-        <div class="filtros-header-content">
-            <h5 id="offcanvasCafeteriaLabel" class="offcanvas-title-filtros">
-                <i class="bi bi-cup-hot-fill"></i>
-                <span id="titulo_cafeteria_ver_mapa">Información de Cafetería</span>
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
-        </div>
-    </div>
-    <div class="offcanvas-body filtros-offcanvas-body">
-        <input type="hidden" id="id_cafeteria_mapa">
-        <div id="contenido_cafeteria_mapa">
-            <?php include 'cafeterias_lista/ver_cafeteria_contenido.php'; ?>
-        </div>
-    </div>
-</div>
-
-<!-- Offcanvas para mostrar información de cafetería (Mobile - desde abajo) -->
-<div class="offcanvas offcanvas-bottom filtros-offcanvas filtros-offcanvas-mobile" tabindex="-1" id="offcanvasCafeteriaMobile" aria-labelledby="offcanvasCafeteriaMobileLabel" style="max-height: 98vh; height: 98vh;">
-    <div class="offcanvas-header filtros-offcanvas-header">
-        <div class="filtros-header-content">
-            <h5 id="offcanvasCafeteriaMobileLabel" class="offcanvas-title-filtros">
-                <i class="bi bi-cup-hot-fill"></i>
-                <span id="titulo_cafeteria_ver_mapa_mobile">Información de Cafetería</span>
-            </h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
-        </div>
-    </div>
-    <div class="offcanvas-body filtros-offcanvas-body">
-        <input type="hidden" id="id_cafeteria_mapa_mobile">
-        <div id="contenido_cafeteria_mapa_mobile">
-            <?php include 'cafeterias_lista/ver_cafeteria_contenido.php'; ?>
-        </div>
-    </div>
-</div>
+<!-- Incluir offcanvas y estilos unificados -->
+<?php include 'cafeterias_lista/ver_cafeteria_contenido.php'; ?>

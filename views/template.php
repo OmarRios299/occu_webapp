@@ -23,7 +23,7 @@ if (!isset($_SESSION['iniciarSesion']) && isset($_COOKIE['token_session'])) {
 
 $template = new TemplateController();
 $url = $template->obtenerUrlController();
-$v = "1.2.0";
+$v = "1.3.0";
 
 ?>
 <!DOCTYPE html>
@@ -34,11 +34,39 @@ $v = "1.2.0";
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>OCCU</title>
+    
+    <!-- Theme Color -->
     <meta name="theme-color" content="#000000">
     <meta name="msapplication-navbutton-color" content="#000000">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-    <link rel="icon" sizes="192x192" href="<?php echo $url; ?>views/assets/img/logo_1.png">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+    <!-- Favicon estándar (genérico) - Funciona en todos los navegadores -->
+    <link rel="icon" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>" type="image/png">
+    <link rel="shortcut icon" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>" type="image/png">
+    
+    <!-- Favicons con tamaños específicos (Windows/Desktop) -->
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
+    
+    <!-- Apple Touch Icon (iOS) - Solo el tamaño estándar requerido -->
+    <link rel="apple-touch-icon" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
+    
+    <!-- Android/Chrome Icons (PWA) -->
+    <link rel="icon" type="image/png" sizes="192x192" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
+    <link rel="icon" type="image/png" sizes="512x512" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
+    
+    <!-- Windows Tiles (Windows 10/11) -->
+    <meta name="msapplication-TileColor" content="#000000">
+    <meta name="msapplication-TileImage" content="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
+    
+    <!-- Apple Mobile Web App -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="OCCU">
+    
+    <!-- Web App Manifest -->
+    <link rel="manifest" href="<?php echo $url; ?>manifest.json?v=<?php echo $v; ?>">
 
     <!-- Bootstrap CSS CDN -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -51,7 +79,7 @@ $v = "1.2.0";
     <!-- <link rel="stylesheet" type="text/css" href="<?php echo $url; ?>views/assets/css/css/fontawesome/all.min.css"> -->
 
     <!-- Estilos internos -->
-    <link rel="stylesheet" type="text/css" href="<?php echo $url; ?>views/assets/css/css/style.css">
+    <link rel="stylesheet" type="text/css" href="<?php echo $url; ?>views/assets/css/css/style.css?v=<?php echo $v; ?>">
 
     <!-- Scrollbar Custom CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css">
@@ -271,6 +299,7 @@ $v = "1.2.0";
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_mapa.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_lista.js?v='<?php echo $v; ?>'"></script>
+    <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_propietario.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_servicios.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_menu.js?v='<?php echo $v; ?>'"></script>
     <!-- Menu -->

@@ -57,6 +57,9 @@
 
 </div>
 
+<!-- Incluir offcanvas y estilos unificados -->
+<?php include 'ver_cafeteria_contenido.php'; ?>
+
 <div class="modal fade" id="modal_cafeteria" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">

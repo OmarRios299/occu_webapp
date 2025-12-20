@@ -27,7 +27,7 @@ class CafeteriasListaController{
             $html .= '
             <div class="cafeteria-card-wrapper">
                 <div class="cafeteria-card">
-                    <a href="' . $url . 'cafeterias_lista/' . $cafeteria['id'] . '" class="cafeteria-card-link">
+                    <div class="cafeteria-card-link" data-cafeteria-id="' . $cafeteria['id'] . '" style="cursor: pointer;">
                         <div class="cafeteria-card-image">
                             <img src="' . htmlspecialchars($cafeteria['imagen']) . '" alt="' . htmlspecialchars($cafeteria['nombre']) . '">
                             <div class="cafeteria-card-overlay">
@@ -50,7 +50,7 @@ class CafeteriasListaController{
                                 </span>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 </div>
             </div>';
         }

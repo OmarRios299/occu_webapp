@@ -223,34 +223,42 @@ class GeneralController
 		$tipo      = $imagen['type'];
 		$tmpimg    = $imagen['tmp_name'];
 
-		if ($tipo == "image/jpg" || $tipo == "image/jpeg") {
+		// Mapear tipos MIME a extensiones
+		$tiposPermitidos = [
+			'image/jpeg' => 'jpg',
+			'image/jpg' => 'jpg',
+			'image/png' => 'png',
+			'image/webp' => 'webp',
+			'image/gif' => 'gif',
+			'image/bmp' => 'bmp'
+		];
 
-			$ext = 'jpg';
-		} else if ($tipo == "image/png") {
+		// Obtener extensión según el tipo
+		$ext = isset($tiposPermitidos[$tipo]) ? $tiposPermitidos[$tipo] : null;
 
-			$ext = 'png';
+		if (!$ext) {
+			return "invalido";
 		}
 
 		$aleatorio = mt_rand(100, 999);
-
 		$nuevo_nombre = $aleatorio . '_' . $nombre . '.' . $ext;
 		$ruta = "../../views/assets/img/$directorio/$nuevo_nombre";
 		$ruta_produccion = "views/assets/img/$directorio/$nuevo_nombre";
 
-
-
-		if ($tipo == "image/jpg" || $tipo == "image/jpeg" || $tipo == "image/png") {
-
-			$move =  @move_uploaded_file($tmpimg, $ruta);
-			$ruta_produccion = GeneralController::convertirImagenWebp($ruta, true);
-			if ($move) {
-				$x =  $ruta_produccion;
+		// Mover el archivo subido
+		$move = @move_uploaded_file($tmpimg, $ruta);
+		
+		if ($move) {
+			// Convertir a WebP (excepto si ya es WebP)
+			if ($ext !== 'webp') {
+				$ruta_produccion = GeneralController::convertirImagenWebp($ruta, true);
 			} else {
-				$x =  "error_img";
+				// Si ya es WebP, solo remover el ../../ del inicio
+				$ruta_produccion = substr($ruta, 6);
 			}
+			$x = $ruta_produccion;
 		} else {
-
-			$x =  "invalido";
+			$x = "error_img";
 		}
 
 		return $x;
@@ -261,45 +269,82 @@ class GeneralController
 	/* CONVERTIR IMAGEN A WEBP */
 
 	/**
-	 * Descripcion: Convertir una imagen JPG o PNG a formato WEBP.
+	 * Descripcion: Convertir una imagen JPG, PNG, GIF o BMP a formato WEBP.
 	 * @param string $imagePath - Ruta de la imagen con ../../ al inicio de la ruta.
-	 * @param bool $elminar 	   - Condición para eliminar la imagen original jpg o png.
+	 * @param bool $eliminar 	   - Condición para eliminar la imagen original.
 	 * @return string la ruta de la imagen sin el ../../ al inicio y con el formato webp.
 	 */
 	static public function convertirImagenWebp($imagePath, $eliminar = false)
 	{
 		$continuar = true;
 		$quality = 80;
-		//PNG a WEBP
-		if (function_exists("imagecreatefrompng") && substr_compare($imagePath, 'png', - (strlen("png"))) === 0) {
+		$im = null;
+		$newImagePath = '';
+		
+		// Determinar el tipo de imagen por extensión
+		$extension = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+		
+		// PNG a WEBP
+		if ($extension === 'png' && function_exists("imagecreatefrompng")) {
 			$im = imagecreatefrompng($imagePath);
-			imagepalettetotruecolor($im);
-			imagealphablending($im, true);
-			imagesavealpha($im, true);
-
-			$newImagePath = str_replace("png", "webp", $imagePath);
-		} else if (function_exists("imagecreatefromjpeg") && substr_compare($imagePath, 'jpg', - (strlen("jpg"))) === 0) {
-			//JPG A WEBP
+			if ($im !== false) {
+				imagepalettetotruecolor($im);
+				imagealphablending($im, true);
+				imagesavealpha($im, true);
+				$newImagePath = str_replace("." . $extension, ".webp", $imagePath);
+			} else {
+				$continuar = false;
+			}
+		} 
+		// JPG/JPEG a WEBP
+		else if (($extension === 'jpg' || $extension === 'jpeg') && function_exists("imagecreatefromjpeg")) {
 			$im = imagecreatefromjpeg($imagePath);
-			$newImagePath = str_replace("jpg", "webp", $imagePath);
-		} else {
-			//Si no es PNG o JPG devuelve el archivo original
+			if ($im !== false) {
+				$newImagePath = str_replace("." . $extension, ".webp", $imagePath);
+			} else {
+				$continuar = false;
+			}
+		}
+		// GIF a WEBP
+		else if ($extension === 'gif' && function_exists("imagecreatefromgif")) {
+			$im = imagecreatefromgif($imagePath);
+			if ($im !== false) {
+				imagepalettetotruecolor($im);
+				$newImagePath = str_replace("." . $extension, ".webp", $imagePath);
+			} else {
+				$continuar = false;
+			}
+		}
+		// BMP a WEBP (requiere PHP 7.2+)
+		else if ($extension === 'bmp' && function_exists("imagecreatefrombmp")) {
+			$im = imagecreatefrombmp($imagePath);
+			if ($im !== false) {
+				$newImagePath = str_replace("." . $extension, ".webp", $imagePath);
+			} else {
+				$continuar = false;
+			}
+		} 
+		// Si no es un formato soportado, devuelve el archivo original
+		else {
 			$continuar = false;
 		}
-		if ($continuar) {
-			//Crear la imagen .webp
-
+		
+		if ($continuar && $im !== false && function_exists("imagewebp")) {
+			// Crear la imagen .webp
 			imagewebp($im, $newImagePath, $quality);
-			if ($eliminar) {
-				//Eliminar la imagen original (png o jpg)
+			imagedestroy($im);
+			
+			if ($eliminar && file_exists($imagePath)) {
+				// Eliminar la imagen original
 				unlink($imagePath);
 			}
-			//Eliminar el inicio de la nueva ruta (../../)
-			$newImagePath = substr($newImagePath, "6");
+			// Eliminar el inicio de la nueva ruta (../../)
+			$newImagePath = substr($newImagePath, 6);
 		} else {
-			//Eliminar el inicio de la ruta original (../../)
-			$newImagePath = substr($imagePath, "6");
+			// Eliminar el inicio de la ruta original (../../)
+			$newImagePath = substr($imagePath, 6);
 		}
+		
 		return $newImagePath;
 	}
 
