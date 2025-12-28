@@ -72,6 +72,6 @@ $(document).on("click",".btn_editar_servicio",function(){
 $(document).on("click","#btn_agregar_servicio",function(){
     $(".input_servicios").val('');
     $("#nombre_servicio").removeAttr('validarCampoEditar').attr('validarCampo');
-    $(".imagen_editar").attr('src','http://localhost/OCCU/occu_webApp/views/assets/img/cafeteria_default.png');
+    $(".imagen_editar").attr('src',url+'views/assets/img/cafeteria_default.png');
     $("#modal_editar_servicios").modal('show');
 });

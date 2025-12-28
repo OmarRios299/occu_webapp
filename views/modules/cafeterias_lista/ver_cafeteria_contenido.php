@@ -201,47 +201,40 @@
     color: var(--cuarto);
 }
 
-/* Cards de servicios en Splide */
-.services-card {
-    background: #fff;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.06);
-    transition: all 0.3s ease;
-    border: 1px solid rgba(0,0,0,0.04);
+/* Contenedor de iconos de servicios */
+.servicios-iconos-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-top: 1rem;
 }
 
-.services-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+.servicio-icono-item {
+    flex: 0 0 auto;
 }
 
-.services-card img {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
+.servicio-icono-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
-.services-card .card-body {
-    padding: 1.2rem;
+.servicio-icono-img {
+    width: 98px;
+    height: 98px;
+    object-fit: contain;
 }
 
-.services-card .card-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--cuarto);
-    margin-bottom: 0.5rem;
-}
-
-.services-card .card-text {
+.servicio-icono-nombre {
     font-size: 0.85rem;
-    color: var(--color-gris);
+    font-weight: 600;
+    color: var(--cuarto);
+    text-align: center;
+    line-height: 1.2;
 }
 
-/* Splide personalizado - Sin botones de navegación */
-#splide_mapa .splide__arrow {
-    display: none !important;
-}
+
 
 /* Sección de Reseñas */
 .reviews-section {
@@ -949,13 +942,13 @@
 /* Ajustes para móviles */
 @media (max-width: 991.98px) {
     #offcanvasCafeteriaMobile {
-        max-height: 100vh !important;
-        height: 100vh !important;
+        max-height: 95vh !important;
+        height: 95vh !important;
     }
     
     #offcanvasCafeteriaMobile #contenido_cafeteria_mapa_mobile {
         padding: 1rem;
-        padding-bottom: 2rem;
+        padding-bottom: 4rem;
     }
 }
 
@@ -1081,12 +1074,8 @@
                                 <h3>Servicios</h3>
                             </div>
                             
-                            <div id="splide_mapa" class="splide">
-                                <div class="splide__track">
-                                    <ul class="splide__list" id="carousel_servicios_mapa">
-                                        <!-- Los servicios se cargan dinámicamente -->
-                                    </ul>
-                                </div>
+                            <div class="servicios-iconos-container" id="servicios_iconos_mapa">
+                                <!-- Los servicios se cargan dinámicamente -->
                             </div>
                         </div>
 
@@ -1246,12 +1235,8 @@
                                 <h3>Servicios</h3>
                             </div>
                             
-                            <div id="splide_mapa" class="splide">
-                                <div class="splide__track">
-                                    <ul class="splide__list" id="carousel_servicios_mapa">
-                                        <!-- Los servicios se cargan dinámicamente -->
-                                    </ul>
-                                </div>
+                            <div class="servicios-iconos-container" id="servicios_iconos_mapa">
+                                <!-- Los servicios se cargan dinámicamente -->
                             </div>
                         </div>
 

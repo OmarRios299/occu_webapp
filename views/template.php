@@ -23,7 +23,7 @@ if (!isset($_SESSION['iniciarSesion']) && isset($_COOKIE['token_session'])) {
 
 $template = new TemplateController();
 $url = $template->obtenerUrlController();
-$v = "1.3.0";
+$v = "1.4.0";
 
 ?>
 <!DOCTYPE html>
@@ -123,7 +123,7 @@ $v = "1.3.0";
             } else {
                 include "modules/sections/navbar_movil.php";
                 echo '<div id="sistema">';
-                echo '<div class="content_sin_sesion">';
+                echo '<div class="contenido_principal">';
                 echo '<div class="modulos">';
             }
         } else if ($moduloActual == "cafeterias_mapa") {
@@ -187,7 +187,7 @@ $v = "1.3.0";
             echo '<div>';
         } else {
             echo '<div id="sistema">';
-            echo '<div class="content_sin_sesion">';
+            echo '<div class="contenido_principal">';
             include "modules/sections/navbar_inicio.php";
             echo '<div class="modulos">';
         }
@@ -221,7 +221,7 @@ $v = "1.3.0";
         // include "modules/inicio.php";
         // echo '</div></div></div><div class="overlay"></div>';
         echo '<div id="sistema">';
-        echo '<div class="content_sin_sesion">';
+        echo '<div class="contenido_principal">';
         include "modules/sections/navbar_inicio.php";
         echo '<div class="modulos">';
         echo '<div class="modulo-' . htmlspecialchars($moduloActual) . '">';

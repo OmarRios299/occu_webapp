@@ -18,8 +18,7 @@ class MisPedidosModel extends Conexion
             v.fecha_entragado,
             c.nombre AS nombre_cafeteria,
             c.imagen AS imagen_cafeteria,
-            c.direccion AS direccion_cafeteria,
-            TIMESTAMPDIFF(MINUTE, v.fecha_alta, NOW()) AS minutos_transcurridos
+            c.direccion AS direccion_cafeteria
         FROM ventas v
         INNER JOIN cafeterias c ON c.id = v.id_cafeteria
         WHERE v.id_cliente = :id_usuario
@@ -52,8 +51,7 @@ class MisPedidosModel extends Conexion
             v.motivo_rechazo,
             c.nombre AS nombre_cafeteria,
             c.imagen AS imagen_cafeteria,
-            c.direccion AS direccion_cafeteria,
-            TIMESTAMPDIFF(MINUTE, v.fecha_alta, COALESCE(v.fecha_entragado, v.fecha_rechazo, NOW())) AS minutos_transcurridos
+            c.direccion AS direccion_cafeteria
         FROM ventas v
         INNER JOIN cafeterias c ON c.id = v.id_cafeteria
         WHERE v.id_cliente = :id_usuario
@@ -95,8 +93,7 @@ class MisPedidosModel extends Conexion
             c.imagen AS imagen_cafeteria,
             c.direccion AS direccion_cafeteria,
             c.telefono AS telefono_cafeteria,
-            c.correo_electronico AS correo_cafeteria,
-            TIMESTAMPDIFF(MINUTE, v.fecha_alta, COALESCE(v.fecha_entragado, v.fecha_rechazo, NOW())) AS minutos_transcurridos
+            c.correo_electronico AS correo_cafeteria
         FROM ventas v
         INNER JOIN cafeterias c ON c.id = v.id_cafeteria
         WHERE v.id = :id_pedido
@@ -179,6 +176,47 @@ class MisPedidosModel extends Conexion
         
         $result = $stmt->fetch();
         return $result['total'] > 0;
+    }
+
+    /* OBTENER ZONA HORARIA DE LA CAFETERÍA */
+    
+    static public function obtenerZonaHorariaCafeteriaModel($id_cafeteria)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT ciudades.zona_horaria 
+        FROM cafeterias c
+        INNER JOIN ciudades ON ciudades.id = c.id_ciudad
+        WHERE c.id = :id_cafeteria");
+
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $resultado = $stmt->fetch();
+
+        return $resultado ? $resultado['zona_horaria'] : null;
+
+        $stmt = null;
+    }
+
+    /* OBTENER ZONA HORARIA DEL PEDIDO */
+    
+    static public function obtenerZonaHorariaPedidoModel($id_pedido)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT ciudades.zona_horaria 
+        FROM ventas v
+        INNER JOIN cafeterias c ON c.id = v.id_cafeteria
+        INNER JOIN ciudades ON ciudades.id = c.id_ciudad
+        WHERE v.id = :id_pedido");
+
+        $stmt->bindParam(':id_pedido', $id_pedido, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $resultado = $stmt->fetch();
+
+        return $resultado ? $resultado['zona_horaria'] : null;
+
+        $stmt = null;
     }
 }
 

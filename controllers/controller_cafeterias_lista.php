@@ -115,15 +115,12 @@ class CafeteriasListaController{
             $titulo = $servicio['nombre'];
             $imagen = $url . $servicio['imagen']; 
             $servicios .= '
-            <li class="splide__slide">
-                <div class="custom-carousel-item">
-                    <div class="card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url(' . $imagen . ');">
-                        <div class="d-flex flex-column p-3 pb-3 text-white text-center titulo-oscuro">
-                            <h3 class="pt-5 mt-5 mb-4 display-7 lh-1 fw-bold">' . $titulo . '</h3>
-                        </div>
-                    </div>
+            <div class="servicio-icono-item">
+                <div class="servicio-icono-wrapper">
+                    <img src="' . $imagen . '" alt="' . $titulo . '" class="servicio-icono-img">
+                    <!-- <span class="servicio-icono-nombre">' . $titulo . '</span> -->
                 </div>
-            </li>
+            </div>
             ';
         }
         
@@ -175,8 +172,19 @@ class CafeteriasListaController{
         session_start();
         if (isset($_SESSION['id']) && $_SESSION['id']!='') {
             $datos['id_usuario'] = $_SESSION['id'];
-            date_default_timezone_set("America/Tijuana");
+            
+            // Obtener la zona horaria de la ciudad de la cafetería
+            $zona_horaria = CafeteriasListaModel::obtenerZonaHorariaCafeteriaModel($datos['id_cafeteria']);
+            
+            // Si no se encuentra zona horaria, usar la por defecto
+            if (!$zona_horaria) {
+                $zona_horaria = "America/Tijuana";
+            }
+
+            // Establecer la zona horaria antes de obtener la fecha
+            date_default_timezone_set($zona_horaria);
             $datos['fecha_alta']= date("Y-m-d H:i:s");
+            
             return CafeteriasListaModel::registrarComentarioModel($datos);
         }else{
             return 'sesion';

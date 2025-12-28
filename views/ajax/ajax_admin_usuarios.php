@@ -14,12 +14,12 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         $datos = array(
             "id"             => isset($_POST['id_usuario']) ? $_POST['id_usuario'] : false,
             "nombre"                => $_POST['nombre'],
-            "apellido"              => $_POST['apellido'],
-            "correo"                => $_POST['correo'],
-            "contrasena"            => $_POST['contrasena'],
-            "telefono"              => $_POST['telefono'],
+            "apellido"              => isset($_POST['apellido']) ? $_POST['apellido'] : '',
+            "correo"                => isset($_POST['correo']) ? $_POST['correo'] : '',
+            "contrasena"            => isset($_POST['contrasena']) ? $_POST['contrasena'] : '',
+            "telefono"              => isset($_POST['telefono']) ? $_POST['telefono'] : '',
             "nivel"                 => $_POST['nivel'],
-            "ciudad"                => $_POST['ciudad'],
+            "ciudad"                => isset($_POST['ciudad']) ? $_POST['ciudad'] : '',
             "imagen_subir"          => isset($_FILES["imagen_usuario_subir"]) ? $_FILES['imagen_usuario_subir'] : false,
             // "imagen_captura"         => isset($_POST["imagen_usuario_captura"]) ? $_POST['imagen_usuario_captura'] : false,
         );

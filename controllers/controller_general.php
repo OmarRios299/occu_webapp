@@ -230,7 +230,9 @@ class GeneralController
 			'image/png' => 'png',
 			'image/webp' => 'webp',
 			'image/gif' => 'gif',
-			'image/bmp' => 'bmp'
+			'image/bmp' => 'bmp',
+			'image/svg+xml' => 'svg',
+			'image/svg' => 'svg'
 		];
 
 		// Obtener extensión según el tipo
@@ -249,8 +251,12 @@ class GeneralController
 		$move = @move_uploaded_file($tmpimg, $ruta);
 		
 		if ($move) {
-			// Convertir a WebP (excepto si ya es WebP)
-			if ($ext !== 'webp') {
+			// Si es SVG, no convertir a WebP, solo devolver la ruta
+			if ($ext === 'svg') {
+				$ruta_produccion = substr($ruta, 6);
+			}
+			// Convertir a WebP (excepto si ya es WebP o SVG)
+			else if ($ext !== 'webp') {
 				$ruta_produccion = GeneralController::convertirImagenWebp($ruta, true);
 			} else {
 				// Si ya es WebP, solo remover el ../../ del inicio
@@ -281,12 +287,21 @@ class GeneralController
 		$im = null;
 		$newImagePath = '';
 		
-		// Determinar el tipo de imagen por extensión
-		$extension = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+		// Determinar el tipo real de imagen usando getimagesize (más confiable que la extensión)
+		$imageInfo = @getimagesize($imagePath);
+		
+		if ($imageInfo === false) {
+			// Si getimagesize falla, intentar por extensión como respaldo
+			$extension = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+			$mimeType = null;
+		} else {
+			$mimeType = $imageInfo['mime'];
+			$extension = strtolower(pathinfo($imagePath, PATHINFO_EXTENSION));
+		}
 		
 		// PNG a WEBP
-		if ($extension === 'png' && function_exists("imagecreatefrompng")) {
-			$im = imagecreatefrompng($imagePath);
+		if (($mimeType === 'image/png' || ($mimeType === null && $extension === 'png')) && function_exists("imagecreatefrompng")) {
+			$im = @imagecreatefrompng($imagePath);
 			if ($im !== false) {
 				imagepalettetotruecolor($im);
 				imagealphablending($im, true);
@@ -297,8 +312,8 @@ class GeneralController
 			}
 		} 
 		// JPG/JPEG a WEBP
-		else if (($extension === 'jpg' || $extension === 'jpeg') && function_exists("imagecreatefromjpeg")) {
-			$im = imagecreatefromjpeg($imagePath);
+		else if (($mimeType === 'image/jpeg' || $mimeType === 'image/jpg' || ($mimeType === null && ($extension === 'jpg' || $extension === 'jpeg'))) && function_exists("imagecreatefromjpeg")) {
+			$im = @imagecreatefromjpeg($imagePath);
 			if ($im !== false) {
 				$newImagePath = str_replace("." . $extension, ".webp", $imagePath);
 			} else {
@@ -306,8 +321,8 @@ class GeneralController
 			}
 		}
 		// GIF a WEBP
-		else if ($extension === 'gif' && function_exists("imagecreatefromgif")) {
-			$im = imagecreatefromgif($imagePath);
+		else if (($mimeType === 'image/gif' || ($mimeType === null && $extension === 'gif')) && function_exists("imagecreatefromgif")) {
+			$im = @imagecreatefromgif($imagePath);
 			if ($im !== false) {
 				imagepalettetotruecolor($im);
 				$newImagePath = str_replace("." . $extension, ".webp", $imagePath);
@@ -316,8 +331,8 @@ class GeneralController
 			}
 		}
 		// BMP a WEBP (requiere PHP 7.2+)
-		else if ($extension === 'bmp' && function_exists("imagecreatefrombmp")) {
-			$im = imagecreatefrombmp($imagePath);
+		else if (($mimeType === 'image/bmp' || ($mimeType === null && $extension === 'bmp')) && function_exists("imagecreatefrombmp")) {
+			$im = @imagecreatefrombmp($imagePath);
 			if ($im !== false) {
 				$newImagePath = str_replace("." . $extension, ".webp", $imagePath);
 			} else {

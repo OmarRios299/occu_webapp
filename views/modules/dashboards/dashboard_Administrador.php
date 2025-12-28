@@ -42,8 +42,8 @@ if ($_SESSION['nivel'] == 'Administrador') { ?>
                 <div class="col-md-6">
                     <div class="card card-metricos h-100">
                         <div class="card-body">
-                            <h5 class="card-title"><?= $contador['total_consumidores'] ?></h5>
-                            <p class="card-text">Consumidores</p>
+                            <h5 class="card-title"><?= $contador['total_clientes'] ?></h5>
+                            <p class="card-text">Clientes</p>
                         </div>
                     </div>
                 </div>

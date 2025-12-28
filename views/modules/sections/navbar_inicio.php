@@ -4,9 +4,9 @@
     <a href="<?= $url ?>inicio" class="nav-btn">
       <span class="ms-1"><img src="<?= $url ?>views/assets/img/logo_blanco.png" alt="Logo" style="width: 70px;"></span>
     </a>
-    <a href="<?= $url ?>registrarme" class="nav-btn">
+    <!-- <a href="<?= $url ?>registrarme" class="nav-btn">
       <i class="fas fa-user"></i><span class="ms-1">Registrarme</span>
-    </a>
+    </a> -->
     <a href="<?= $url ?>cafeterias_mapa" class="nav-btn">
       <i class="fas fa-map-marker-alt"></i><span class="ms-1">Ubicaciones</span>
     </a>

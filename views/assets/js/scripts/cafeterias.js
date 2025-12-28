@@ -3,6 +3,8 @@ let map_registrar;
 let currentMarker_registrar = null;
 let allowedPolygon_registrar = null;
 let initialized_map = false;
+let coordenadasTemporales = null; // Guardar coordenadas temporales hasta que se presione aceptar
+let coordenadasOriginales = null; // Guardar coordenadas originales para restaurar si se cancela
 
 // Función para verificar que Leaflet esté cargado
 function waitForLeaflet(callback, maxAttempts = 50) {
@@ -24,27 +26,96 @@ function waitForLeaflet(callback, maxAttempts = 50) {
 
 $(document).ready(function () {
   if (moduloActual == "cafeterias" && $("#ciudad_select").length) {
-    // Inicializar polígono cuando se carga la página
-    initializePolygonAndMap();
+    // NO inicializar polígono al cargar la página - se hará al abrir el modal
 
     // Escuchar el cambio del select para actualizar el polígono y centrar el mapa
     $("#ciudad_select").change(function () {
       updatePolygonAndMap();
     });
 
-    // Evento para mostrar el modal y cargar el mapa
+    // Evento para mostrar el modal y cargar el mapa con coordenadas actualizadas
     $("#modal_ubicacion").on("shown.bs.modal", function () {
-      if (!initialized_map) {
-        waitForLeaflet(() => {
-          initializeMap();
+      // Guardar las coordenadas originales antes de modificar nada
+      coordenadasOriginales = {
+        direccion: $("#direccion_cafeteria").val() || "",
+        latitud: $("#latitud_cafeteria").val() || "",
+        longitud: $("#longitud_cafeteria").val() || "",
+        pais: $("#pais_cafeteria").val() || ""
+      };
+      
+      // Resetear coordenadas temporales
+      coordenadasTemporales = null;
+      
+      // Cargar coordenadas de la ciudad al abrir el modal
+      const idCiudad = $("#ciudad_select option:selected").val();
+      if (idCiudad) {
+        cargarCoordenadasCiudadAjax(idCiudad, function(polygonCoordinates) {
+          allowedPolygon_registrar = polygonCoordinates;
+          if (!initialized_map) {
+            waitForLeaflet(() => {
+              initializeMap();
+            });
+          } else {
+            // Actualizar el mapa con las nuevas coordenadas
+            updatePolygonAndMap();
+            setTimeout(() => {
+              if (map_registrar) {
+                map_registrar.invalidateSize();
+                // Si hay coordenadas originales, mostrar el marcador
+                if (coordenadasOriginales.latitud && coordenadasOriginales.longitud) {
+                  const lat = parseFloat(coordenadasOriginales.latitud);
+                  const lng = parseFloat(coordenadasOriginales.longitud);
+                  if (currentMarker_registrar) {
+                    map_registrar.removeLayer(currentMarker_registrar);
+                  }
+                  currentMarker_registrar = L.marker([lat, lng]).addTo(map_registrar);
+                  map_registrar.setView([lat, lng], map_registrar.getZoom() || 15);
+                }
+              }
+            }, 300);
+          }
         });
       } else {
-        setTimeout(() => {
-          if (map_registrar) {
-            map_registrar.invalidateSize();
-          }
-        }, 300);
+        allowedPolygon_registrar = null;
+        if (!initialized_map) {
+          waitForLeaflet(() => {
+            initializeMap();
+          });
+        } else {
+          setTimeout(() => {
+            if (map_registrar) {
+              map_registrar.invalidateSize();
+              // Si hay coordenadas originales, mostrar el marcador
+              if (coordenadasOriginales.latitud && coordenadasOriginales.longitud) {
+                const lat = parseFloat(coordenadasOriginales.latitud);
+                const lng = parseFloat(coordenadasOriginales.longitud);
+                if (currentMarker_registrar) {
+                  map_registrar.removeLayer(currentMarker_registrar);
+                }
+                currentMarker_registrar = L.marker([lat, lng]).addTo(map_registrar);
+                map_registrar.setView([lat, lng], map_registrar.getZoom() || 15);
+              }
+            }
+          }, 300);
+        }
       }
+    });
+    
+    // Evento para cuando se cierra el modal sin guardar
+    $("#modal_ubicacion").on("hidden.bs.modal", function () {
+      // Restaurar coordenadas originales si no se guardó
+      if (coordenadasOriginales) {
+        $("#direccion_cafeteria").val(coordenadasOriginales.direccion);
+        $("#latitud_cafeteria").val(coordenadasOriginales.latitud);
+        $("#longitud_cafeteria").val(coordenadasOriginales.longitud);
+        if (coordenadasOriginales.pais) {
+          $("#pais_cafeteria").val(coordenadasOriginales.pais);
+        }
+      }
+      
+      // Resetear coordenadas temporales y originales
+      coordenadasTemporales = null;
+      coordenadasOriginales = null;
     });
   }
   // if ($('#tabla_imagenes').length) {
@@ -68,7 +139,55 @@ $(document).ready(function () {
   }
 });
 
-// Función para inicializar el polígono (sin mapa aún)
+// Función para cargar coordenadas de ciudad vía AJAX
+function cargarCoordenadasCiudadAjax(idCiudad, callback) {
+  if (!idCiudad) {
+    callback([]);
+    return;
+  }
+  
+  var datos = new FormData();
+  datos.append("obtener_info_ciudad", true);
+  datos.append('id_ciudad', idCiudad);
+  
+  $.ajax({
+    url: url + 'views/ajax/ajax_admin_paises.php',
+    method: 'POST',
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    success: function (respuesta) {
+      try {
+        const ciudad = JSON.parse(respuesta);
+        let polygonCoordinates = [];
+        
+        if (ciudad && ciudad.coordenadas && ciudad.coordenadas.trim() !== '' && ciudad.coordenadas !== 'null') {
+          try {
+            polygonCoordinates = JSON.parse(ciudad.coordenadas);
+            if (!Array.isArray(polygonCoordinates) || polygonCoordinates.length < 3) {
+              polygonCoordinates = [];
+            }
+          } catch (e) {
+            console.error('Error al parsear coordenadas:', e);
+            polygonCoordinates = [];
+          }
+        }
+        
+        callback(polygonCoordinates);
+      } catch (e) {
+        console.error('Error al parsear respuesta:', e);
+        callback([]);
+      }
+    },
+    error: function(xhr, status, error) {
+      console.error('Error al obtener coordenadas de ciudad:', error);
+      callback([]);
+    }
+  });
+}
+
+// Función para inicializar el polígono (sin mapa aún) - DEPRECATED, usar cargarCoordenadasCiudadAjax
 function initializePolygonAndMap() {
   const coordenadasAttr = $("#ciudad_select option:selected").attr(
     "coordenadas"
@@ -157,11 +276,12 @@ function initializeMap() {
     }
   }
 
-  // Agregar marcador si hay coordenadas guardadas
+  // Agregar marcador si hay coordenadas guardadas (estas son las originales)
   if (latitud && longitud) {
     currentMarker_registrar = L.marker([latitud, longitud]).addTo(
       map_registrar
     );
+    // No establecer coordenadasTemporales aquí, se hará solo cuando el usuario seleccione una nueva ubicación
   }
 
   // Agregar evento click al mapa para seleccionar ubicación
@@ -272,14 +392,16 @@ function isPointInPolygon(point, polygon) {
   return inside;
 }
 
-// Función para colocar el marcador y guardar los datos
+// Función para colocar el marcador y guardar los datos TEMPORALMENTE (hasta que se presione aceptar)
 function placeMarkerAndSaveData(latlng) {
   // Verificar si la ubicación está dentro del polígono permitido
   if (allowedPolygon_registrar && allowedPolygon_registrar.length > 0) {
     const point = { lat: latlng.lat, lng: latlng.lng };
     if (!isPointInPolygon(point, allowedPolygon_registrar)) {
-      alert(
-        "La ubicación seleccionada está fuera del área permitida. Por favor, selecciona una ubicación dentro de los límites."
+      swal(
+        "¡Alerta!",
+        "La ubicación seleccionada está fuera del área permitida. Por favor, selecciona una ubicación dentro de los límites.",
+        "warning"
       );
       return;
     }
@@ -321,23 +443,23 @@ function placeMarkerAndSaveData(latlng) {
           direccion = data.display_name || "";
         }
 
-        let country = data.address.country || "";
-        let city = $("#ciudad_select option:selected").text();
-        let id_city = $("#ciudad_select option:selected").val();
+        // Guardar temporalmente (no se guarda en los campos hasta que se presione aceptar)
+        coordenadasTemporales = {
+          direccion: direccion,
+          latitud: latlng.lat,
+          longitud: latlng.lng,
+          pais: data.address.country || ""
+        };
 
-        // Guardar los datos en los campos correspondientes
-        $("#direccion_cafeteria").val(direccion);
-        $("#latitud_cafeteria").val(latlng.lat);
-        $("#longitud_cafeteria").val(latlng.lng);
-        $("#pais_cafeteria").val(country);
-
-        console.log("Dirección guardada:", direccion);
-        console.log("Ciudad:", city, "País:", country, "ID Ciudad:", id_city);
+        console.log("Ubicación temporal seleccionada:", coordenadasTemporales);
       } else {
         // Si no se puede obtener la dirección, al menos guardar las coordenadas
-        $("#latitud_cafeteria").val(latlng.lat);
-        $("#longitud_cafeteria").val(latlng.lng);
-        $("#direccion_cafeteria").val(`Lat: ${latlng.lat}, Lng: ${latlng.lng}`);
+        coordenadasTemporales = {
+          direccion: `Lat: ${latlng.lat}, Lng: ${latlng.lng}`,
+          latitud: latlng.lat,
+          longitud: latlng.lng,
+          pais: ""
+        };
         console.log(
           "No se pudo obtener la dirección, guardando solo coordenadas"
         );
@@ -346,9 +468,12 @@ function placeMarkerAndSaveData(latlng) {
     .catch((error) => {
       console.error("Error al obtener la dirección:", error);
       // Guardar coordenadas aunque falle la geocodificación
-      $("#latitud_cafeteria").val(latlng.lat);
-      $("#longitud_cafeteria").val(latlng.lng);
-      $("#direccion_cafeteria").val(`Lat: ${latlng.lat}, Lng: ${latlng.lng}`);
+      coordenadasTemporales = {
+        direccion: `Lat: ${latlng.lat}, Lng: ${latlng.lng}`,
+        latitud: latlng.lat,
+        longitud: latlng.lng,
+        pais: ""
+      };
     });
 }
 
@@ -363,6 +488,14 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
   let ciudad = $("#ciudad_select option:selected").val();
   let latitud = $("#latitud_cafeteria").val();
   let longitud = $("#longitud_cafeteria").val();
+  
+  // Validar que se haya seleccionado una ciudad
+  if (!ciudad) {
+    swal("¡Error!", "Por favor selecciona una ciudad.", "error");
+    return;
+  }
+  
+  console.log("Enviando formulario. ID Ciudad:", ciudad);
   let horario_diferente = $("#switch_horario").is(":checked") ? "NO" : "SI";
   let imagen_subir = $("#imagen_cafeteria")[0].files[0]
     ? $("#imagen_cafeteria")[0].files[0]
@@ -481,15 +614,46 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
 
 // Mostrar el modal cuando se hace clic en el botón
 $("#btn_seleccionar_ubicacion").on("click", function () {
-  // Asegurarse de que el polígono esté actualizado antes de abrir el modal
-  initializePolygonAndMap();
+  // Resetear coordenadas temporales
+  coordenadasTemporales = null;
+  // Cargar polígono y mostrar modal - el polígono se cargará en el evento shown.bs.modal
   $("#modal_ubicacion").modal("show");
 });
 
+
 // Evento para el botón de guardar ubicación en el modal
 $(document).on("click", "#btn_guardar_ubicacion", function () {
-  // El modal se cierra automáticamente, las coordenadas ya están guardadas
-  // No necesitamos hacer nada adicional aquí
+  // Si hay coordenadas temporales (nueva selección), usar esas
+  // Si no hay temporales pero hay originales, mantener las originales (ya están guardadas)
+  // Si no hay ninguna, avisar
+  if (!coordenadasTemporales && (!coordenadasOriginales || (!coordenadasOriginales.latitud && !coordenadasOriginales.longitud))) {
+    swal("¡Alerta!", "Por favor selecciona una ubicación en el mapa antes de aceptar.", "warning");
+    return;
+  }
+
+  // Si hay coordenadas temporales (nueva ubicación seleccionada), guardarlas
+  if (coordenadasTemporales) {
+    $("#direccion_cafeteria").val(coordenadasTemporales.direccion);
+    $("#latitud_cafeteria").val(coordenadasTemporales.latitud);
+    $("#longitud_cafeteria").val(coordenadasTemporales.longitud);
+    if (coordenadasTemporales.pais) {
+      $("#pais_cafeteria").val(coordenadasTemporales.pais);
+    }
+  }
+  // Si no hay temporales pero hay originales, las originales ya están en los campos, no hacer nada
+
+  // Asegurar que el id_ciudad se guarde correctamente
+  const idCiudad = $("#ciudad_select option:selected").val();
+  console.log("Guardando ubicación. ID Ciudad:", idCiudad);
+
+  // Limpiar referencias antes de cerrar
+  coordenadasOriginales = null;
+  coordenadasTemporales = null;
+
+  // Cerrar el modal
+  $("#modal_ubicacion").modal("hide");
+
+  swal("¡Bien!", "Ubicación guardada correctamente.", "success");
 });
 
 function toggleFields(checkbox, dia) {

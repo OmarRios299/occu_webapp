@@ -23,6 +23,51 @@ class MisPedidosController
         $total_pedidos = MisPedidosModel::contarPedidosAnterioresModel($id_usuario);
         $total_paginas = ceil($total_pedidos / $por_pagina);
 
+        // Calcular minutos transcurridos para el pedido actual (si existe)
+        if ($pedido_actual) {
+            $zona_horaria = MisPedidosModel::obtenerZonaHorariaCafeteriaModel($pedido_actual['id_cafeteria']);
+            if (!$zona_horaria) {
+                $zona_horaria = "America/Tijuana";
+            }
+            
+            if ($pedido_actual['fecha_alta']) {
+                $timezone_cafeteria = new DateTimeZone($zona_horaria);
+                $fecha_alta = new DateTime($pedido_actual['fecha_alta'], $timezone_cafeteria);
+                $ahora = new DateTime('now', $timezone_cafeteria);
+                $diferencia = $ahora->diff($fecha_alta);
+                $pedido_actual['minutos_transcurridos'] = ($diferencia->days * 24 * 60) + ($diferencia->h * 60) + $diferencia->i;
+            } else {
+                $pedido_actual['minutos_transcurridos'] = 0;
+            }
+        }
+
+        // Calcular minutos transcurridos para pedidos anteriores
+        foreach ($pedidos_anteriores as &$pedido) {
+            $zona_horaria = MisPedidosModel::obtenerZonaHorariaCafeteriaModel($pedido['id_cafeteria']);
+            if (!$zona_horaria) {
+                $zona_horaria = "America/Tijuana";
+            }
+            
+            // Para pedidos anteriores, calcular desde fecha_alta hasta fecha_entragado o fecha_rechazo, o hasta ahora si aún está en proceso
+            $fecha_fin = $pedido['fecha_entragado'] ?? $pedido['fecha_rechazo'] ?? null;
+            
+            if ($pedido['fecha_alta']) {
+                $timezone_cafeteria = new DateTimeZone($zona_horaria);
+                $fecha_alta = new DateTime($pedido['fecha_alta'], $timezone_cafeteria);
+                
+                if ($fecha_fin) {
+                    $fecha_final = new DateTime($fecha_fin, $timezone_cafeteria);
+                } else {
+                    $fecha_final = new DateTime('now', $timezone_cafeteria);
+                }
+                
+                $diferencia = $fecha_final->diff($fecha_alta);
+                $pedido['minutos_transcurridos'] = ($diferencia->days * 24 * 60) + ($diferencia->h * 60) + $diferencia->i;
+            } else {
+                $pedido['minutos_transcurridos'] = 0;
+            }
+        }
+
         return json_encode([
             "pedido_actual" => $pedido_actual ? $pedido_actual : null,
             "pedidos_anteriores" => $pedidos_anteriores ? $pedidos_anteriores : [],
@@ -56,6 +101,31 @@ class MisPedidosController
                 "error" => true,
                 "message" => "Pedido no encontrado."
             ]);
+        }
+
+        // Obtener la zona horaria del pedido y calcular minutos transcurridos
+        $zona_horaria = MisPedidosModel::obtenerZonaHorariaPedidoModel($id_pedido);
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+        
+        // Calcular minutos transcurridos desde fecha_alta hasta fecha_entragado, fecha_rechazo o ahora
+        $fecha_fin = $pedido['fecha_entragado'] ?? $pedido['fecha_rechazo'] ?? null;
+        
+        if ($pedido['fecha_alta']) {
+            $timezone_cafeteria = new DateTimeZone($zona_horaria);
+            $fecha_alta = new DateTime($pedido['fecha_alta'], $timezone_cafeteria);
+            
+            if ($fecha_fin) {
+                $fecha_final = new DateTime($fecha_fin, $timezone_cafeteria);
+            } else {
+                $fecha_final = new DateTime('now', $timezone_cafeteria);
+            }
+            
+            $diferencia = $fecha_final->diff($fecha_alta);
+            $pedido['minutos_transcurridos'] = ($diferencia->days * 24 * 60) + ($diferencia->h * 60) + $diferencia->i;
+        } else {
+            $pedido['minutos_transcurridos'] = 0;
         }
 
         // Obtener items del pedido

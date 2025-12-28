@@ -111,13 +111,10 @@ class CarritoController
     // Procesar el pago y crear la venta
     static public function procesarPagoController($datos)
     {
-        date_default_timezone_set("America/Tijuana");
         $id_usuario = $_SESSION['id'];
-        $fecha_actual = date("Y-m-d H:i:s");
 
         // Verificar si tiene un pedido en proceso
-        require_once __DIR__ . '/../models/model_mis_pedidos.php';
-        $tiene_pedido = MisPedidosModel::tienePedidoEnProcesoModel($id_usuario);
+        $tiene_pedido = CarritoModel::tienePedidoEnProcesoModel($id_usuario);
         
         if ($tiene_pedido) {
             return json_encode([
@@ -136,6 +133,18 @@ class CarritoController
                 "message" => "No tienes productos en tu carrito."
             ]);
         }
+
+        // Obtener la zona horaria de la ciudad de la cafetería
+        $zona_horaria = CarritoModel::obtenerZonaHorariaCafeteriaModel($carrito['id_cafeteria']);
+        
+        // Si no se encuentra zona horaria, usar la por defecto
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+
+        // Establecer la zona horaria antes de obtener la fecha
+        date_default_timezone_set($zona_horaria);
+        $fecha_actual = date("Y-m-d H:i:s");
 
         // Obtener items del carrito
         $items = CarritoModel::obtenerItemsParaVentaModel($carrito['id_carrito'], $carrito['id_cafeteria']);

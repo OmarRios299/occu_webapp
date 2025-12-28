@@ -233,6 +233,26 @@ class CafeteriasListaModel extends Conexion {
         }
         $stmt = null;
     }
+
+    /* OBTENER ZONA HORARIA DE LA CAFETERÍA */
+    
+    static public function obtenerZonaHorariaCafeteriaModel($id_cafeteria)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT ciudades.zona_horaria 
+        FROM cafeterias c
+        INNER JOIN ciudades ON ciudades.id = c.id_ciudad
+        WHERE c.id = :id_cafeteria");
+
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $resultado = $stmt->fetch();
+
+        return $resultado ? $resultado['zona_horaria'] : null;
+
+        $stmt = null;
+    }
     
     /* REGISTRAR COMENTARIOS */
 

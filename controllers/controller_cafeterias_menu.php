@@ -80,14 +80,44 @@ class CafeteriasMenuController
     static public function agregarCarritoController($datos)
     {
         session_start();
-        date_default_timezone_set("America/Tijuana");
 
         if (!isset($_SESSION['id']) || empty($_SESSION['id'])) {
             return json_encode([
-                "error" => true,
+                "error" => 'error_sesion',
                 "message" => "Debes iniciar sesión para agregar productos al carrito."
             ]);
         }
+
+        if (isset($_SESSION['nivel']) && 
+        $_SESSION['nivel'] == "Propietario" || 
+        $_SESSION['nivel'] == "Barista" || 
+        $_SESSION['nivel'] == "Administrador") {
+            return json_encode([
+                "error" => 'error_sesion',
+                "message" => "Debes iniciar sesión como cliente para agregar productos al carrito."
+            ]);
+        }
+
+        // Obtener información de la cafetería para obtener su id_ciudad
+        $cafeteria_info = CafeteriasMenuModel::buscarCafeteriaModel($datos['id_cafeteria']);
+        
+        if (!$cafeteria_info || !isset($cafeteria_info['id_ciudad'])) {
+            return json_encode([
+                "error" => 'error_cafeteria',
+                "message" => "No se pudo obtener la información de la cafetería."
+            ]);
+        }
+
+        // Obtener la zona horaria de la ciudad de la cafetería
+        $zona_horaria = CafeteriasMenuModel::obtenerZonaHorariaCiudadModel($cafeteria_info['id_ciudad']);
+        
+        // Si no se encuentra zona horaria, usar la por defecto
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+
+        // Establecer la zona horaria antes de obtener la fecha
+        date_default_timezone_set($zona_horaria);
 
         $datos['id_usuario'] = $_SESSION['id'];
         $datos['fecha_alta'] = date("Y-m-d H:i:s");

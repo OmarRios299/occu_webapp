@@ -26,7 +26,6 @@ $(document).ready(function() {
         waitForLeafletMapa(() => {
         cargarMapaCafeterias();
         });
-        //cargarServiciosFiltro();
         
         // Prevenir que el navbar se oculte al hacer scroll en el módulo de mapa
         const mobileLogoNav = document.querySelector('.mobile-logo-nav.hide-on-scroll');
@@ -139,18 +138,32 @@ function cargarMapaCafeterias(){
                 var latitud = parseFloat(cafeteria.latitud);
                 var longitud = parseFloat(cafeteria.longitud);
 
-                // Crear un ícono personalizado con Leaflet
+                // Crear un ícono personalizado con Leaflet usando el SVG
                 var customIcon = L.icon({
-                    iconUrl: url + imagen,
+                    iconUrl: url + 'views/assets/css/img/iconos/botones/icono-mapa.svg',
                     iconSize: [50, 50],
                     iconAnchor: [25, 50],
                     popupAnchor: [0, -50]
                 });
 
+                // Crear HTML para el tooltip con imagen y nombre
+                var tooltipHtml = '<div style="text-align: center; padding: 10px; min-width: 100px;">' +
+                    '<img src="' + url + imagen + '" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; margin-bottom: 8px; display: block; margin-left: auto; margin-right: auto;">' +
+                    '<span style="font-weight: 600; font-size: 14px; color: #333; display: block; white-space: nowrap;">' + nombre + '</span>' +
+                    '</div>';
+
                 // Crear un marcador con el icono personalizado
                 var marker = L.marker([latitud, longitud], {
                     icon: customIcon
                 }).addTo(mapa_ubicaciones_cafeterias);
+
+                // Agregar tooltip al marcador que se muestra al pasar el mouse
+                marker.bindTooltip(tooltipHtml, {
+                    permanent: false,
+                    direction: 'top',
+                    offset: [0, -50],
+                    className: 'custom-tooltip-mapa'
+                });
 
                 // Guardar el marcador en el array para luego poder eliminarlo
                 markersArray.push(marker);
@@ -216,10 +229,6 @@ function abrirModalCafeteria(id) {
     // Determinar qué offcanvas usar según el tamaño de pantalla
     const isMobile = window.innerWidth < 992;
     
-    // Establecer el ID de la cafetería en ambos campos hidden
-    $("#id_cafeteria_mapa").val(id);
-    $("#id_cafeteria_mapa_mobile").val(id);
-    
     // Ocultar botón de filtros
     $("#btn_filtro_mapa").hide();
     
@@ -250,6 +259,11 @@ function abrirModalCafeteria(id) {
 
 // Función para cargar información de la cafetería en el mapa
 function CargarVerCafeteriaMapa(idCafeteria) {
+
+        // Establecer el ID de la cafetería en ambos campos hidden
+    $("#id_cafeteria_mapa").val(idCafeteria);
+    $("#id_cafeteria_mapa_mobile").val(idCafeteria);
+
     var datos = new FormData();
     datos.append("cargar_datos", true);
     datos.append("id", idCafeteria);
@@ -284,48 +298,11 @@ function CargarVerCafeteriaMapa(idCafeteria) {
                 contenedoresServicios.forEach(function(contenedor) {
                     const $contenedor = $(contenedor);
                     if ($contenedor.length) {
-                        // Limpiar y agregar servicios
-                        const $carousel = $contenedor.find('#carousel_servicios_mapa');
-                        $carousel.html('');
-                        $carousel.append(respuesta.servicios);
-                        
-                        // Reinicializar Splide para servicios
-                        const $splide = $contenedor.find('#splide_mapa');
-                        if ($splide.length) {
-                            // Destruir instancia anterior si existe
-                            if ($splide.data('splide')) {
-                                $splide.data('splide').destroy();
-                            }
-                            
-                            // Determinar perPage según el ancho del offcanvas padre
-                            const offcanvasEl = $splide.closest('.offcanvas');
-                            const offcanvasWidth = offcanvasEl.width() || (window.innerWidth < 992 ? window.innerWidth : 600);
-                            let perPage = 2; // Por defecto 2 para offcanvas
-                            
-                            if (offcanvasWidth > 700) {
-                                perPage = 3;
-                            } else if (offcanvasWidth < 500 || window.innerWidth < 992) {
-                                perPage = 1;
-                            }
-                            
-                            // Pequeño delay para asegurar que el DOM esté listo
-                            setTimeout(function() {
-                                new Splide($splide[0], {
-                                    type: 'loop',
-                                    perPage: perPage,
-                                    perMove: 1,
-                                    gap: '0.75rem',
-                                    padding: '0.5rem',
-                                    breakpoints: {
-                                        768: {
-                                            perPage: 2,
-                                        },
-                                        480: {
-                                            perPage: 1,
-                                        },
-                                    },
-                                }).mount();
-                            }, 100);
+                        // Limpiar y agregar servicios como iconos
+                        const $serviciosContainer = $contenedor.find('#servicios_iconos_mapa');
+                        $serviciosContainer.html('');
+                        if (respuesta.servicios && respuesta.servicios.trim() !== '') {
+                            $serviciosContainer.append(respuesta.servicios);
                         }
                     }
                 });
@@ -523,10 +500,10 @@ $(document).on("click", "#btn_aceptar_comentario_mapa", function () {
                     icon: "success",
                     button: "Aceptar",
                 }).then(function () {
-                    // Limpiar ambos textareas
-                    $("#agregar_comentario_mapa").val('');
-                    $("#comment-form-area_mapa").hide();
-                    var idCafeteria = $("#id_cafeteria_mapa").val() || $("#id_cafeteria_mapa_mobile").val();
+                    // Limpiar textarea y ocultar área de comentarios
+                    $textarea.val('');
+                    $contenedor.find("#comment-form-area_mapa").hide();
+                    // Recargar comentarios usando el mismo ID que se usó para registrar
                     cargarComentariosMapa(1, idCafeteria);
                 });
             } else if(respuesta == 'sesion'){

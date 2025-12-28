@@ -74,6 +74,6 @@ $(document).on("click",".btn_editar_categoria",function(){
 $(document).on("click","#btn_agregar_categoria",function(){
     $(".input_categorias").val('');
     $("#nombre_categoria").removeAttr('validarCampoEditar').attr('validarCampo');
-    $(".imagen_editar").attr('src','http://localhost/OCCU/occu_webApp/views/assets/img/cafeteria_default.png');
+    $(".imagen_editar").attr('src',url+'views/assets/img/cafeteria_default.png');
     $("#modal_editar_categorias").modal('show');
 });

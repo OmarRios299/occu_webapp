@@ -12,7 +12,7 @@
     <div class="offcanvas-body filtros-offcanvas-body">
         <form onsubmit="return false;" id="aplicar_filtros_offcanvas">
             <input type="hidden" id="ciudades_filtro_offcanvas" value="">
-            
+
             <div class="filtros-content-wrapper">
                 <!-- Filtro de Calificación -->
                 <!-- <div class="filtro-section">
@@ -114,21 +114,20 @@
                         </div>
                     </div>
                 </div>
+                <div class="filtros-offcanvas-footer">
+                    <button type="button" class="btn-clear-filters" onclick="limpiarFiltros();">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        <span>Limpiar</span>
+                    </button>
+                    <button type="button" class="btn-apply-filters-offcanvas" onclick="aplicarFiltros();">
+                        <i class="bi bi-funnel-fill"></i>
+                        <span>Aplicar Filtros</span>
+                    </button>
+                </div>
             </div>
         </form>
     </div>
-    
-    <!-- Footer fijo del offcanvas -->
-    <div class="filtros-offcanvas-footer">
-        <button type="button" class="btn-clear-filters" onclick="limpiarFiltros();">
-            <i class="bi bi-arrow-clockwise"></i>
-            <span>Limpiar</span>
-        </button>
-        <button type="button" class="btn-apply-filters-offcanvas" onclick="aplicarFiltros();">
-            <i class="bi bi-funnel-fill"></i>
-            <span>Aplicar Filtros</span>
-        </button>
-    </div>
+
 </div>
 
 <!-- Offcanvas de Filtros para Móvil (inferior) -->
@@ -143,7 +142,7 @@
     <div class="offcanvas-body-modern">
         <form onsubmit="return false;" id="aplicar_filtros_mobile">
             <input type="hidden" id="ciudades_filtro_mobile" value="">
-            
+
             <!-- Ciudad -->
             <div class="offcanvas-filter-group">
                 <label class="offcanvas-filter-label">
@@ -233,12 +232,16 @@
             </div>
 
             <!-- Botón de aplicar -->
-            <div class="offcanvas-actions-menu">
-                <button type="button" class="btn-apply-filters-offcanvas" onclick="aplicarFiltrosMobile();">
-                    <i class="bi bi-search"></i>
-                    <span>Aplicar filtros</span>
-                </button>
-            </div>
+            <div class="filtros-offcanvas-footer">
+                    <button type="button" class="btn-clear-filters" onclick="limpiarFiltros();">
+                        <i class="bi bi-arrow-clockwise"></i>
+                        <span>Limpiar</span>
+                    </button>
+                    <button type="button" class="btn-apply-filters-offcanvas" onclick="aplicarFiltros();">
+                        <i class="bi bi-funnel-fill"></i>
+                        <span>Aplicar Filtros</span>
+                    </button>
+                </div>
         </form>
     </div>
 </div>

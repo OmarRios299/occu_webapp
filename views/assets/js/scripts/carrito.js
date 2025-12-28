@@ -1,5 +1,7 @@
 $(document).ready(function () {
-  actualizarContadorCarrito();
+  if (moduloActual == 'cafeterias_lista') {
+    actualizarContadorCarrito();
+  }
 });
 
 function actualizarContadorCarrito() {

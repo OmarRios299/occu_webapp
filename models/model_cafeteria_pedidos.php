@@ -22,8 +22,7 @@ class CafeteriaPedidosModel extends Conexion
             v.fecha_aceptado,
             v.fecha_rechazo,
             v.motivo_rechazo,
-            v.fecha_entragado,
-            TIMESTAMPDIFF(MINUTE, v.fecha_alta, NOW()) AS minutos_transcurridos
+            v.fecha_entragado
         FROM ventas v
         INNER JOIN admin_usuarios u ON u.id = v.id_cliente
         WHERE v.id_cafeteria = :id_cafeteria
@@ -91,8 +90,7 @@ class CafeteriaPedidosModel extends Conexion
             CONCAT(u.nombre, ' ', u.apellido) AS nombre_cliente,
             u.telefono AS telefono_cliente,
             u.correo_electronico AS correo_cliente,
-            c.nombre AS nombre_cafeteria,
-            TIMESTAMPDIFF(MINUTE, v.fecha_alta, NOW()) AS minutos_transcurridos
+            c.nombre AS nombre_cafeteria
         FROM ventas v
         INNER JOIN admin_usuarios u ON u.id = v.id_cliente
         INNER JOIN cafeterias c ON c.id = v.id_cafeteria
@@ -155,6 +153,47 @@ class CafeteriaPedidosModel extends Conexion
         $stmt->execute();
         
         return $stmt->fetchAll();
+    }
+
+    /* OBTENER ZONA HORARIA DE LA CIUDAD DEL PEDIDO */
+    
+    static public function obtenerZonaHorariaPedidoModel($id_pedido)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT ciudades.zona_horaria 
+        FROM ventas v
+        INNER JOIN cafeterias c ON c.id = v.id_cafeteria
+        INNER JOIN ciudades ON ciudades.id = c.id_ciudad
+        WHERE v.id = :id_pedido");
+
+        $stmt->bindParam(':id_pedido', $id_pedido, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $resultado = $stmt->fetch();
+
+        return $resultado ? $resultado['zona_horaria'] : null;
+
+        $stmt = null;
+    }
+
+    /* OBTENER ZONA HORARIA DE LA CAFETERÍA */
+    
+    static public function obtenerZonaHorariaCafeteriaModel($id_cafeteria)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT ciudades.zona_horaria 
+        FROM cafeterias c
+        INNER JOIN ciudades ON ciudades.id = c.id_ciudad
+        WHERE c.id = :id_cafeteria");
+
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $resultado = $stmt->fetch();
+
+        return $resultado ? $resultado['zona_horaria'] : null;
+
+        $stmt = null;
     }
 
 

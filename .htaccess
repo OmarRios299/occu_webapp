@@ -2,4 +2,13 @@ Options All -Indexes
 
 RewriteEngine On
 
-RewriteRule ^([-a-zA-Z0-9-/_]+)$ index.php?action=$1
+# 1 Redirigir www → sin www
+RewriteCond %{HTTP_HOST} ^www\.occu\.app$ [NC]
+RewriteRule ^(.*)$ https://occu.app/$1 [L,R=301]
+
+# 2 Evitar reescribir archivos o carpetas reales
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# 3 Rutas de la app
+RewriteRule ^(.+)$ index.php?action=$1 [L,QSA]

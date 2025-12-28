@@ -11,11 +11,30 @@ class CafeteriaPedidosController
         $id_cafeteria = $datos['id_cafeteria'];
         $estado_pedido = isset($datos['estado_pedido']) ? $datos['estado_pedido'] : null;
 
+        // Obtener la zona horaria de la cafetería
+        $zona_horaria = CafeteriaPedidosModel::obtenerZonaHorariaCafeteriaModel($id_cafeteria);
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+
         $pedidos = CafeteriaPedidosModel::obtenerPedidosModel($id_cafeteria, $estado_pedido);
         $contadores = CafeteriaPedidosModel::obtenerContadoresPedidosModel($id_cafeteria);
 
-        // Agregar items resumidos a cada pedido
+        // Crear objeto DateTimeZone para la cafetería
+        $timezone_cafeteria = new DateTimeZone($zona_horaria);
+        $ahora = new DateTime('now', $timezone_cafeteria);
+
+        // Agregar items resumidos y calcular minutos transcurridos para cada pedido
         foreach ($pedidos as &$pedido) {
+            // Calcular minutos transcurridos usando la zona horaria de la cafetería
+            if ($pedido['fecha_alta']) {
+                $fecha_alta = new DateTime($pedido['fecha_alta'], $timezone_cafeteria);
+                $diferencia = $ahora->diff($fecha_alta);
+                $pedido['minutos_transcurridos'] = ($diferencia->days * 24 * 60) + ($diferencia->h * 60) + $diferencia->i;
+            } else {
+                $pedido['minutos_transcurridos'] = 0;
+            }
+
             $items = CafeteriaPedidosModel::obtenerItemsPedidoModel($pedido['id']);
             $pedido['items_resumen'] = [];
             $pedido['total_items'] = 0;
@@ -50,6 +69,23 @@ class CafeteriaPedidosController
             return json_encode(['error' => true, 'message' => 'Pedido no encontrado']);
         }
 
+        // Obtener la zona horaria de la cafetería del pedido
+        $zona_horaria = CafeteriaPedidosModel::obtenerZonaHorariaPedidoModel($datos['id_pedido']);
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+
+        // Calcular minutos transcurridos usando la zona horaria de la cafetería
+        if ($pedido['fecha_alta']) {
+            $timezone_cafeteria = new DateTimeZone($zona_horaria);
+            $fecha_alta = new DateTime($pedido['fecha_alta'], $timezone_cafeteria);
+            $ahora = new DateTime('now', $timezone_cafeteria);
+            $diferencia = $ahora->diff($fecha_alta);
+            $pedido['minutos_transcurridos'] = ($diferencia->days * 24 * 60) + ($diferencia->h * 60) + $diferencia->i;
+        } else {
+            $pedido['minutos_transcurridos'] = 0;
+        }
+
         // Obtener items del pedido
         $items = CafeteriaPedidosModel::obtenerItemsPedidoModel($datos['id_pedido']);
 
@@ -70,7 +106,16 @@ class CafeteriaPedidosController
     // Aceptar pedido
     static public function aceptarPedidoController($datos)
     {
-        date_default_timezone_set("America/Tijuana");
+        // Obtener la zona horaria de la ciudad de la cafetería del pedido
+        $zona_horaria = CafeteriaPedidosModel::obtenerZonaHorariaPedidoModel($datos['id_pedido']);
+        
+        // Si no se encuentra zona horaria, usar la por defecto
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+
+        // Establecer la zona horaria antes de obtener la fecha
+        date_default_timezone_set($zona_horaria);
 
         $datos_pedido = [
             'id_pedido' => $datos['id_pedido'],
@@ -96,7 +141,16 @@ class CafeteriaPedidosController
     // Rechazar pedido
     static public function rechazarPedidoController($datos)
     {
-        date_default_timezone_set("America/Tijuana");
+        // Obtener la zona horaria de la ciudad de la cafetería del pedido
+        $zona_horaria = CafeteriaPedidosModel::obtenerZonaHorariaPedidoModel($datos['id_pedido']);
+        
+        // Si no se encuentra zona horaria, usar la por defecto
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+
+        // Establecer la zona horaria antes de obtener la fecha
+        date_default_timezone_set($zona_horaria);
 
         if (empty($datos['motivo'])) {
             return json_encode([
@@ -130,7 +184,16 @@ class CafeteriaPedidosController
     // Entregar pedido
     static public function entregarPedidoController($datos)
     {
-        date_default_timezone_set("America/Tijuana");
+        // Obtener la zona horaria de la ciudad de la cafetería del pedido
+        $zona_horaria = CafeteriaPedidosModel::obtenerZonaHorariaPedidoModel($datos['id_pedido']);
+        
+        // Si no se encuentra zona horaria, usar la por defecto
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+
+        // Establecer la zona horaria antes de obtener la fecha
+        date_default_timezone_set($zona_horaria);
 
         $datos_pedido = [
             'id_pedido' => $datos['id_pedido'],
@@ -156,7 +219,16 @@ class CafeteriaPedidosController
     // Cancelar pedido
     static public function cancelarPedidoController($datos)
     {
-        date_default_timezone_set("America/Tijuana");
+        // Obtener la zona horaria de la ciudad de la cafetería del pedido
+        $zona_horaria = CafeteriaPedidosModel::obtenerZonaHorariaPedidoModel($datos['id_pedido']);
+        
+        // Si no se encuentra zona horaria, usar la por defecto
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+
+        // Establecer la zona horaria antes de obtener la fecha
+        date_default_timezone_set($zona_horaria);
 
         $datos_pedido = [
             'id_pedido' => $datos['id_pedido'],

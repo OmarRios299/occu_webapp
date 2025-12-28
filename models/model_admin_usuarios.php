@@ -140,9 +140,10 @@ class AdminUsuariosModel extends Conexion
         paises.nombre AS pais
         FROM
             admin_usuarios
-        INNER JOIN ciudades ON admin_usuarios.id_ciudad = ciudades.id
-        INNER JOIN entidades_federativas ON ciudades.id_entidad_federativa = entidades_federativas.id
-        INNER JOIN paises ON paises.id = entidades_federativas.id_pais WHERE admin_usuarios.id=:id");
+        LEFT JOIN ciudades ON admin_usuarios.id_ciudad = ciudades.id
+        LEFT JOIN entidades_federativas ON ciudades.id_entidad_federativa = entidades_federativas.id
+        LEFT JOIN paises ON paises.id = entidades_federativas.id_pais
+        WHERE admin_usuarios.id=:id");
     
         $stmt->bindParam(':id', $id,PDO::PARAM_STR);
     
@@ -214,6 +215,15 @@ class AdminUsuariosModel extends Conexion
     
     static public function editarUsuarioModel($datos){
 
+        // Obtener usuario actual para preservar valores de campos opcionales no enviados
+        $usuario_actual = AdminUsuariosModel::buscarUsuarioModel($datos['id']);
+        
+        // Usar valores actuales si los campos opcionales están vacíos
+        $apellido = !empty($datos['apellido']) ? $datos['apellido'] : $usuario_actual['apellido'];
+        $ciudad = !empty($datos['ciudad']) ? $datos['ciudad'] : $usuario_actual['id_ciudad'];
+        $correo = !empty($datos['correo']) ? $datos['correo'] : $usuario_actual['correo_electronico'];
+        $telefono = !empty($datos['telefono']) ? $datos['telefono'] : $usuario_actual['telefono'];
+        
         $contrasena = $datos['contrasena'] ? "contrasena=:contrasena," : ""; 
         $stmt = Conexion::conectar()->prepare("UPDATE admin_usuarios SET 
         nombre = :nombre, 
@@ -226,12 +236,12 @@ class AdminUsuariosModel extends Conexion
         WHERE id = :id");
 
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
-        $stmt->bindParam(':apellido', $datos['apellido'], PDO::PARAM_STR);
-        $stmt->bindParam(':id_ciudad', $datos['ciudad'], PDO::PARAM_INT);
-        $stmt->bindParam(':correo_electronico', $datos['correo'], PDO::PARAM_STR);
+        $stmt->bindParam(':apellido', $apellido, PDO::PARAM_STR);
+        $stmt->bindParam(':id_ciudad', $ciudad, PDO::PARAM_INT);
+        $stmt->bindParam(':correo_electronico', $correo, PDO::PARAM_STR);
         if($datos['contrasena']) $stmt->bindParam(":contrasena",$datos['contrasena'],PDO::PARAM_STR);
         $stmt->bindParam(':nivel', $datos['nivel'], PDO::PARAM_STR);
-        $stmt->bindParam(':telefono', $datos['telefono'], PDO::PARAM_STR);
+        $stmt->bindParam(':telefono', $telefono, PDO::PARAM_STR);
         $stmt->bindParam(':id', $datos['id'], PDO::PARAM_INT);
 
         if($stmt->execute()){

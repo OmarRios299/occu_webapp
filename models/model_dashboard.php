@@ -68,7 +68,7 @@ class DashboardModel extends Conexion {
         (SELECT COUNT(*) FROM ciudades WHERE estado != 2) AS total_ciudades,
         (SELECT COUNT(*) FROM admin_usuarios WHERE estado != 2 AND nivel = 'Propietario') AS total_propietarios,
         (SELECT COUNT(*) FROM admin_usuarios WHERE estado != 2 AND nivel = 'Barista') AS total_baristas,
-        (SELECT COUNT(*) FROM admin_usuarios WHERE estado != 2 AND nivel = 'Consumidor') AS total_consumidores
+        (SELECT COUNT(*) FROM admin_usuarios WHERE estado != 2 AND nivel = 'Cliente') AS total_clientes
         ");
 
         //$stmt->bindParam(':', ,PDO::PARAM_STR);

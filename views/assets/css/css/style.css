@@ -2239,16 +2239,17 @@ a.fc-daygrid-event {
 /* ---------------------------------------
 @@@@ media-queries
 --------------------------------------- */
-#sistema .content_sin_sesion {
+#sistema .contenido_principal {
         height: 100vh !important; 
     }
 @media (max-width:1216px) {
-    #sistema .content_sin_sesion {
+    #sistema .contenido_principal {
         padding: 0px;
         margin-top: 0px !important;
         margin-bottom: 0px;
     }
-    #sistema > .content_sin_sesion {
+    
+    #sistema > .contenido_principal {
         flex: none;
         width: 100%;
         margin: 0px auto auto auto;
@@ -2258,7 +2259,7 @@ a.fc-daygrid-event {
 }
 @media (min-width:992px) {
     /* @@@@ - [Estructura] - @@@@ */
-#sistema .content_sin_sesion {
+#sistema .contenido_principal {
     padding: 25px;
     margin-top: 20px !important;
     margin-bottom: 25px;
@@ -2286,7 +2287,7 @@ a.fc-daygrid-event {
         /* padding: 15px; */
         transition: all 0.25s;
     }
-    #sistema > .content_sin_sesion {
+    #sistema > .contenido_principal {
         flex: none;
         width: calc( 100% - 230px);
         margin: 80px auto auto auto;

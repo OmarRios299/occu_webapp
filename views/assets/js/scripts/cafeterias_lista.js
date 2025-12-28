@@ -3,14 +3,10 @@ $(document).ready(function () {
 
     if (moduloActual == 'cafeterias_lista' || (moduloActual == 'cafeterias' && $('#div_lista_cafeterias').length && !$('#tabla_cafeterias').length)) {
 
-        if ($('#titulo_cafeteria_ver').length) {
-            CargarVerCafeteria();
-            cargarComentarios(1);
-        }
+        // La función CargarVerCafeteria se eliminó - ahora se usa CargarVerCafeteriaMapa del archivo cafeterias_mapa.js
 
         if ($('#div_lista_cafeterias').length) {
             cargarListaCafeterias(paginaActual);
-            //cargarServiciosFiltro();
             
             // Manejar click en las cards de cafetería para abrir offcanvas (reutilizar el del mapa)
             $(document).on('click', '.cafeteria-card-link', function(e) {
@@ -128,248 +124,13 @@ function cargarListaCafeterias(pagina, filtro = '') {
 }
 
 
-function CargarVerCafeteria() {
-
-    let id_cafeteria = $("#id_cafeteria").attr("idCafeteria");
-
-    var datos = new FormData();
-
-    datos.append("cargar_datos", true);
-    datos.append("id", id_cafeteria);
-
-    $.ajax({
-        url: url + 'views/ajax/ajax_cafeterias_lista.php',
-        method: 'POST',
-        data: datos,
-        cache: false,
-        contentType: false,
-        processData: false,
-        success: function (respuesta) {
-            respuesta = JSON.parse(respuesta);
-            //console.log(respuesta);
-            if (respuesta == 'error') {
-                swal("¡Error!", "Ha ocurrido un error", "error");
-            } else {
-                $("#aux_validacion").val(respuesta.data.id);
-                $("#titulo_cafeteria_ver").html(respuesta.data.nombre);
-                
-                // Inicializar la nueva galería con el array de imágenes
-                if (respuesta.imagenesArray && respuesta.imagenesArray.length > 0) {
-                    initGallery(respuesta.imagenesArray);
-                }
-                
-                $('#carousel_servicios').append(respuesta.servicios);
-                    new Splide('#splide', {
-                        type   : 'loop',
-                        perPage: 3,
-                        perMove: 1,
-                        gap    : '1rem',
-                        breakpoints: {
-                            768: {
-                                perPage: 2,
-                            },
-                            480: {
-                                perPage: 1,
-                            },
-                        },
-                    }).mount();
-                $("#info1").html(respuesta.data.direccion || '');
-                $("#info2").html(respuesta.data.telefono ? '<a id="copiar_num" href="#">' + respuesta.data.telefono + '</a>' : '');
-                $("#info3").html(respuesta.data.correo ? '<a id="copiar_correo" href="#">' + respuesta.data.correo + '</a>' : '');
-                $("#info4").html((respuesta.data.horario || '') + (respuesta.data.horario && respuesta.data.status ? ' &bull; ' : '') + (respuesta.data.status || ''));
-                $(".ir_googlemaps").attr("latitud", respuesta.data.latitud).attr('longitud', respuesta.data.longitud);
-                $("#descripcion").html(respuesta.data.descripcion || '');
-                
-                // Ocultar items vacíos en información general
-                ocultarItemsVacios();
-            }
-        }
-    });
-
-
-}
-
-// Función para ocultar items vacíos en información general
-function ocultarItemsVacios() {
-    // Verificar cada item de información
-    $('#info1').closest('.info-item').toggle($('#info1').text().trim() !== '');
-    $('#info2').closest('.info-item').toggle($('#info2').text().trim() !== '');
-    $('#info3').closest('.info-item').toggle($('#info3').text().trim() !== '');
-    $('#info4').closest('.info-item').toggle($('#info4').text().trim() !== '');
-    
-    // Ocultar descripción si está vacía
-    const $descripcionCard = $('#descripcion').closest('.modern-card');
-    if ($descripcionCard.length && $('#descripcion').text().trim() === '') {
-        $descripcionCard.hide();
-    } else if ($descripcionCard.length) {
-        $descripcionCard.show();
-    }
-}
-
-// $(document).on("click", "#abrir_filtros", function () {
-//     $('#filtros_div').toggle();
-//     $(this).attr("open", $(this).attr("open") === 'si' ? 'no' : 'si');
-//     cargarServiciosFiltro();
-// });
+// Funciones comentadas eliminadas - ahora se usa CargarVerCafeteriaMapa de cafeterias_mapa.js
 
 $(document).on("click", ".ver_img_modal", function () {
     $("#carouselModal").modal("show")
 });
 
-function cargarComentarios(pagina) {
-    let cafeteria = $("#id_cafeteria").attr('idCafeteria');
-    let filtro = `?comentarios=${true}&pagina=${pagina}&cafeteria=${cafeteria}`;
-
-    $.ajax({
-        url: url + 'views/ajax/ajax_cafeterias_lista.php' + filtro, 
-        method: "GET",
-        success: function (response) {
-            response = JSON.parse(response);
-            if (response.comentarios == '' || !response.comentarios || response.comentarios.length === 0) {
-                // Mostrar mensaje cuando no hay reseñas
-                $(".coment-ocultar").show();
-                $("#mensaje-sin-resenas").show();
-                $("#comentariosLista").html('');
-                $("#paginacionComentarios").html('');
-            } else {
-                // Ocultar mensaje y mostrar comentarios
-                $("#mensaje-sin-resenas").hide();
-                // Llenar la lista de comentarios con los datos recibidos
-                var comentariosHtml = '';
-                response.comentarios.forEach(function (comentario) {
-                    var fechaSinHora = comentario.fecha_alta.substring(0, 10);
-
-                    comentariosHtml += '<li><h3>' + comentario.nombre_usuario + '</h3>';
-                    comentariosHtml += '<p>' + comentario.comentario + '</p>';
-                    comentariosHtml += '<p><small>' + fechaSinHora + '</small></p></li>';
-                });
-                $('#comentariosLista').html(comentariosHtml);
-                $("#total_coment").html(response.totalComentarios);
-                // Actualizar controles de paginación
-                actualizarPaginacion(response.totalPaginas, pagina);
-            }
-
-        }
-    });
-}
-
-function actualizarPaginacion(totalPaginas, paginaActual) {
-    var paginacionHtml = '';
-    for (var i = 1; i <= totalPaginas; i++) {
-        paginacionHtml += '<button class="btn-paginacion ' + (i === paginaActual ? 'active' : '') + '" data-pagina="' + i + '">' + i + '</button>';
-    }
-    $('#paginacionComentarios').html(paginacionHtml);
-
-    // Asignar evento a los botones de paginación
-    $('.btn-paginacion').on('click', function () {
-        var pagina = $(this).data('pagina');
-        cargarComentarios(pagina);
-    });
-}
-// Evento para mostrar/ocultar el área de comentarios
-$(document).on("click", "#btn_agregar_comentario", function () {
-    $("#comment-form-area").toggle();
-    // Limpiar el textarea cuando se oculta
-    if (!$("#comment-form-area").is(":visible")) {
-        $("#agregar_comentario").val('');
-    }
-});
-
-// Evento para cancelar y cerrar el área de comentarios
-$(document).on("click", ".btn-cancelar-comentario", function () {
-    $("#comment-form-area").hide();
-    $("#agregar_comentario").val('');
-});
-
-$(document).on("click", "#btn_aceptar_comentario", function () {
-    if ($("#agregar_comentario").val() == '') {
-        swal("¡Alerta!", "Agrega un comentario.", "warning");
-        return '';
-    }
-    var datos = new FormData();
-    datos.append("registrar_comentario", true);
-    datos.append('comentario', $("#agregar_comentario").val());
-    datos.append('id_cafeteria', $("#id_cafeteria").attr('idCafeteria'));
-
-    $.ajax({
-        url: url + 'views/ajax/ajax_cafeterias_lista.php',
-        method: 'POST',
-        data: datos,
-        cache: false,
-        contentType: false,
-        processData: false,
-        beforeSend: cargaSistema(true),
-        success: function (respuesta) {
-            // console.log(respuesta);
-            if (respuesta == 'success') {
-                swal({
-                    title: "¡Ok!",
-                    text: "Tu comentario se registró correctamente.",
-                    icon: "success",
-                    button: "Aceptar",
-                }).then(function () {
-                    $("#agregar_comentario").val('');
-                    $("#comment-form-area").hide();
-                    cargarComentarios(1);
-                });
-            }else if(respuesta == 'sesion'){
-                swal({
-                    title: "¡Inicia sesión!",
-                    text: "Inicia sesión para registrar tu comentario.",
-                    icon: "warning",
-                    button: "Aceptar",
-                }).then(function () {
-                    window.location = url+"login";
-                });
-                
-            } else {
-                swal("¡Error!", "Ha ocurrido un error.", "error");
-            }
-            cargaSistema(false);
-        }
-    });
-});
-
-$(document).on("click", ".ir_googlemaps", function () {
-    const latitude = $(this).attr("latitud");
-    const longitude = $(this).attr("longitud");
-    console.log(latitude);
-
-    // URL para abrir Google Maps con la ubicación específica y permitir obtener indicaciones
-    const googleMapsUrl = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
-
-    // Abrir la URL en una nueva pestaña
-    window.open(googleMapsUrl, '_blank');
-});
-
-// Función para copiar el texto
-function copyToClipboard(text, feedbackId) {
-    navigator.clipboard.writeText(text).then(function () {
-        // Mostrar mensaje de éxito correspondiente
-        const feedbackElement = document.getElementById(feedbackId);
-        feedbackElement.style.display = 'block';
-
-        // Ocultar mensaje después de 5 segundos
-        setTimeout(() => {
-            feedbackElement.style.display = 'none';
-        }, 5000);
-    }, function (err) {
-        console.error('Error al copiar el texto: ', err);
-    });
-}
-
-// Asignar eventos de click a los elementos dinámicos para copiar teléfono y correo
-$(document).on('click', '#copiar_num', function (event) {
-    event.preventDefault(); // Evitar comportamiento predeterminado de enlace
-    const telefono = $(this).text(); // Obtener el texto del número de teléfono
-    copyToClipboard(telefono, 'copy-feedback-tel'); // Llamar a la función de copiar con el feedback del teléfono
-});
-
-$(document).on('click', '#copiar_correo', function (event) {
-    event.preventDefault(); // Evitar comportamiento predeterminado de enlace
-    const correo = $(this).text(); // Obtener el texto del correo
-    copyToClipboard(correo, 'copy-feedback-email'); // Llamar a la función de copiar con el feedback del correo
-});
+// Funciones de comentarios eliminadas - ahora se usan las funciones del mapa (cargarComentariosMapa, etc.)
 
 $(document).ready(function(){
     if (moduloActual=='cafeterias_lista') {
@@ -515,21 +276,4 @@ $(document).ready(function(){
     }
 });
 
-$(document).ready(function () {
-if (moduloActual=='cafeterias_lista' || moduloActual=='cafeterias_mapa') {
-    new Splide('#splide', {
-        type   : 'loop',
-        perPage: 3,
-        perMove: 1,
-        gap    : '1rem',
-        breakpoints: {
-            768: {
-                perPage: 2,
-            },
-            480: {
-                perPage: 1,
-            },
-        },
-    }).mount();
-}
-});
+// Código de Splide eliminado - ya no se usa carousel para servicios

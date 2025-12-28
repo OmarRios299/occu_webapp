@@ -64,13 +64,15 @@ class AdminUsuariosController{
 
         date_default_timezone_set("America/Tijuana");
 
-        //validamos el correo electrónico
-        $validacion_email = ($datos['id']) ? 
-        GeneralModel::validarCampoEditarModel($datos['correo'],"correo_electronico","admin_usuarios",$datos['id'])
-        : GeneralModel::validarCampoModel($datos['correo'],"correo_electronico","admin_usuarios");
+        //validamos el correo electrónico solo si se proporciona
+        if($datos['correo']){
+            $validacion_email = ($datos['id']) ? 
+            GeneralModel::validarCampoEditarModel($datos['correo'],"correo_electronico","admin_usuarios",$datos['id'])
+            : GeneralModel::validarCampoModel($datos['correo'],"correo_electronico","admin_usuarios");
 
-        //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
-        if($validacion_email) return "error_validacion_email";
+            //en caso que el correo ya se encuentre registrado por otra cuenta retornamos el error y terminamos la ejecución
+            if($validacion_email) return "error_validacion_email";
+        }
 
         //si se envio una contraseña la editamos
         if($datos['contrasena']) $datos['contrasena'] = crypt($datos['contrasena'],'$2a$07$asxx54ahjppf45sd87a5a4dDDGsystemdev$');

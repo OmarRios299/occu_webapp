@@ -129,11 +129,14 @@ if ($menu['subcategorias'] == "") {
           <input type="text" class="form-control text-center" value="1" readonly style="border-left: 0; border-right: 0;">
           <button class="btn btn-outline-secondary" type="button" id="btn_sumar">+</button>
         </div>
-        <?php
-        if ($_SESSION['nivel'] == "Cliente" || $_SESSION['nivel'] == "Barista") {
-          echo '<button class="btn btn-warning text-white rounded-pill px-4 fw-bold" id="btn_agregar" style="flex-shrink: 0;">Agregar · MX$0</button>';
-        }
-        ?>
+          <button class="btn btn-warning text-white rounded-pill px-4 fw-bold" 
+          id="btn_agregar_producto_carrito" style="flex-shrink: 0;" 
+          <?php if (isset($_SESSION['nivel']) && 
+          $_SESSION['nivel'] == "Propietario" || 
+          $_SESSION['nivel'] == "Barista" || 
+          $_SESSION['nivel'] == "Administrador") { echo 'disabled'; } ?>
+          >Agregar · MX$0</button>
+        
       </div>
 
     </div>

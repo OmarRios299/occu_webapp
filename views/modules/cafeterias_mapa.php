@@ -89,6 +89,19 @@
         min-height: calc(100vh - 120px) !important;
     }
 }
+
+/* Estilos para el tooltip del mapa */
+.leaflet-tooltip.custom-tooltip-mapa {
+    background: #fff !important;
+    border: none !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+    border-radius: 12px !important;
+    padding: 0 !important;
+}
+
+.leaflet-tooltip.custom-tooltip-mapa:before {
+    border-top-color: #fff !important;
+}
 </style>
 
 <!-- Menu de mapa -->

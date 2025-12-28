@@ -423,7 +423,7 @@ $(document).on('change', '.imagenPrevisualizar', function(){
 	let imagen = this.files[0];
 	let input = $(this);
 
-	if((imagen.type == "image/jpeg" || imagen.type == "image/png")){
+	if((imagen.type == "image/jpeg" || imagen.type == "image/png" || imagen.type == "image/svg+xml" || imagen.type == "image/svg")){
 
 		let datosImagen = new FileReader;
         datosImagen.readAsDataURL(imagen);

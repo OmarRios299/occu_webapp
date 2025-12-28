@@ -580,4 +580,21 @@ class CafeteriasMenuModel extends Conexion
 
         return $stmt->execute() ? "success" : "error";
     }
+
+    /* OBTENER ZONA HORARIA DE LA CIUDAD */
+    
+    static public function obtenerZonaHorariaCiudadModel($id_ciudad)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT zona_horaria FROM ciudades WHERE id = :id_ciudad");
+
+        $stmt->bindParam(':id_ciudad', $id_ciudad, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $resultado = $stmt->fetch();
+
+        return $resultado ? $resultado['zona_horaria'] : null;
+
+        $stmt = null;
+    }
 }

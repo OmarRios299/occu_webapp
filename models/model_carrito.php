@@ -512,4 +512,41 @@ class CarritoModel extends Conexion {
         $stmt->bindParam(':id_carrito', $id_carrito, PDO::PARAM_INT);
         return $stmt->execute();
     }
+
+
+    static public function tienePedidoEnProcesoModel($id_usuario)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT COUNT(*) as total
+        FROM ventas
+        WHERE id_cliente = :id_usuario
+        AND estado = 0
+        AND estado_pedido IN (1, 2)");
+
+        $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+        $stmt->execute();
+        
+        $result = $stmt->fetch();
+        return $result['total'] > 0;
+    }
+
+    
+    /* OBTENER ZONA HORARIA DE LA CAFETERÍA */
+    
+    static public function obtenerZonaHorariaCafeteriaModel($id_cafeteria)
+    {
+        $stmt = Conexion::conectar()->prepare("SELECT ciudades.zona_horaria 
+        FROM cafeterias c
+        INNER JOIN ciudades ON ciudades.id = c.id_ciudad
+        WHERE c.id = :id_cafeteria");
+
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+
+        $stmt->execute();
+
+        $resultado = $stmt->fetch();
+
+        return $resultado ? $resultado['zona_horaria'] : null;
+
+        $stmt = null;
+    }
 }

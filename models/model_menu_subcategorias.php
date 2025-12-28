@@ -50,7 +50,7 @@ class MenuSubcategoriasModel extends Conexion
         $stmt->bindParam(':nombre', $datos['nombre'], PDO::PARAM_STR);
         $stmt->bindParam(':id_categoria', $datos['id_categoria'], PDO::PARAM_INT);
         $stmt->bindParam(':fecha', $datos['fecha_alta'], PDO::PARAM_STR);
-        $stmt->bindParam(':id_alta', $datos['id_propietario'], PDO::PARAM_INT);
+        $stmt->bindParam(':id_alta', $datos['id_alta'], PDO::PARAM_INT);
         
         if($stmt->execute()){
             return $conexion-> lastInsertId();
