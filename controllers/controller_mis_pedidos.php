@@ -159,5 +159,65 @@ class MisPedidosController
             "tiene_pedido" => $tiene_pedido
         ]);
     }
+
+    // Cancelar pedido (solo si es del usuario y estado es 1)
+    static public function cancelarPedidoController($datos)
+    {
+        if (!isset($_SESSION['id']) || empty($_SESSION['id'])) {
+            return json_encode([
+                "error" => true,
+                "message" => "Debes iniciar sesión para cancelar un pedido."
+            ]);
+        }
+
+        $id_usuario = $_SESSION['id'];
+        $id_pedido = $datos['id_pedido'];
+
+        // Verificar que el pedido pertenezca al usuario
+        $pedido = MisPedidosModel::obtenerDetallePedidoModel($id_pedido, $id_usuario);
+        if (!$pedido) {
+            return json_encode([
+                "error" => true,
+                "message" => "Pedido no encontrado o no tienes permiso para cancelarlo."
+            ]);
+        }
+
+        // Verificar que el pedido esté en estado 1 (pendiente, no aceptado)
+        if ($pedido['estado_pedido'] != 1) {
+            return json_encode([
+                "error" => true,
+                "message" => "Solo se pueden cancelar pedidos que aún no han sido aceptados."
+            ]);
+        }
+
+        // Obtener la zona horaria
+        $zona_horaria = MisPedidosModel::obtenerZonaHorariaPedidoModel($id_pedido);
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+
+        date_default_timezone_set($zona_horaria);
+
+        $datos_pedido = [
+            'id_pedido' => $id_pedido,
+            'id_usuario' => $id_usuario,
+            'fecha' => date("Y-m-d H:i:s")
+        ];
+
+        require_once __DIR__ . '/../models/model_cafeteria_pedidos.php';
+        $resultado = CafeteriaPedidosModel::cancelarPedidoModel($datos_pedido);
+
+        if ($resultado == 'success') {
+            return json_encode([
+                "success" => true,
+                "message" => "Pedido cancelado correctamente."
+            ]);
+        }
+
+        return json_encode([
+            "error" => true,
+            "message" => "No se pudo cancelar el pedido."
+        ]);
+    }
 }
 

@@ -19,19 +19,20 @@
 </div>
 
 <!-- Offcanvas para mostrar información y acciones de cafetería -->
-<div class="offcanvas offcanvas-end filtros-offcanvas" tabindex="-1" id="offcanvasCafeteriaPropietario" aria-labelledby="offcanvasCafeteriaPropietarioLabel" style="width: 500px; max-width: 90vw;">
-    <div class="offcanvas-header filtros-offcanvas-header">
-        <div class="filtros-header-content">
-            <h5 class="offcanvas-title-filtros" id="offcanvasCafeteriaPropietarioLabel">
+<div class="offcanvas offcanvas-end offcanvas-unified slide-from-right width-medium" tabindex="-1" id="offcanvasCafeteriaPropietario" aria-labelledby="offcanvasCafeteriaPropietarioLabel">
+    <div class="offcanvas-header offcanvas-unified-header">
+        <div class="offcanvas-unified-header-content">
+            <h5 class="offcanvas-unified-title" id="offcanvasCafeteriaPropietarioLabel">
                 <i class="bi bi-cup-hot-fill"></i>
                 <span id="titulo_cafeteria_propietario">Información de Cafetería</span>
             </h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
         </div>
     </div>
-    <div class="offcanvas-body p-0">
+    <div class="offcanvas-body offcanvas-unified-body">
         <div class="h-100 d-flex flex-column overflow-hidden">
-            <div class="flex-grow-1 overflow-auto p-3">
+            <div class="offcanvas-unified-scrollable">
+                <div class="offcanvas-unified-content">
                 <input type="hidden" id="id_cafeteria_propietario">
 
                 <!-- Información de la cafetería -->

@@ -2691,3 +2691,338 @@ color: #ffffff;
   background: rgba(255,255,255,0.2);
   /* ó border-bottom: 2px solid white; */
 }
+
+
+
+/* ---------------------------------------
+@@@@ modulos ---> Offcanvas Unificado
+@@@@ Clases CSS generales para unificar estilos de offcanvas
+--------------------------------------- */
+
+/* Clase base para offcanvas unificado */
+.offcanvas-unified {
+    z-index: 1060 !important;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    overflow: hidden;
+  }
+  
+  /* Bordes redondeados para offcanvas desde abajo */
+  .offcanvas-unified.slide-from-bottom {
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  
+  /* ============================================
+     HEADER UNIFICADO
+     ============================================ */
+  
+  /* Header base unificado (basado en filtros-offcanvas-header del carrito) */
+  .offcanvas-unified-header {
+    background: linear-gradient(135deg, var(--principal), #ff8a7a);
+    color: var(--color-blanco);
+    padding: 1rem;
+    border-bottom: none;
+    box-shadow: 0 4px 12px rgba(241, 108, 91, 0.2);
+  }
+  
+  .offcanvas-unified-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .offcanvas-unified-title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-blanco);
+    margin: 0;
+  }
+  
+  .offcanvas-unified-title i {
+    font-size: 1.5rem;
+  }
+  
+  .offcanvas-unified-title span {
+    display: inline-block;
+  }
+  
+  
+  /* ============================================
+     BODY UNIFICADO
+     ============================================ */
+  
+  /* Body base unificado - Solo cuando está visible */
+  .offcanvas.show .offcanvas-unified-body,
+  .offcanvas.showing .offcanvas-unified-body {
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+  
+  /* Para offcanvas desde abajo, ajustar altura */
+  .offcanvas.show .offcanvas-unified.slide-from-bottom .offcanvas-unified-body,
+  .offcanvas.showing .offcanvas-unified.slide-from-bottom .offcanvas-unified-body {
+    height: auto !important;
+    max-height: 95vh !important;
+  }
+  
+  /* Contenedor principal con scroll */
+  .offcanvas.show .offcanvas-unified-body > div,
+  .offcanvas.showing .offcanvas-unified-body > div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  
+  /* Contenido scrollable */
+  .offcanvas-unified-scrollable {
+    flex-grow: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--principal) #f1f1f1;
+  }
+  
+  /* Scrollbar personalizada para contenido scrollable */
+  .offcanvas-unified-scrollable::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  .offcanvas-unified-scrollable::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 5px;
+    margin: 1rem 0;
+  }
+  
+  .offcanvas-unified-scrollable::-webkit-scrollbar-thumb {
+    background: var(--principal);
+    border-radius: 5px;
+    border: 2px solid #f1f1f1;
+  }
+  
+  .offcanvas-unified-scrollable::-webkit-scrollbar-thumb:hover {
+    background: #e65a4a;
+  }
+  
+  /* Contenido interno con padding */
+  .offcanvas-unified-content {
+    width: 100%;
+    padding: 1rem;
+    padding-bottom: 2rem;
+  }
+  
+  /* ============================================
+     FOOTER UNIFICADO
+     ============================================ */
+  
+  /* Footer fijo unificado */
+  .offcanvas-unified-footer {
+    border-top: 2px solid var(--color-gris-claro);
+    padding: 1rem 1.5rem;
+    background: var(--color-blanco);
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+    z-index: 10;
+    position: relative;
+    margin-top: auto;
+  }
+  
+  /* ============================================
+     ANCHOS Y TAMAÑOS
+     ============================================ */
+  
+  /* Ancho para offcanvas lateral (desktop) */
+  @media (min-width: 992px) {
+    .offcanvas-unified.slide-from-left,
+    .offcanvas-unified.slide-from-right {
+      width: 420px !important;
+      max-width: 90vw;
+      box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+    }
+  
+    .offcanvas-unified.slide-from-left.width-medium,
+    .offcanvas-unified.slide-from-right.width-medium {
+      width: 500px !important;
+    }
+  
+    .offcanvas-unified.slide-from-left.width-large,
+    .offcanvas-unified.slide-from-right.width-large {
+      width: 600px !important;
+    }
+  
+    .offcanvas-unified.slide-from-left.width-small,
+    .offcanvas-unified.slide-from-right.width-small {
+      width: 350px !important;
+    }
+  }
+  
+  /* Altura para offcanvas desde abajo */
+  .offcanvas-unified.slide-from-bottom {
+    height: 90% !important;
+    max-height: 90vh;
+  }
+  
+  .offcanvas-unified.slide-from-bottom.height-large {
+    height: 90% !important;
+    max-height: 90vh;
+  }
+  
+  .offcanvas-unified.slide-from-bottom.height-small {
+    height: 50% !important;
+    max-height: 400px;
+  }
+  
+  /* ============================================
+     RESPONSIVE
+     ============================================ */
+  
+  /* Ajustes para móviles */
+  @media (max-width: 991.98px) {
+    .offcanvas-unified.slide-from-left,
+    .offcanvas-unified.slide-from-right {
+      width: 100% !important;
+      max-width: 100vw;
+    }
+  
+    .offcanvas-unified.slide-from-bottom {
+      height: 85% !important;
+      max-height: none;
+    }
+  
+    .offcanvas-unified-content {
+      padding: 1rem;
+      padding-bottom: 4rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .offcanvas-unified.slide-from-bottom {
+      height: 90% !important;
+    }
+  
+    .offcanvas-unified-header {
+      padding: 0.875rem;
+    }
+  
+    .offcanvas-unified-title {
+      font-size: 1.1rem;
+    }
+  
+    .offcanvas-unified-title i {
+      font-size: 1.25rem;
+    }
+  
+    .offcanvas-unified-footer {
+      flex-direction: column;
+      padding: 1rem;
+    }
+  }
+  
+  /* ============================================
+     COMPATIBILIDAD CON CLASES EXISTENTES
+     ============================================ */
+  
+  /* ============================================
+     SELECT2 DENTRO DE OFFCANVAS
+     ============================================ */
+  
+  /* ============================================
+     SELECT2 DENTRO DE OFFCANVAS
+     ============================================ */
+  
+  /* Asegurar que el dropdown de Select2 aparezca por encima del offcanvas */
+  .offcanvas-unified .select2-container--open .select2-dropdown {
+    z-index: 1070 !important; /* Mayor que el offcanvas (1060) */
+}
+
+/* Carrito debe estar por encima de todos los offcanvas */
+#offcanvasCarrito {
+    z-index: 1075 !important; /* Mayor que otros offcanvas (1060) y Select2 (1070) */
+  }
+  
+  .offcanvas-unified .select2-container {
+    z-index: 1061 !important; /* Mayor que el offcanvas cuando está abierto */
+  }
+  
+  /* Permitir que el dropdown se muestre fuera del contenedor scrollable */
+  .offcanvas-unified .select2-container--open {
+    position: relative;
+    z-index: 1071 !important;
+  }
+  
+  /* Cuando Select2 está abierto, permitir que el dropdown se muestre */
+  .offcanvas-unified-body:has(.select2-container--open) {
+    overflow: visible !important;
+  }
+  
+  .offcanvas-unified-scrollable:has(.select2-container--open) {
+    overflow: visible !important;
+  }
+  
+  /* Mantener compatibilidad con filtros-offcanvas-header */
+  .filtros-offcanvas-header {
+    background: linear-gradient(135deg, var(--principal), #ff8a7a);
+    color: var(--color-blanco);
+    padding: 1rem;
+    border-bottom: none;
+    box-shadow: 0 4px 12px rgba(241, 108, 91, 0.2);
+  }
+  
+  .filtros-header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  
+  .offcanvas-title-filtros {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-blanco);
+    margin: 0;
+  }
+  
+  .offcanvas-title-filtros i {
+    font-size: 1.5rem;
+  }
+  
+  /* Mantener compatibilidad con filtros-offcanvas-body */
+  .filtros-offcanvas-body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    flex: 1 1 auto;
+    position: relative;
+  }
+  
+  /* Mantener compatibilidad con filtros-offcanvas-footer */
+  .filtros-offcanvas-footer {
+    border-top: 2px solid var(--color-gris-claro);
+    padding: 1rem 1.5rem;
+    background: var(--color-blanco);
+    display: flex;
+    gap: 1rem;
+    flex-shrink: 0;
+    z-index: 10;
+    position: relative;
+    margin-top: auto;
+  }

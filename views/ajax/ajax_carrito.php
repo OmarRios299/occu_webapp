@@ -47,6 +47,21 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         );
         $controller = "procesarPagoController";
 
+    }else if(isset($_POST['obtener_resumen_cafeteria'])){
+
+        $datos = array(
+            'id_usuario' => $_SESSION['id'],
+            'id_cafeteria' => $_POST['id_cafeteria']
+        );
+        
+        $carrito_info = CarritoModel::obtenerResumenCarritoCafeteriaModel($datos['id_usuario'], $datos['id_cafeteria']);
+        
+        echo json_encode([
+            'success' => true,
+            'carrito' => $carrito_info
+        ]);
+        exit;
+
     }else{
 
         $datos = false;

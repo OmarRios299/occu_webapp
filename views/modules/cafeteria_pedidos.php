@@ -76,6 +76,12 @@ if ($cafeteria) {
             </button>
         </li>
         <li class="nav-item" role="presentation">
+            <button class="nav-link" id="tab-terminados" data-bs-toggle="tab" data-bs-target="#terminados" type="button" role="tab">
+                <i class="fas fa-check-double me-1 text-info"></i> Terminados
+                <span class="badge bg-info ms-1" id="badge_terminados">0</span>
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
             <button class="nav-link" id="tab-entregados" data-bs-toggle="tab" data-bs-target="#entregados" type="button" role="tab">
                 <i class="fas fa-check-circle me-1 text-success"></i> Entregados
                 <span class="badge bg-success ms-1" id="count_entregados">0</span>
@@ -106,6 +112,16 @@ if ($cafeteria) {
             <div class="row" id="lista_preparando">
                 <div class="col-12 text-center py-5">
                     <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted">Cargando pedidos...</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terminados -->
+        <div class="tab-pane fade" id="terminados" role="tabpanel">
+            <div class="row" id="lista_terminados">
+                <div class="col-12 text-center py-5">
+                    <div class="spinner-border text-info" role="status"></div>
                     <p class="mt-2 text-muted">Cargando pedidos...</p>
                 </div>
             </div>
@@ -183,6 +199,36 @@ if ($cafeteria) {
     </div>
 </div>
 
+<!-- Modal para entregar pedido (solicitar código) -->
+<div class="modal fade" id="modal_entregar_pedido" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success text-white">
+                <h5 class="modal-title"><i class="fas fa-check-circle me-2"></i>Entregar pedido</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="entregar_id_pedido">
+                <div class="mb-3">
+                    <label class="form-label">Código de verificación <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-lg text-center" id="codigo_verificacion" 
+                        placeholder="000000" maxlength="6" style="font-size: 1.5rem; letter-spacing: 0.5rem; font-weight: bold;">
+                </div>
+                <div class="alert alert-info mb-0">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Solicite al cliente el código de verificación de 6 dígitos que aparece en su pedido.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-success" id="btn_confirmar_entrega">
+                    <i class="fas fa-check-double me-1"></i> Confirmar entrega
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
 .pedido-card {
     transition: all 0.3s ease;
@@ -197,6 +243,7 @@ if ($cafeteria) {
 .pedido-card.estado-3 { border-left-color: #dc3545; }
 .pedido-card.estado-4 { border-left-color: #198754; }
 .pedido-card.estado-5 { border-left-color: #6c757d; }
+.pedido-card.estado-6 { border-left-color: #0dcaf0; }
 
 .pedido-nuevo {
     animation: pulse-warning 2s infinite;

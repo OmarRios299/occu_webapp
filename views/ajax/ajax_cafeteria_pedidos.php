@@ -42,9 +42,17 @@ if (isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok') {
     } else if (isset($_POST['entregarPedido'])) {
 
         $datos = array(
-            "id_pedido" => $_POST['id_pedido']
+            "id_pedido" => $_POST['id_pedido'],
+            "codigo" => isset($_POST['codigo']) ? $_POST['codigo'] : ''
         );
         $controller = "entregarPedidoController";
+
+    } else if (isset($_POST['terminarPedido'])) {
+
+        $datos = array(
+            "id_pedido" => $_POST['id_pedido']
+        );
+        $controller = "terminarPedidoController";
 
     } else if (isset($_POST['cancelarPedido'])) {
 

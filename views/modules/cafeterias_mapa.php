@@ -12,7 +12,7 @@
 
 /* Carrito debe estar por encima de TODO cuando está abierto */
 #offcanvasCarrito {
-    z-index: 1060 !important; /* Por encima del navbar (1055) */
+    z-index: 1075 !important; /* Por encima del navbar (1055), otros offcanvas (1060) y Select2 (1070) */
 }
 
 /* Offcanvas de filtros debe estar por encima del navbar en pantallas grandes */

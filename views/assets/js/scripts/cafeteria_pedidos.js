@@ -68,12 +68,14 @@ function cargarPedidos(silent = false) {
       // Separar pedidos por estado
       let pendientes = response.pedidos.filter((p) => p.estado_pedido == 1);
       let preparando = response.pedidos.filter((p) => p.estado_pedido == 2);
+      let terminados = response.pedidos.filter((p) => p.estado_pedido == 6);
       let entregados = response.pedidos.filter((p) => p.estado_pedido == 4);
       let rechazados = response.pedidos.filter((p) => p.estado_pedido == 3);
 
       // Renderizar cada lista
       renderizarPedidos("#lista_pendientes", pendientes, 1);
       renderizarPedidos("#lista_preparando", preparando, 2);
+      renderizarPedidos("#lista_terminados", terminados, 6);
       renderizarPedidos("#lista_entregados", entregados, 4);
       renderizarPedidos("#lista_rechazados", rechazados, 3);
     },
@@ -93,6 +95,7 @@ function actualizarContadores(contadores) {
 
   $("#badge_pendientes").text(contadores.pendientes);
   $("#badge_preparando").text(contadores.preparando);
+  $("#badge_terminados").text(contadores.terminados || 0);
 }
 
 function renderizarPedidos(contenedor, pedidos, estado) {
@@ -110,6 +113,8 @@ function renderizarPedidos(contenedor, pedidos, estado) {
   let html = "";
 
   pedidos.forEach((pedido) => {
+    // Determinar el estado real del pedido (puede ser 2 o 6 en la lista de preparando)
+    let estadoReal = pedido.estado_pedido;
     let tiempoClase =
       pedido.minutos_transcurridos > 15 && estado == 1 ? "urgente" : "";
     let cardClase = estado == 1 && pedido.minutos_transcurridos < 2 ? "pedido-nuevo" : "";
@@ -121,14 +126,14 @@ function renderizarPedidos(contenedor, pedidos, estado) {
       )
       .join("");
 
-    let botonesHtml = obtenerBotonesPedido(pedido, estado);
+    let botonesHtml = obtenerBotonesPedido(pedido, estadoReal);
 
     html += `
             <div class="col-12 col-md-6 col-lg-4 mb-3">
-                <div class="card pedido-card estado-${estado} ${cardClase}">
+                <div class="card pedido-card estado-${estadoReal} ${cardClase}">
                     <div class="card-header d-flex justify-content-between align-items-center py-2">
                         <div>
-                            <strong class="text-primary">#${pedido.id}</strong>
+                            <strong class="text-primary">#${formatearFolio(pedido.id)}</strong>
                             <span class="ms-2 text-muted tiempo-pedido ${tiempoClase}">
                                 <i class="fas fa-clock"></i> ${formatearTiempo(pedido.minutos_transcurridos)}
                             </span>
@@ -175,6 +180,8 @@ function obtenerMensajeVacio(estado) {
       return { icono: "fa-times-circle", texto: "No hay pedidos rechazados" };
     case 4:
       return { icono: "fa-check-circle", texto: "No hay pedidos entregados hoy" };
+    case 6:
+      return { icono: "fa-check-double", texto: "No hay pedidos terminados" };
     default:
       return { icono: "fa-box", texto: "No hay pedidos" };
   }
@@ -201,6 +208,16 @@ function obtenerBotonesPedido(pedido, estado) {
     case 2: // En preparación
       return `
                 ${btnImprimir}
+                <button class="btn btn-sm btn-info btn_terminar_pedido" data-id="${pedido.id}">
+                    <i class="fas fa-check-circle"></i> Terminar
+                </button>
+                <button class="btn btn-sm btn-success btn_entregar_pedido flex-grow-1" data-id="${pedido.id}">
+                    <i class="fas fa-check-double"></i> Entregar
+                </button>
+            `;
+    case 6: // Terminado/Pedido listo
+      return `
+                ${btnImprimir}
                 <button class="btn btn-sm btn-success btn_entregar_pedido flex-grow-1" data-id="${pedido.id}">
                     <i class="fas fa-check-double"></i> Entregar
                 </button>
@@ -221,6 +238,10 @@ function formatearTiempo(minutos) {
   return `${horas}h ${mins}m`;
 }
 
+function formatearFolio(id) {
+  return String(id).padStart(6, '0');
+}
+
 // ========== VER DETALLE DEL PEDIDO ==========
 $(document).on("click", ".btn_ver_detalle", function () {
   let id_pedido = $(this).data("id");
@@ -228,7 +249,7 @@ $(document).on("click", ".btn_ver_detalle", function () {
 });
 
 function cargarDetallePedido(id_pedido) {
-  $("#detalle_numero_pedido").text(id_pedido);
+  $("#detalle_numero_pedido").text(formatearFolio(id_pedido));
   $("#detalle_pedido_contenido").html(`
         <div class="text-center py-4">
             <div class="spinner-border text-primary" role="status"></div>
@@ -353,6 +374,15 @@ function renderizarDetallePedido(pedido, items) {
         `;
   } else if (pedido.estado_pedido == 2) {
     accionesHtml += `
+            <button class="btn btn-info btn_terminar_pedido" data-id="${pedido.id}">
+                <i class="fas fa-check-circle me-1"></i> Marcar como terminado
+            </button>
+            <button class="btn btn-success btn_entregar_pedido" data-id="${pedido.id}">
+                <i class="fas fa-check-double me-1"></i> Marcar como entregado
+            </button>
+        `;
+  } else if (pedido.estado_pedido == 6) {
+    accionesHtml += `
             <button class="btn btn-success btn_entregar_pedido" data-id="${pedido.id}">
                 <i class="fas fa-check-double me-1"></i> Marcar como entregado
             </button>
@@ -374,6 +404,8 @@ function obtenerBadgeEstado(estado) {
       return '<span class="badge bg-success">Entregado</span>';
     case 5:
       return '<span class="badge bg-secondary">Cancelado</span>';
+    case 6:
+      return '<span class="badge bg-info">Pedido listo</span>';
     default:
       return '<span class="badge bg-secondary">Desconocido</span>';
   }
@@ -456,16 +488,16 @@ $(document).on("click", "#btn_confirmar_rechazo", function () {
   });
 });
 
-// Entregar pedido
-$(document).on("click", ".btn_entregar_pedido", function () {
+// Terminar pedido
+$(document).on("click", ".btn_terminar_pedido", function () {
   let id_pedido = $(this).data("id");
   let btn = $(this);
 
   swal({
-    title: "¿Entregar pedido?",
-    text: "Se marcará como entregado al cliente",
+    title: "¿Terminar pedido?",
+    text: "Se marcará como terminado y listo para entregar",
     icon: "info",
-    buttons: ["Cancelar", "Sí, entregar"],
+    buttons: ["Cancelar", "Sí, terminar"],
   }).then((confirmar) => {
     if (confirmar) {
       btn.prop("disabled", true).html('<i class="fas fa-spinner fa-spin"></i>');
@@ -474,24 +506,87 @@ $(document).on("click", ".btn_entregar_pedido", function () {
         url: url + "views/ajax/ajax_cafeteria_pedidos.php",
         method: "POST",
         data: {
-          entregarPedido: true,
+          terminarPedido: true,
           id_pedido: id_pedido,
         },
         success: function (response) {
           response = JSON.parse(response);
 
           if (response.success) {
-            swal("¡Entregado!", response.message, "success");
+            swal("¡Terminado!", response.message, "success");
             $("#modal_detalle_pedido").modal("hide");
             cargarPedidos();
           } else {
             swal("Error", response.message, "error");
-            btn.prop("disabled", false).html('<i class="fas fa-check-double"></i> Entregar');
+            btn.prop("disabled", false).html('<i class="fas fa-check-circle"></i> Terminar');
           }
+        },
+        error: function () {
+          swal("Error", "No se pudo terminar el pedido", "error");
+          btn.prop("disabled", false).html('<i class="fas fa-check-circle"></i> Terminar');
         },
       });
     }
   });
+});
+
+// Abrir modal para entregar pedido
+$(document).on("click", ".btn_entregar_pedido", function () {
+  let id_pedido = $(this).data("id");
+  $("#entregar_id_pedido").val(id_pedido);
+  $("#codigo_verificacion").val("");
+  $("#modal_detalle_pedido").modal("hide");
+  $("#modal_entregar_pedido").modal("show");
+  setTimeout(function() {
+    $("#codigo_verificacion").focus();
+  }, 500);
+});
+
+// Confirmar entrega
+$(document).on("click", "#btn_confirmar_entrega", function () {
+  let id_pedido = $("#entregar_id_pedido").val();
+  let codigo = $("#codigo_verificacion").val().trim();
+
+  if (!codigo || codigo.length !== 6) {
+    swal("Error", "Debe ingresar un código de verificación de 6 dígitos", "warning");
+    return;
+  }
+
+  let btn = $(this);
+  btn.prop("disabled", true).html('<i class="fas fa-spinner fa-spin"></i> Procesando...');
+
+  $.ajax({
+    url: url + "views/ajax/ajax_cafeteria_pedidos.php",
+    method: "POST",
+    data: {
+      entregarPedido: true,
+      id_pedido: id_pedido,
+      codigo: codigo,
+    },
+    success: function (response) {
+      response = JSON.parse(response);
+
+      if (response.success) {
+        swal("¡Entregado!", response.message, "success");
+        $("#modal_entregar_pedido").modal("hide");
+        cargarPedidos();
+      } else {
+        swal("Error", response.message, "error");
+        $("#codigo_verificacion").val("").focus();
+      }
+
+      btn.prop("disabled", false).html('<i class="fas fa-check-double me-1"></i> Confirmar entrega');
+    },
+    error: function () {
+      swal("Error", "No se pudo procesar la entrega", "error");
+      btn.prop("disabled", false).html('<i class="fas fa-check-double me-1"></i> Confirmar entrega');
+    },
+  });
+});
+
+// Permitir solo números en el código de verificación
+$(document).on("input", "#codigo_verificacion", function () {
+  this.value = this.value.replace(/[^0-9]/g, '');
 });
 
 // ========== IMPRESIÓN DE TICKET/COMANDA ==========
@@ -544,7 +639,7 @@ function imprimirTicket(pedido, items) {
   let ticketHtml = generarTicketHtml(pedido, items);
 
   // Abrir ventana de impresión
-  let ventanaImpresion = window.open("", "_blank", "width=350,height=600");
+  let ventanaImpresion = window.open("", "_blank", "width=350");
   
   ventanaImpresion.document.write(`
     <!DOCTYPE html>
@@ -561,12 +656,19 @@ function imprimirTicket(pedido, items) {
           padding: 0;
           box-sizing: border-box;
         }
+        html, body {
+          height: auto;
+          margin: 0;
+          padding: 0;
+        }
         body {
           font-family: 'Courier New', monospace;
           font-size: 12px;
           width: 80mm;
           padding: 5mm;
           background: white;
+          display: flex;
+          flex-direction: column;
         }
         .ticket-header {
           text-align: center;
@@ -643,8 +745,9 @@ function imprimirTicket(pedido, items) {
         }
         .footer {
           text-align: center;
-          margin-top: 15px;
-          padding-top: 10px;
+          margin-top: 10px;
+          padding-top: 8px;
+          padding-bottom: 5px;
           border-top: 1px dashed #000;
           font-size: 10px;
         }
@@ -665,11 +768,21 @@ function imprimirTicket(pedido, items) {
           padding-right: 5px;
         }
         @media print {
+          html, body {
+            height: auto;
+            margin: 0;
+            padding: 0;
+          }
           body {
             width: 80mm;
+            padding: 5mm;
           }
           .no-print {
             display: none !important;
+          }
+          @page {
+            size: 80mm auto;
+            margin: 0;
           }
         }
         .btn-imprimir {
@@ -746,7 +859,7 @@ function generarTicketHtml(pedido, items) {
     <div class="ticket-header">
       <h1>${pedido.nombre_cafeteria || "CAFETERÍA"}</h1>
       <div>*** COMANDA ***</div>
-      <div class="pedido-numero">#${pedido.id}</div>
+      <div class="pedido-numero">#${formatearFolio(pedido.id)}</div>
     </div>
 
     <div class="info-cliente">
@@ -771,7 +884,7 @@ function generarTicketHtml(pedido, items) {
 
     <div class="footer">
       <div>¡Gracias por su preferencia!</div>
-      <div style="margin-top: 5px; font-size: 9px;">
+      <div style="margin-top: 3px; font-size: 9px;">
         Impreso: ${new Date().toLocaleString("es-MX")}
       </div>
     </div>

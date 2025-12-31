@@ -9,16 +9,6 @@
    ESTILOS UNIFICADOS PARA OFFCANVAS DE CAFETERÍA
    ============================================ */
 
-/* Estilos adaptados para offcanvas - mismos estilos que ver_cafeteria.php pero más compactos */
-.cafeteria-content-offcanvas {
-    padding: 0;
-    max-width: 100%;
-    overflow-x: hidden;
-    height: auto;
-    min-height: 100%;
-    position: relative;
-}
-
 /* ========== ESTILOS BASE (fuera del contenedor offcanvas) ========== */
 /* Cards principales */
 .modern-card {
@@ -858,142 +848,28 @@
     }
 }
 
-/* Asegurar que todo el contenido se adapte al ancho del offcanvas */
-.cafeteria-content-offcanvas * {
-    max-width: 100%;
-    box-sizing: border-box;
-}
 
-.cafeteria-content-offcanvas img {
-    max-width: 100%;
-    height: auto;
-}
 
-.cafeteria-content-offcanvas .splide__list {
-    display: flex;
-}
-
-.cafeteria-content-offcanvas .splide__slide {
-    min-width: 0;
-    flex-shrink: 0;
-}
-
-/* ============================================
-   ESTILOS PARA OFFCANVAS DE CAFETERÍA
-   ============================================ */
-
-/* Estilos específicos para el offcanvas de cafetería - igual que el carrito pero con scroll */
-#offcanvasCafeteria {
-    z-index: 1060 !important; /* Igual que el carrito - por encima de todo */
-}
-
-#offcanvasCafeteriaMobile {
-    z-index: 1060 !important; /* Igual que el carrito - por encima de todo */
-}
-
-/* Estructura del body del offcanvas - igual que el carrito con scroll */
-#offcanvasCafeteria .offcanvas-body,
-#offcanvasCafeteriaMobile .offcanvas-body {
-    padding: 0 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100vh !important;
-    overflow: hidden !important;
-}
-
-/* Contenedor principal con scroll - igual que el carrito */
-#offcanvasCafeteria .offcanvas-body > div,
-#offcanvasCafeteriaMobile .offcanvas-body > div {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-/* Contenido scrollable - igual que el carrito */
-#offcanvasCafeteria .offcanvas-body .flex-grow-1,
-#offcanvasCafeteriaMobile .offcanvas-body .flex-grow-1 {
-    min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-}
-
-/* Contenido interno con padding */
-#offcanvasCafeteria #contenido_cafeteria_mapa,
-#offcanvasCafeteriaMobile #contenido_cafeteria_mapa_mobile {
-    width: 100%;
-    padding: 1rem;
-    padding-bottom: 2rem;
-}
-
-/* Ajustes para pantallas grandes */
-@media (min-width: 992px) {
-    #offcanvasCafeteria {
-        width: 500px !important;
-        max-width: 90vw !important;
-    }
-    
-    #offcanvasCafeteria #contenido_cafeteria_mapa {
-        padding: 1.5rem;
-        padding-bottom: 2rem;
-    }
-}
-
-/* Ajustes para móviles */
-@media (max-width: 991.98px) {
-    #offcanvasCafeteriaMobile {
-        max-height: 95vh !important;
-        height: 95vh !important;
-    }
-    
-    #offcanvasCafeteriaMobile #contenido_cafeteria_mapa_mobile {
-        padding: 1rem;
-        padding-bottom: 4rem;
-    }
-}
-
-/* Scrollbar personalizada para el contenido scrollable */
-#offcanvasCafeteria .flex-grow-1.overflow-auto::-webkit-scrollbar,
-#offcanvasCafeteriaMobile .flex-grow-1.overflow-auto::-webkit-scrollbar {
-    width: 10px;
-}
-
-#offcanvasCafeteria .flex-grow-1.overflow-auto::-webkit-scrollbar-track,
-#offcanvasCafeteriaMobile .flex-grow-1.overflow-auto::-webkit-scrollbar-track {
-    background: #f1f1f1;
-    border-radius: 5px;
-}
-
-#offcanvasCafeteria .flex-grow-1.overflow-auto::-webkit-scrollbar-thumb,
-#offcanvasCafeteriaMobile .flex-grow-1.overflow-auto::-webkit-scrollbar-thumb {
-    background: var(--principal);
-    border-radius: 5px;
-    border: 2px solid #f1f1f1;
-}
-
-#offcanvasCafeteria .flex-grow-1.overflow-auto::-webkit-scrollbar-thumb:hover,
-#offcanvasCafeteriaMobile .flex-grow-1.overflow-auto::-webkit-scrollbar-thumb:hover {
-    background: #e65a4a;
-}
 </style>
 
 <!-- Offcanvas para mostrar información de cafetería (Desktop - desde la derecha) -->
-<div class="offcanvas offcanvas-end filtros-offcanvas filtros-offcanvas-desktop" tabindex="-1" id="offcanvasCafeteria" aria-labelledby="offcanvasCafeteriaLabel" style="width: 500px; max-width: 90vw;">
-    <div class="offcanvas-header filtros-offcanvas-header">
-        <div class="filtros-header-content">
-            <h5 id="offcanvasCafeteriaLabel" class="offcanvas-title-filtros">
+<div class="offcanvas offcanvas-end offcanvas-unified slide-from-right width-medium filtros-offcanvas-desktop" tabindex="-1" id="offcanvasCafeteria" aria-labelledby="offcanvasCafeteriaLabel">
+    <div class="offcanvas-header offcanvas-unified-header">
+        <div class="offcanvas-unified-header-content">
+            <h5 id="offcanvasCafeteriaLabel" class="offcanvas-unified-title">
                 <i class="bi bi-cup-hot-fill"></i>
                 <span id="titulo_cafeteria_ver_mapa">Información de Cafetería</span>
             </h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+            
         </div>
     </div>
-    <div class="offcanvas-body p-0">
+    <div class="offcanvas-body offcanvas-unified-body">
         <div class="h-100 d-flex flex-column overflow-hidden">
             <!-- Contenido scrollable -->
-            <div class="flex-grow-1 overflow-auto">
+            <div class="offcanvas-unified-scrollable">
                 <input type="hidden" id="id_cafeteria_mapa">
-                <div id="contenido_cafeteria_mapa">
+                <div id="contenido_cafeteria_mapa" class="offcanvas-unified-content">
                     <div class="cafeteria-content-offcanvas">
                         <!-- Galería de Imágenes -->
                         <div class="modern-card" style="padding: 0; overflow: visible; margin-bottom: 1.5rem;">
@@ -1060,10 +936,10 @@
                                     <i class="fas fa-location-arrow"></i>
                                     Ir a Ubicación
                                 </button>
-                                <a class="btn-action btn-menu-link" href="#" id="link_menu_mapa" target="_blank" rel="noopener noreferrer">
+                                <button class="btn-action btn-menu-link" type="button" id="btn_ver_menu_mapa">
                                     <i class="fas fa-utensils"></i>
                                     Ver Menú
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -1139,22 +1015,23 @@
 </div>
 
 <!-- Offcanvas para mostrar información de cafetería (Mobile - desde abajo) -->
-<div class="offcanvas offcanvas-bottom filtros-offcanvas filtros-offcanvas-mobile" tabindex="-1" id="offcanvasCafeteriaMobile" aria-labelledby="offcanvasCafeteriaMobileLabel">
-    <div class="offcanvas-header filtros-offcanvas-header">
-        <div class="filtros-header-content">
-            <h5 id="offcanvasCafeteriaMobileLabel" class="offcanvas-title-filtros">
+<div class="offcanvas offcanvas-end offcanvas-unified slide-from-right" tabindex="-1" id="offcanvasCafeteriaMobile" aria-labelledby="offcanvasCafeteriaMobileLabel">
+    <div class="offcanvas-header offcanvas-unified-header">
+        <div class="offcanvas-unified-header-content">
+            <h5 id="offcanvasCafeteriaMobileLabel" class="offcanvas-unified-title">
                 <i class="bi bi-cup-hot-fill"></i>
+
                 <span id="titulo_cafeteria_ver_mapa_mobile">Información de Cafetería</span>
             </h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
         </div>
     </div>
-    <div class="offcanvas-body p-0">
+    <div class="offcanvas-body offcanvas-unified-body">
         <div class="h-100 d-flex flex-column overflow-hidden">
             <!-- Contenido scrollable -->
-            <div class="flex-grow-1 overflow-auto">
+            <div class="offcanvas-unified-scrollable">
                 <input type="hidden" id="id_cafeteria_mapa_mobile">
-                <div id="contenido_cafeteria_mapa_mobile">
+                <div id="contenido_cafeteria_mapa_mobile" class="offcanvas-unified-content">
                     <div class="cafeteria-content-offcanvas">
                         <!-- Galería de Imágenes -->
                         <div class="modern-card" style="padding: 0; overflow: visible; margin-bottom: 1.5rem;">
@@ -1221,10 +1098,10 @@
                                     <i class="fas fa-location-arrow"></i>
                                     Ir a Ubicación
                                 </button>
-                                <a class="btn-action btn-menu-link" href="#" id="link_menu_mapa" target="_blank" rel="noopener noreferrer">
+                                <button class="btn-action btn-menu-link" type="button" id="btn_ver_menu_mapa">
                                     <i class="fas fa-utensils"></i>
                                     Ver Menú
-                                </a>
+                                </button>
                             </div>
                         </div>
 
@@ -1437,3 +1314,90 @@ function openGalleryMapa(index = 0) {
     }
 }
 </script>
+
+<!-- Offcanvas del Menú de Cafetería -->
+<div class="offcanvas offcanvas-end offcanvas-unified slide-from-right width-medium" tabindex="-1" id="offcanvasMenuCafeteria" aria-labelledby="offcanvasMenuCafeteriaLabel">
+    <div class="offcanvas-header offcanvas-unified-header">
+        <div class="offcanvas-unified-header-content">
+            <h5 id="offcanvasMenuCafeteriaLabel" class="offcanvas-unified-title">
+                <i class="fas fa-utensils"></i>
+                <span id="titulo_menu_cafeteria">Menú</span>
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body offcanvas-unified-body">
+        <div class="h-100 d-flex flex-column overflow-hidden">
+            <!-- Contenido scrollable -->
+            <div class="offcanvas-unified-scrollable">
+                <div class="offcanvas-unified-content">
+                    <input type="hidden" id="id_cafeteria" value="">
+                    <input type="hidden" id="id_cafeteria_menu_offcanvas" value="">
+                    <!-- El contenido del menú se cargará aquí dinámicamente -->
+                    <div id="contenido_menu_offcanvas">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                            <p class="mt-3 text-muted">Cargando menú...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Offcanvas Detalle de Producto -->
+<div class="offcanvas offcanvas-end offcanvas-unified slide-from-right" tabindex="-1" id="offcanvasProducto" aria-labelledby="offcanvasProductoLabel">
+    <div class="offcanvas-header offcanvas-unified-header">
+        <div class="offcanvas-unified-header-content">
+            <h5 class="offcanvas-unified-title" id="offcanvasProductoLabel">
+                <i class="bi bi-cup-hot"></i>
+                <span>Iced latte</span>
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+        </div>
+    </div>
+    <div class="offcanvas-body offcanvas-unified-body">
+        <div class="h-100 d-flex flex-column overflow-hidden">
+            <!-- Contenido scrollable -->
+            <div class="offcanvas-unified-scrollable">
+                <div class="offcanvas-unified-content">
+                    <!-- Imagen -->
+                    <div class="producto-imagen position-relative">
+                        <img src="<?= $url ?>views/assets/img/cafeteria_default.png" id="prod_imagen" alt="Producto" class="w-100 object-fit-cover" style="max-height: 200px; width: 100%;">
+                    </div>
+
+                    <!-- Info general -->
+                    <div class="p-3">
+                        <div class="mb-2"><small class="text-muted">🔥 100%</small></div>
+                        <h5 id="nombre" class="mb-2">Iced latte</h5>
+                        <p class="text-muted mb-0" id="prod_descripcion">Bebida a base de leche y cafe con hielo</p>
+                    </div>
+
+                    <!-- Opciones -->
+                    <div class="px-3 pb-3" id="options">
+                        <!-- Las opciones se cargan dinámicamente aquí -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer fijo -->
+            <div class="offcanvas-unified-footer">
+                <div class="input-group" style="width: 120px;">
+                    <button class="btn btn-outline-secondary" type="button" id="btn_restar">-</button>
+                    <input type="text" class="form-control text-center" value="1" readonly style="border-left: 0; border-right: 0;">
+                    <button class="btn btn-outline-secondary" type="button" id="btn_sumar">+</button>
+                </div>
+                <button class="btn btn-warning text-white rounded-pill px-4 fw-bold" 
+                id="btn_agregar_producto_carrito" style="flex-shrink: 0;" 
+                <?php if (isset($_SESSION['nivel']) && 
+                $_SESSION['nivel'] == "Propietario" || 
+                $_SESSION['nivel'] == "Barista" || 
+                $_SESSION['nivel'] == "Administrador") { echo 'disabled'; } ?>
+                >Agregar · MX$0</button>
+            </div>
+        </div>
+    </div>
+</div>

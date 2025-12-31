@@ -23,7 +23,7 @@ if (!isset($_SESSION['iniciarSesion']) && isset($_COOKIE['token_session'])) {
 
 $template = new TemplateController();
 $url = $template->obtenerUrlController();
-$v = "1.4.0";
+$v = "1.5.0";
 
 ?>
 <!DOCTYPE html>
@@ -113,6 +113,7 @@ $v = "1.4.0";
 
     <?php
     if (isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok') {
+        echo '<input type="hidden" class="nivel_usuario" value="'.$_SESSION['nivel'].'">';
         // Determina si la página actual es "cafeterias_mapa" y estructura el layout en consecuencia
         if ($_SESSION['nivel'] == 'Barista'  || $_SESSION['nivel'] == 'Cliente') {
             include "modules/carrito.php";

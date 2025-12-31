@@ -1,5 +1,5 @@
 $(document).ready(function () {
-  if (moduloActual == 'cafeterias_lista') {
+  if (nivelUsuario == 'Cliente' || nivelUsuario == 'Barista') {
     actualizarContadorCarrito();
   }
 });
@@ -30,6 +30,19 @@ function actualizarContadorCarrito() {
 
 $(document).on("click", "#ver-carrito", function () {
   const offcanvasEl = document.getElementById("offcanvasCarrito");
+  
+  // Cerrar cualquier otro offcanvas abierto (como el del menú) antes de abrir el carrito
+  const offcanvasMenu = document.getElementById("offcanvasMenuCafeteria");
+  if (offcanvasMenu) {
+    const bsOffcanvasMenu = bootstrap.Offcanvas.getInstance(offcanvasMenu);
+    if (bsOffcanvasMenu) {
+      bsOffcanvasMenu.hide();
+    }
+  }
+  
+  // Asegurar que el z-index del carrito sea mayor
+  $(offcanvasEl).css('z-index', '1075');
+  
   const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
   offcanvas.show();
 

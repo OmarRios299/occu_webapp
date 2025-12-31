@@ -10,6 +10,8 @@
   height: 100vh !important; /* O ocupa el 100% de la altura de la pantalla */
 }
 .login .caja {
+  /* Estilos específicos para caja de login si se necesitan */
+  display: block;
 }
 .login .formulario {
   display: block;

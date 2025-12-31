@@ -76,6 +76,66 @@ class CafeteriasMenuController
         ]);
     }
 
+    static public function obtenerMenuOffcanvasController($id_cafeteria)
+    {
+        // Usar la misma función que usa cafeterias_menu.php
+        $menu = self::obtenerMenuPropietarioController($id_cafeteria);
+        
+        if ($menu['subcategorias'] == "") {
+            return json_encode([
+                'success' => false,
+                'message' => 'Esta cafetería aún no tiene menú disponible.'
+            ]);
+        }
+        
+        // Verificar si el usuario tiene un carrito activo en esta cafetería
+        $carrito_info = null;
+        session_start();
+        if (isset($_SESSION['id']) && !empty($_SESSION['id'])) {
+            require_once __DIR__ . '/../models/model_carrito.php';
+            $carrito_info = CarritoModel::obtenerResumenCarritoCafeteriaModel($_SESSION['id'], $id_cafeteria);
+        }
+        
+        // Generar el HTML del menú en el mismo formato que cafeterias_menu.php
+        $html = '<div class="menu-cafeterias">
+                    <input type="hidden" id="id_cafeteria_menu_offcanvas" value="' . $id_cafeteria . '">
+                    <!-- Menú de Navegación -->
+                    <div class="nav-menu">
+                        <ul>
+                            ' . $menu['categorias'] . '
+                        </ul>
+                    </div>
+                    <div class="product-list">
+                        <!-- Secciones de Categorías -->
+                        <div class="cafe-menu">
+                            ' . $menu['subcategorias'] . '
+                        </div>
+                    </div>';
+        
+        // Agregar información del carrito si existe
+        if ($carrito_info && $carrito_info['total_productos'] > 0) {
+            $html .= '<div class="menu-carrito-resumen" style="position: sticky; bottom: 0; background: var(--principal, #ffc107); color: white; padding: 1rem; margin-top: 1rem; border-radius: 12px 12px 0 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 10;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <small style="display: block; opacity: 0.9;">Total en carrito</small>
+                                <strong style="font-size: 1.1rem;">' . $carrito_info['total_productos'] . ' producto' . ($carrito_info['total_productos'] > 1 ? 's' : '') . ' · MX$' . number_format($carrito_info['total'], 2) . '</strong>
+                            </div>
+                            <button type="button" class="btn btn-light btn-sm" onclick="document.getElementById(\'ver-carrito\').click();" style="border-radius: 20px;">
+                                <i class="fas fa-shopping-cart"></i> Carrito
+                            </button>
+                        </div>
+                      </div>';
+        }
+        
+        $html .= '</div>';
+        
+        return json_encode([
+            'success' => true,
+            'html' => $html,
+            'carrito' => $carrito_info
+        ]);
+    }
+
 
     static public function agregarCarritoController($datos)
     {

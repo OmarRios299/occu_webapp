@@ -2,6 +2,11 @@
 let paginaActual = 1;
 const pedidosPorPagina = 10;
 
+// Función para formatear folio a 6 dígitos
+function formatearFolio(id) {
+    return String(id).padStart(6, '0');
+}
+
 // Cargar pedidos al iniciar
 $(document).ready(function() {
     if (moduloActual == "mis_pedidos") {
@@ -61,9 +66,10 @@ function mostrarPedidoActual(pedido) {
     
     const estadoInfo = obtenerInfoEstado(pedido.estado_pedido);
     const fechaFormateada = formatearFecha(pedido.fecha_alta);
+    const folioFormateado = formatearFolio(pedido.id);
     
     const html = `
-        <div class="pedido-card" onclick="verDetallePedido(${pedido.id})">
+        <div class="pedido-card">
             <div class="pedido-card-header">
                 <img src="${url}${pedido.imagen_cafeteria || 'views/assets/img/cafeteria_default.png'}" 
                      alt="${pedido.nombre_cafeteria}" 
@@ -72,6 +78,7 @@ function mostrarPedidoActual(pedido) {
                 <div class="pedido-card-info">
                     <h5>${pedido.nombre_cafeteria}</h5>
                     <p><i class="fas fa-map-marker-alt me-1"></i>${pedido.direccion_cafeteria || 'Dirección no disponible'}</p>
+                    <p class="mb-0"><strong>Folio: #${folioFormateado}</strong></p>
                 </div>
             </div>
             <div class="pedido-card-body">
@@ -83,15 +90,37 @@ function mostrarPedidoActual(pedido) {
                     </span>
                 </div>
                 ${pedido.minutos_transcurridos !== null ? `
-                    <small class="text-muted">
+                    <small class="text-muted d-block mb-2">
                         <i class="fas fa-clock me-1"></i>
                         ${pedido.minutos_transcurridos} minutos transcurridos
                     </small>
                 ` : ''}
+                ${pedido.codigo && (pedido.estado_pedido == 2 || pedido.estado_pedido == 6) ? `
+                    <div class="alert alert-info mb-0 mt-3">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <div>
+                                <strong><i class="fas fa-key me-2"></i>Código de verificación:</strong>
+                                <p class="mb-0 mt-1" style="font-size: 1.5rem; font-weight: bold; letter-spacing: 0.3rem;">
+                                    ${pedido.codigo}
+                                </p>
+                                <small class="text-muted">Muestre este código al recoger su pedido</small>
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
             </div>
             <div class="pedido-card-footer">
                 <span class="pedido-monto">MX$${parseFloat(pedido.monto_total).toFixed(2)}</span>
-                <i class="fas fa-chevron-right text-muted"></i>
+                <div class="d-flex gap-2">
+                    ${pedido.estado_pedido == 1 ? `
+                        <button class="btn btn-sm btn-danger btn-cancelar-pedido" onclick="cancelarPedido(${pedido.id})">
+                            <i class="fas fa-times me-1"></i> Cancelar
+                        </button>
+                    ` : ''}
+                    <button class="btn btn-sm btn-outline-primary" onclick="verDetallePedido(${pedido.id})">
+                        <i class="fas fa-eye me-1"></i> Ver detalle
+                    </button>
+                </div>
             </div>
         </div>
     `;
@@ -116,6 +145,7 @@ function mostrarPedidosAnteriores(pedidos, paginacion) {
     pedidos.forEach(function(pedido) {
         const estadoInfo = obtenerInfoEstado(pedido.estado_pedido);
         const fechaFormateada = formatearFecha(pedido.fecha_alta);
+        const folioFormateado = formatearFolio(pedido.id);
         
         html += `
             <div class="pedido-card" onclick="verDetallePedido(${pedido.id})">
@@ -127,6 +157,7 @@ function mostrarPedidosAnteriores(pedidos, paginacion) {
                     <div class="pedido-card-info">
                         <h5>${pedido.nombre_cafeteria}</h5>
                         <p><i class="fas fa-map-marker-alt me-1"></i>${pedido.direccion_cafeteria || 'Dirección no disponible'}</p>
+                        <p class="mb-0"><strong>Folio: #${folioFormateado}</strong></p>
                     </div>
                 </div>
                 <div class="pedido-card-body">
@@ -322,7 +353,7 @@ function mostrarDetallePedido(pedido, items) {
     `;
     
     $('#detalle-pedido-content').html(html);
-    $('#offcanvasDetallePedidoLabel').text('Detalle del Pedido #' + pedido.id);
+    $('#offcanvasDetallePedidoLabel').text('Detalle del Pedido #' + formatearFolio(pedido.id));
 }
 
 // Obtener información del estado del pedido
@@ -352,6 +383,18 @@ function obtenerInfoEstado(estado_pedido) {
                 clase: 'entregado',
                 icono: 'fas fa-check-circle'
             };
+        case 5:
+            return {
+                texto: 'Cancelado',
+                clase: 'rechazado',
+                icono: 'fas fa-ban'
+            };
+        case 6:
+            return {
+                texto: 'Pedido listo',
+                clase: 'terminado',
+                icono: 'fas fa-check-double'
+            };
         default:
             return {
                 texto: 'Desconocido',
@@ -375,5 +418,50 @@ function formatearFecha(fecha) {
     };
     
     return fechaObj.toLocaleDateString('es-MX', opciones);
+}
+
+// Cancelar pedido
+function cancelarPedido(idPedido) {
+    swal({
+        title: "¿Cancelar pedido?",
+        text: "Esta acción cancelará tu pedido. ¿Estás seguro?",
+        icon: "warning",
+        buttons: ["No, mantener pedido", "Sí, cancelar"],
+        dangerMode: true
+    }).then((confirmar) => {
+        if (confirmar) {
+            $.ajax({
+                url: url + 'views/ajax/ajax_mis_pedidos.php',
+                method: 'POST',
+                data: {
+                    cancelarPedido: true,
+                    id_pedido: idPedido
+                },
+                beforeSend: function() {
+                    cargaSistema(true);
+                },
+                success: function(response) {
+                    cargaSistema(false);
+                    try {
+                        const data = JSON.parse(response);
+                        
+                        if (data.success) {
+                            swal("¡Cancelado!", data.message, "success");
+                            cargarMisPedidos();
+                        } else {
+                            swal("Error", data.message, "error");
+                        }
+                    } catch (e) {
+                        console.error('Error al procesar respuesta:', e);
+                        swal("Error", "Hubo un problema al cancelar el pedido.", "error");
+                    }
+                },
+                error: function() {
+                    cargaSistema(false);
+                    swal("Error", "No se pudo cancelar el pedido.", "error");
+                }
+            });
+        }
+    });
 }
 

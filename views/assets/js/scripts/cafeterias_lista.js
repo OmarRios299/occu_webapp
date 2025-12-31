@@ -151,18 +151,22 @@ $(document).ready(function(){
             
             // Determinar qué offcanvas usar según el tamaño de pantalla
             const isMobile = window.innerWidth < 992;
+            const offcanvasId = isMobile ? 'offcanvasFiltrosMobile' : 'offcanvasFiltros';
+            const offcanvasEl = document.getElementById(offcanvasId);
+            const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+            offcanvas.show();
             
-            if (isMobile) {
-                // Usar offcanvas inferior para móvil
-                const offcanvasEl = document.getElementById("offcanvasFiltrosMobile");
-                const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
-                offcanvas.show();
-            } else {
-                // Usar offcanvas lateral para desktop
-                const offcanvasEl = document.getElementById("offcanvasFiltros");
-                const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
-                offcanvas.show();
-            }
+            // Re-inicializar Select2 dentro del offcanvas para asegurar que funcione correctamente
+            setTimeout(function() {
+                $('#' + offcanvasId + ' .select2').each(function() {
+                    if ($(this).data('select2')) {
+                        $(this).select2('destroy');
+                    }
+                    $(this).select2({
+                        dropdownParent: $('#' + offcanvasId)
+                    });
+                });
+            }, 100);
             
             // Cargar servicios si ya está activado el checkbox
             if ($('.check_servicios').is(':checked')) {
@@ -220,6 +224,8 @@ $(document).ready(function(){
             $("#ciudades_filtro").val(ciudadVal);
             $("#ciudades_filtro_offcanvas").val(ciudadVal);
             $("#ciudades_filtro_mobile").val(ciudadVal);
+            // Actualizar resultados automáticamente al cambiar la ciudad
+            cargarListaCafeterias(1, '');
         });
         
         // Función global para aplicar filtros desde el offcanvas desktop
@@ -277,3 +283,139 @@ $(document).ready(function(){
 });
 
 // Código de Splide eliminado - ya no se usa carousel para servicios
+
+// ============================================
+// FUNCIONALIDAD DEL MENÚ EN OFFCANVAS
+// ============================================
+// Reutiliza las funciones y eventos existentes del menú
+
+// Función para cargar el menú de la cafetería en el offcanvas
+// Usa la misma lógica que cafeterias_menu.php
+function cargarMenuCafeteria(idCafeteria) {
+  var datos = new FormData();
+  datos.append("cargar_menu", true);
+  datos.append("id_cafeteria", idCafeteria);
+
+  $.ajax({
+    url: url + "views/ajax/ajax_cafeterias_lista.php",
+    method: "POST",
+    data: datos,
+    cache: false,
+    contentType: false,
+    processData: false,
+    beforeSend: function () {
+      $("#contenido_menu_offcanvas").html(
+        '<div class="text-center py-5"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Cargando...</span></div><p class="mt-3 text-muted">Cargando menú...</p></div>'
+      );
+    },
+    success: function (respuesta) {
+      respuesta = JSON.parse(respuesta);
+      if (respuesta.success) {
+        // Insertar el HTML del menú (igual que en cafeterias_menu.php)
+        $("#contenido_menu_offcanvas").html(respuesta.html);
+
+        // Establecer el ID de la cafetería para que funcione el menú
+        // Este ID es necesario para cargar ingredientes y agregar al carrito
+        $("#id_cafeteria").val(idCafeteria);
+        $("#id_cafeteria_menu_offcanvas").val(idCafeteria);
+
+        // Inicializar eventos del menú después de cargar el contenido
+        inicializarEventosMenuOffcanvas();
+      } else {
+        $("#contenido_menu_offcanvas").html(
+          '<div class="text-center py-5"><i class="fas fa-utensils fa-3x text-muted mb-3"></i><h5 class="text-muted">Menú no disponible</h5><p class="text-muted">Esta cafetería aún no tiene menú disponible.</p></div>'
+        );
+      }
+    },
+    error: function () {
+      $("#contenido_menu_offcanvas").html(
+        '<div class="text-center py-5"><i class="fas fa-exclamation-triangle fa-3x text-danger mb-3"></i><h5 class="text-danger">Error al cargar el menú</h5><p class="text-muted">Por favor, intenta nuevamente.</p></div>'
+      );
+    },
+  });
+}
+
+// Función para inicializar los eventos del menú dentro del offcanvas
+// Reutiliza la lógica de menu.js pero limitada al contexto del offcanvas
+function inicializarEventosMenuOffcanvas() {
+  // Remover eventos previos para evitar duplicados
+  $("#offcanvasMenuCafeteria .menu-link").off("click.menuOffcanvas");
+  
+  // Navegación de categorías (similar a menu.js pero limitado al offcanvas)
+  $("#offcanvasMenuCafeteria .menu-link").on("click.menuOffcanvas", function (e) {
+    e.preventDefault();
+
+    // Remover la clase 'active' de todas las pestañas y categorías dentro del offcanvas
+    $("#offcanvasMenuCafeteria .menu-link").removeClass("active");
+    $("#offcanvasMenuCafeteria .category").removeClass("active");
+
+    // Añadir la clase 'active' a la pestaña y categoría seleccionada
+    $(this).addClass("active");
+    const target = $(this).attr("href");
+    if (target == 'todos') {
+      $("#offcanvasMenuCafeteria .category").addClass("active");
+    } else {
+      $("#offcanvasMenuCafeteria ." + target).addClass("active");
+    }
+
+    // Centrar la categoría seleccionada en el menú de navegación (solo si existe)
+    const $navMenu = $("#offcanvasMenuCafeteria .nav-menu");
+    if ($navMenu.length) {
+      const $selectedItem = $(this);
+
+      // Obtener la posición actual del elemento seleccionado
+      const itemLeftPosition = $selectedItem.offset().left;
+      const navMenuLeftPosition = $navMenu.offset().left;
+      const itemWidth = $selectedItem.outerWidth();
+      const navMenuWidth = $navMenu.width();
+
+      // Calcular el desplazamiento ideal para centrar el elemento
+      let scrollToPosition = $navMenu.scrollLeft() + (itemLeftPosition - navMenuLeftPosition) - (navMenuWidth / 2) + (itemWidth / 2);
+
+      // Asegurarse de que el desplazamiento no sea menor que cero
+      const maxScroll = $navMenu[0].scrollWidth - navMenuWidth;
+      scrollToPosition = Math.max(0, Math.min(scrollToPosition, maxScroll));
+
+      // Hacer scroll horizontal para centrar la categoría seleccionada
+      $navMenu.animate({
+        scrollLeft: scrollToPosition
+      }, 500);
+    }
+  });
+  
+  // Activar la primera categoría por defecto
+  const $firstCategory = $("#offcanvasMenuCafeteria .menu-link").first();
+  if ($firstCategory.length) {
+    $firstCategory.trigger("click.menuOffcanvas");
+  }
+}
+
+// Evento para abrir el menú en offcanvas
+$(document).on("click", "#btn_ver_menu_mapa, #btn_ver_menu_mapa_mobile", function() {
+  const idCafeteria = $(this).attr("data-cafeteria-id") || 
+                     $("#id_cafeteria_mapa").val() || 
+                     $("#id_cafeteria_mapa_mobile").val();
+  
+  if (idCafeteria) {
+    // Actualizar título del offcanvas
+    const nombreCafeteria = $("#titulo_cafeteria_ver_mapa").text() || 
+                           $("#titulo_cafeteria_ver_mapa_mobile").text() || 
+                           "Menú";
+    $("#titulo_menu_cafeteria").text("Menú - " + nombreCafeteria);
+    
+    // Cargar el menú
+    cargarMenuCafeteria(idCafeteria);
+    
+    // Abrir el offcanvas
+    const offcanvasEl = document.getElementById("offcanvasMenuCafeteria");
+    if (offcanvasEl) {
+      const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+      offcanvas.show();
+    }
+  }
+});
+
+
+
+
+

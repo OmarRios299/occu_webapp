@@ -1,20 +1,55 @@
-const offcanvasEl = document.getElementById("offcanvasProducto");
-const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+// Evento para abrir el offcanvas de producto cuando se hace clic en un producto
+// Usar delegación de eventos para que funcione con contenido cargado dinámicamente
 $(document).on("click", ".addProducto", function () {
-  offcanvas.show();
   const id_producto = $(this).attr("id-producto");
-
+  
+  if (!id_producto) {
+    console.error("No se encontró el ID del producto");
+    return;
+  }
+  
+  // Obtener el offcanvas de producto (obtenerlo cada vez para asegurar que existe)
+  const offcanvasEl = document.getElementById("offcanvasProducto");
+  if (!offcanvasEl) {
+    console.error("Offcanvas offcanvasProducto no encontrado");
+    swal("¡Error!", "No se pudo abrir el producto. El componente no está disponible.", "error");
+    return;
+  }
+  
+  // Obtener o crear instancia del offcanvas
+  let offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl);
+  if (!offcanvas) {
+    offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+  }
+  
+  // Establecer el ID del producto en el offcanvas
   $("#offcanvasProducto").attr("producto-id", id_producto);
-
+  
+  // Cargar los ingredientes del producto
   cargarIngredientesProducto(id_producto);
+  
+  // Abrir el offcanvas
+  offcanvas.show();
 });
 
 let precioBase = 0;
 let extrasTotal = 0;
 let cantidadProducto = 1;
 
-function cargarIngredientesProducto(id_producto) {
-  let cafeteria = $("#id_cafeteria").val();
+// Hacer la función global para que esté disponible desde otros archivos
+window.cargarIngredientesProducto = function(id_producto) {
+  // Obtener el ID de la cafetería desde diferentes fuentes
+  let cafeteria = $("#id_cafeteria").val() || 
+                  $("#id_cafeteria_menu_offcanvas").val() || 
+                  $("#id_cafeteria_mapa").val() || 
+                  $("#id_cafeteria_mapa_mobile").val();
+  
+  if (!cafeteria) {
+    console.error("No se encontró el ID de la cafetería para cargar ingredientes.");
+    swal("¡Error!", "No se pudo obtener la información de la cafetería para cargar el producto.", "error");
+    return;
+  }
+  
   let filtro = `?obtenerProducto=${true}&id_producto=${id_producto}&id_cafeteria=${cafeteria}`;
 
   $.ajax({
@@ -198,7 +233,7 @@ function cargarIngredientesProducto(id_producto) {
       actualizarTotal();
     },
   });
-}
+};
 
 function actualizarTotal() {
   // Recalcular extrasTotal
@@ -445,9 +480,27 @@ function agregarProductoCarrito(eliminarOtroCarrito = "No") {
       }
 
       swal("Perfecto", "Producto agregado al carrito", "success");
-      offcanvas.hide();
+      
+      // Cerrar el offcanvas de producto
+      const offcanvasProductoEl = document.getElementById("offcanvasProducto");
+      if (offcanvasProductoEl) {
+        const offcanvasProducto = bootstrap.Offcanvas.getInstance(offcanvasProductoEl);
+        if (offcanvasProducto) {
+          offcanvasProducto.hide();
+        }
+      }
+      
       $("#btn_agregar_producto_carrito").text(`Agregar · MX$ 0`);
       actualizarContadorCarrito();
+      
+      // Actualizar el total del carrito en el menú y en el offcanvas de producto
+      const idCafeteria = $("#id_cafeteria").val() || 
+                          $("#id_cafeteria_menu_offcanvas").val() || 
+                          $("#id_cafeteria_mapa").val() || 
+                          $("#id_cafeteria_mapa_mobile").val();
+      if (idCafeteria) {
+        actualizarTotalCarritoMenu(idCafeteria);
+      }
     },
   });
 }
@@ -503,3 +556,48 @@ function validarOpciones() {
 
   return { valido, mensaje };
 }
+
+// Función para actualizar el total del carrito en el menú
+function actualizarTotalCarritoMenu(idCafeteria) {
+  $.ajax({
+    url: url + "views/ajax/ajax_carrito.php",
+    method: "POST",
+    data: {
+      obtener_resumen_cafeteria: true,
+      id_cafeteria: idCafeteria
+    },
+    success: function (respuesta) {
+      respuesta = JSON.parse(respuesta);
+      const $menuCarrito = $("#offcanvasMenuCafeteria .menu-carrito-resumen");
+      
+      if (respuesta.success && respuesta.carrito && respuesta.carrito.total_productos > 0) {
+        const totalHtml = `
+          <div class="menu-carrito-resumen" style="position: sticky; bottom: 0; background: var(--principal, #ffc107); color: white; padding: 1rem; margin-top: 1rem; border-radius: 12px 12px 0 0; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 10;">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <small style="display: block; opacity: 0.9;">Total en carrito</small>
+                <strong style="font-size: 1.1rem;">${respuesta.carrito.total_productos} producto${respuesta.carrito.total_productos > 1 ? 's' : ''} · MX$${parseFloat(respuesta.carrito.total).toFixed(2)}</strong>
+              </div>
+              <button type="button" class="btn btn-light btn-sm" onclick="document.getElementById('ver-carrito').click();" style="border-radius: 20px;">
+                <i class="fas fa-shopping-cart"></i> Ver carrito
+              </button>
+            </div>
+          </div>
+        `;
+        
+        if ($menuCarrito.length) {
+          $menuCarrito.replaceWith(totalHtml);
+        } else {
+          $("#offcanvasMenuCafeteria .menu-cafeterias").append(totalHtml);
+        }
+      } else {
+        // Ocultar si no hay carrito
+        $menuCarrito.remove();
+      }
+    },
+    error: function () {
+      console.error("Error al actualizar el total del carrito en el menú");
+    }
+  });
+}
+

@@ -46,6 +46,15 @@ require_once '../../models/model_general.php';
 
         $controller = "obtenerServiciosController";
 
+    }else if(isset($_POST['cargar_menu'])){
+
+        require_once '../../controllers/controller_cafeterias_menu.php';
+        require_once '../../models/model_cafeterias_menu.php';
+        
+        $datos = $_POST['id_cafeteria'];
+        echo CafeteriasMenuController::obtenerMenuOffcanvasController($datos);
+        exit;
+
     }else{
 
         $datos = false;

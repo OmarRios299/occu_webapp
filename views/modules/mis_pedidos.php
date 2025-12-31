@@ -167,6 +167,11 @@
     color: #721C24;
 }
 
+.pedido-estado.terminado {
+    background: #D1ECF1;
+    color: #0C5460;
+}
+
 .pedido-monto {
     font-size: 1.25rem;
     font-weight: 700;
@@ -302,17 +307,24 @@
 </div>
 
 <!-- Offcanvas Detalle de Pedido -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasDetallePedido" aria-labelledby="offcanvasDetallePedidoLabel">
-    <div class="offcanvas-header">
-        <h5 class="offcanvas-title" id="offcanvasDetallePedidoLabel">Detalle del Pedido</h5>
-        <button type="button" class="btn-close btn-close-black" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+<div class="offcanvas offcanvas-end offcanvas-unified slide-from-right" tabindex="-1" id="offcanvasDetallePedido" aria-labelledby="offcanvasDetallePedidoLabel">
+    <div class="offcanvas-header offcanvas-unified-header">
+        <div class="offcanvas-unified-header-content">
+            <h5 class="offcanvas-unified-title" id="offcanvasDetallePedidoLabel">
+                <i class="bi bi-receipt"></i>
+                <span>Detalle del Pedido</span>
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+        </div>
     </div>
-    <div class="offcanvas-body p-0">
+    <div class="offcanvas-body offcanvas-unified-body">
         <div class="h-100 d-flex flex-column overflow-hidden">
             <!-- Contenido scrollable -->
-            <div class="flex-grow-1 overflow-auto" style="min-height: 0;">
-                <div id="detalle-pedido-content">
-                    <!-- El contenido se carga dinámicamente aquí -->
+            <div class="offcanvas-unified-scrollable">
+                <div class="offcanvas-unified-content">
+                    <div id="detalle-pedido-content">
+                        <!-- El contenido se carga dinámicamente aquí -->
+                    </div>
                 </div>
             </div>
         </div>

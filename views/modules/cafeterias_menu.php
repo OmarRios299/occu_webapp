@@ -93,52 +93,55 @@ if ($menu['subcategorias'] == "") {
 <?php } ?>
 
 <!-- Offcanvas Detalle de Producto -->
-<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasProducto" aria-labelledby="offcanvasProductoLabel">
-  <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="offcanvasProductoLabel">Iced latte</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+<div class="offcanvas offcanvas-end offcanvas-unified slide-from-right" tabindex="-1" id="offcanvasProducto" aria-labelledby="offcanvasProductoLabel">
+  <div class="offcanvas-header offcanvas-unified-header">
+    <div class="offcanvas-unified-header-content">
+      <h5 class="offcanvas-unified-title" id="offcanvasProductoLabel">
+        <i class="bi bi-cup-hot"></i>
+        <span>Iced latte</span>
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
   </div>
-  <div class="offcanvas-body p-0">
+  <div class="offcanvas-body offcanvas-unified-body">
     <div class="h-100 d-flex flex-column overflow-hidden">
+      <!-- Contenido scrollable -->
+      <div class="offcanvas-unified-scrollable">
+        <div class="offcanvas-unified-content">
+          <!-- Imagen -->
+          <div class="producto-imagen position-relative">
+            <img src="<?= $url ?>views/assets/img/cafeteria_default.png" id="prod_imagen" alt="Producto" class="w-100 object-fit-cover" style="max-height: 200px; width: 100%;">
+          </div>
 
-      <!-- Todo el contenido scrollable -->
-      <div class="flex-grow-1 overflow-auto" style="min-height: 0;">
+          <!-- Info general -->
+          <div class="p-3">
+            <div class="mb-2"><small class="text-muted">🔥 100%</small></div>
+            <h5 id="nombre" class="mb-2">Iced latte</h5>
+            <p class="text-muted mb-0" id="prod_descripcion">Bebida a base de leche y cafe con hielo</p>
+          </div>
 
-        <!-- Imagen -->
-        <div class="producto-imagen position-relative">
-          <img src="<?= $url ?>views/assets/img/cafeteria_default.png" id="prod_imagen" alt="Producto" class="w-100 object-fit-cover" style="max-height: 200px; width: 100%;">
-        </div>
-
-        <!-- Info general -->
-        <div class="p-3">
-          <div class="mb-2"><small class="text-muted">🔥 100%</small></div>
-          <h5 id="nombre" class="mb-2">Iced latte</h5>
-          <p class="text-muted mb-0" id="prod_descripcion">Bebida a base de leche y cafe con hielo</p>
-        </div>
-
-        <!-- Opciones -->
-        <div class="px-3 pb-3" id="options">
-          <!-- Las opciones se cargan dinámicamente aquí -->
+          <!-- Opciones -->
+          <div class="px-3 pb-3" id="options">
+            <!-- Las opciones se cargan dinámicamente aquí -->
+          </div>
         </div>
       </div>
 
       <!-- Footer fijo -->
-      <div class="border-top px-3 py-3 bg-white d-flex justify-content-between align-items-center" style="flex-shrink: 0;">
+      <div class="offcanvas-unified-footer">
         <div class="input-group" style="width: 120px;">
           <button class="btn btn-outline-secondary" type="button" id="btn_restar">-</button>
           <input type="text" class="form-control text-center" value="1" readonly style="border-left: 0; border-right: 0;">
           <button class="btn btn-outline-secondary" type="button" id="btn_sumar">+</button>
         </div>
-          <button class="btn btn-warning text-white rounded-pill px-4 fw-bold" 
-          id="btn_agregar_producto_carrito" style="flex-shrink: 0;" 
-          <?php if (isset($_SESSION['nivel']) && 
-          $_SESSION['nivel'] == "Propietario" || 
-          $_SESSION['nivel'] == "Barista" || 
-          $_SESSION['nivel'] == "Administrador") { echo 'disabled'; } ?>
-          >Agregar · MX$0</button>
-        
+        <button class="btn btn-warning text-white rounded-pill px-4 fw-bold" 
+        id="btn_agregar_producto_carrito" style="flex-shrink: 0;" 
+        <?php if (isset($_SESSION['nivel']) && 
+        $_SESSION['nivel'] == "Propietario" || 
+        $_SESSION['nivel'] == "Barista" || 
+        $_SESSION['nivel'] == "Administrador") { echo 'disabled'; } ?>
+        >Agregar · MX$0</button>
       </div>
-
     </div>
   </div>
 </div>

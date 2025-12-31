@@ -22,7 +22,8 @@ class CafeteriaPedidosModel extends Conexion
             v.fecha_aceptado,
             v.fecha_rechazo,
             v.motivo_rechazo,
-            v.fecha_entragado
+            v.fecha_entragado,
+            v.codigo
         FROM ventas v
         INNER JOIN admin_usuarios u ON u.id = v.id_cliente
         WHERE v.id_cafeteria = :id_cafeteria
@@ -39,13 +40,13 @@ class CafeteriaPedidosModel extends Conexion
                 // Rechazados: solo los rechazados hoy
                 $sql .= " AND DATE(v.fecha_rechazo) = CURDATE()";
             } else {
-                // Pendientes (1) y En preparación (2): solo los creados hoy
+                // Pendientes (1), En preparación (2) y Terminados (6): solo los creados hoy
                 $sql .= " AND DATE(v.fecha_alta) = CURDATE()";
             }
         } else {
             // Si no se especifica estado, filtrar todos los pedidos de hoy según su estado
             $sql .= " AND (
-                (v.estado_pedido IN (1, 2) AND DATE(v.fecha_alta) = CURDATE()) OR
+                (v.estado_pedido IN (1, 2, 6) AND DATE(v.fecha_alta) = CURDATE()) OR
                 (v.estado_pedido = 3 AND DATE(v.fecha_rechazo) = CURDATE()) OR
                 (v.estado_pedido = 4 AND DATE(v.fecha_entragado) = CURDATE())
             )";
@@ -70,6 +71,7 @@ class CafeteriaPedidosModel extends Conexion
         $stmt = Conexion::conectar()->prepare("SELECT 
             SUM(CASE WHEN estado_pedido = 1 AND DATE(fecha_alta) = CURDATE() THEN 1 ELSE 0 END) AS pendientes,
             SUM(CASE WHEN estado_pedido = 2 AND DATE(fecha_alta) = CURDATE() THEN 1 ELSE 0 END) AS preparando,
+            SUM(CASE WHEN estado_pedido = 6 AND DATE(fecha_alta) = CURDATE() THEN 1 ELSE 0 END) AS terminados,
             SUM(CASE WHEN estado_pedido = 4 AND DATE(fecha_entragado) = CURDATE() THEN 1 ELSE 0 END) AS entregados_hoy,
             SUM(CASE WHEN estado_pedido = 3 AND DATE(fecha_rechazo) = CURDATE() THEN 1 ELSE 0 END) AS rechazados_hoy
         FROM ventas
@@ -202,16 +204,35 @@ class CafeteriaPedidosModel extends Conexion
     // Aceptar pedido (estado 1 -> 2)
     static public function aceptarPedidoModel($datos)
     {
+        // Generar código único de 6 dígitos
+        $codigo = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+        
+        // Verificar que el código no exista (aunque es muy poco probable con 6 dígitos)
+        $stmt_verificar = Conexion::conectar()->prepare("SELECT id FROM ventas WHERE codigo = :codigo AND estado = 0");
+        $stmt_verificar->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+        $stmt_verificar->execute();
+        
+        // Si el código ya existe, generar uno nuevo (máximo 10 intentos)
+        $intentos = 0;
+        while ($stmt_verificar->fetch() && $intentos < 10) {
+            $codigo = str_pad(rand(100000, 999999), 6, '0', STR_PAD_LEFT);
+            $stmt_verificar->bindParam(':codigo', $codigo, PDO::PARAM_STR);
+            $stmt_verificar->execute();
+            $intentos++;
+        }
+        
         $stmt = Conexion::conectar()->prepare("UPDATE ventas 
             SET estado_pedido = 2,
                 id_aceptado = :id_usuario,
-                fecha_aceptado = :fecha
+                fecha_aceptado = :fecha,
+                codigo = :codigo
             WHERE id = :id_pedido
             AND estado_pedido = 1");
 
         $stmt->bindParam(':id_pedido', $datos['id_pedido'], PDO::PARAM_INT);
         $stmt->bindParam(':id_usuario', $datos['id_usuario'], PDO::PARAM_INT);
         $stmt->bindParam(':fecha', $datos['fecha'], PDO::PARAM_STR);
+        $stmt->bindParam(':codigo', $codigo, PDO::PARAM_STR);
 
         if ($stmt->execute() && $stmt->rowCount() > 0) {
             return 'success';
@@ -241,13 +262,50 @@ class CafeteriaPedidosModel extends Conexion
         return 'error';
     }
 
-    // Marcar como entregado (estado 2 -> 4)
+    // Marcar como entregado (estado 2 o 6 -> 4) - Validar código
     static public function entregarPedidoModel($datos)
     {
+        // Primero verificar que el código coincida y el pedido esté en estado 2 o 6
+        $stmt_verificar = Conexion::conectar()->prepare("SELECT id FROM ventas 
+            WHERE id = :id_pedido 
+            AND codigo = :codigo 
+            AND estado_pedido IN (2, 6)
+            AND estado = 0");
+        
+        $stmt_verificar->bindParam(':id_pedido', $datos['id_pedido'], PDO::PARAM_INT);
+        $stmt_verificar->bindParam(':codigo', $datos['codigo'], PDO::PARAM_STR);
+        $stmt_verificar->execute();
+        
+        if (!$stmt_verificar->fetch()) {
+            return 'codigo_invalido';
+        }
+        
         $stmt = Conexion::conectar()->prepare("UPDATE ventas 
             SET estado_pedido = 4,
                 id_entregado = :id_usuario,
                 fecha_entragado = :fecha
+            WHERE id = :id_pedido
+            AND estado_pedido IN (2, 6)
+            AND codigo = :codigo");
+
+        $stmt->bindParam(':id_pedido', $datos['id_pedido'], PDO::PARAM_INT);
+        $stmt->bindParam(':id_usuario', $datos['id_usuario'], PDO::PARAM_INT);
+        $stmt->bindParam(':fecha', $datos['fecha'], PDO::PARAM_STR);
+        $stmt->bindParam(':codigo', $datos['codigo'], PDO::PARAM_STR);
+
+        if ($stmt->execute() && $stmt->rowCount() > 0) {
+            return 'success';
+        }
+        return 'error';
+    }
+
+    // Terminar pedido (estado 2 -> 6)
+    static public function terminarPedidoModel($datos)
+    {
+        $stmt = Conexion::conectar()->prepare("UPDATE ventas 
+            SET estado_pedido = 6,
+                id_terminado = :id_usuario,
+                fecha_terminado = :fecha
             WHERE id = :id_pedido
             AND estado_pedido = 2");
 
@@ -261,7 +319,7 @@ class CafeteriaPedidosModel extends Conexion
         return 'error';
     }
 
-    // Cancelar pedido (estado -> 5)
+    // Cancelar pedido (estado -> 5) - Solo si NO está aceptado (estado 1)
     static public function cancelarPedidoModel($datos)
     {
         $stmt = Conexion::conectar()->prepare("UPDATE ventas 
@@ -269,7 +327,7 @@ class CafeteriaPedidosModel extends Conexion
                 id_cancelado = :id_usuario,
                 fecha_cancelado = :fecha
             WHERE id = :id_pedido
-            AND estado_pedido IN (1, 2)");
+            AND estado_pedido = 1");
 
         $stmt->bindParam(':id_pedido', $datos['id_pedido'], PDO::PARAM_INT);
         $stmt->bindParam(':id_usuario', $datos['id_usuario'], PDO::PARAM_INT);

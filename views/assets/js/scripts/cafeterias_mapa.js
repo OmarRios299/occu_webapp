@@ -327,12 +327,8 @@ function CargarVerCafeteriaMapa(idCafeteria) {
                         // Configurar botón de ubicación
                         $contenedor.find(".ir_googlemaps_mapa").attr("latitud", respuesta.data.latitud).attr('longitud', respuesta.data.longitud);
                         
-                        // Configurar link del menú (abrir en nueva pestaña)
-                        $contenedor.find("#link_menu_mapa").attr({
-                            "href": url + "cafeterias_menu/" + respuesta.data.id,
-                            "target": "_blank",
-                            "rel": "noopener noreferrer"
-                        });
+                        // Configurar botón del menú para abrir offcanvas
+                        $contenedor.find("#btn_ver_menu_mapa, #btn_ver_menu_mapa_mobile").attr("data-cafeteria-id", respuesta.data.id);
                     }
                 });
                 
@@ -611,6 +607,8 @@ $(document).ready(function(){
             $("#ciudades_filtro_offcanvas").attr('coordenadas', coordenadas);
             $("#ciudades_filtro_mobile").val(ciudadVal);
             $("#ciudades_filtro_mobile").attr('coordenadas', coordenadas);
+            // Actualizar resultados automáticamente al cambiar la ciudad
+            cargarMapaCafeterias();
         });
         
         // Función global para aplicar filtros desde el offcanvas desktop
@@ -697,6 +695,18 @@ $(document).ready(function(){
                 var bsDesktopOffcanvas = new bootstrap.Offcanvas(desktopOffcanvas);
                 bsDesktopOffcanvas.show();
                 
+                // Re-inicializar Select2 dentro del offcanvas para asegurar que funcione correctamente
+                setTimeout(function() {
+                    $('#offcanvasFiltros .select2').each(function() {
+                        if ($(this).data('select2')) {
+                            $(this).select2('destroy');
+                        }
+                        $(this).select2({
+                            dropdownParent: $('#offcanvasFiltros')
+                        });
+                    });
+                }, 100);
+                
                 // Cargar servicios si ya está activado el checkbox
                 if ($('.check_servicios').is(':checked')) {
                     cargarServiciosFiltro();
@@ -744,6 +754,18 @@ $(document).ready(function(){
                 var mobileOffcanvas = document.getElementById("offcanvasFiltrosMobile");
                 var bsMobileOffcanvas = new bootstrap.Offcanvas(mobileOffcanvas);
                 bsMobileOffcanvas.show();
+                
+                // Re-inicializar Select2 dentro del offcanvas para asegurar que funcione correctamente
+                setTimeout(function() {
+                    $('#offcanvasFiltrosMobile .select2').each(function() {
+                        if ($(this).data('select2')) {
+                            $(this).select2('destroy');
+                        }
+                        $(this).select2({
+                            dropdownParent: $('#offcanvasFiltrosMobile')
+                        });
+                    });
+                }, 100);
                 
                 // Cargar servicios si ya está activado el checkbox
                 if ($('.check_servicios').is(':checked')) {

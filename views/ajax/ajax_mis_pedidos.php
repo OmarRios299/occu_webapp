@@ -27,6 +27,13 @@ if(isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok'){
         $datos = true;
         $controller = "verificarPedidoEnProcesoController";
 
+    }else if(isset($_POST['cancelarPedido'])){
+
+        $datos = array(
+            "id_pedido" => $_POST['id_pedido']
+        );
+        $controller = "cancelarPedidoController";
+
     }else{
 
         $datos = false;

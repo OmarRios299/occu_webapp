@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/conexion.php';
 
 class MisPedidosModel extends Conexion
 {
-    // Obtener pedido actual (en proceso: estado_pedido 1 o 2)
+    // Obtener pedido actual (en proceso: estado_pedido 1, 2 o 6)
     static public function obtenerPedidoActualModel($id_usuario)
     {
         $stmt = Conexion::conectar()->prepare("SELECT 
@@ -16,6 +16,8 @@ class MisPedidosModel extends Conexion
             v.fecha_alta,
             v.fecha_aceptado,
             v.fecha_entragado,
+            v.fecha_terminado,
+            v.codigo,
             c.nombre AS nombre_cafeteria,
             c.imagen AS imagen_cafeteria,
             c.direccion AS direccion_cafeteria
@@ -23,7 +25,7 @@ class MisPedidosModel extends Conexion
         INNER JOIN cafeterias c ON c.id = v.id_cafeteria
         WHERE v.id_cliente = :id_usuario
         AND v.estado = 0
-        AND v.estado_pedido IN (1, 2)
+        AND v.estado_pedido IN (1, 2, 6)
         ORDER BY v.fecha_alta DESC
         LIMIT 1");
 

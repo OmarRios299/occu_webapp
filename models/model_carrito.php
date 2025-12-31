@@ -248,6 +248,88 @@ class CarritoModel extends Conexion {
         return $stmt->fetch();
     }
 
+    // Obtener resumen del carrito de una cafetería específica (total de productos y monto)
+    static public function obtenerResumenCarritoCafeteriaModel($id_usuario, $id_cafeteria)
+    {
+        // Primero verificar si existe un carrito activo para esta cafetería
+        $stmt = Conexion::conectar()->prepare("SELECT 
+            vc.id AS id_carrito,
+            vc.id_cafeteria
+        FROM ventas_carrito vc
+        WHERE vc.estado = 0
+        AND vc.id_usuario = :id_usuario
+        AND vc.id_cafeteria = :id_cafeteria");
+
+        $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
+        $stmt->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+        $stmt->execute();
+        $carrito = $stmt->fetch();
+
+        if (!$carrito) {
+            return null; // No hay carrito activo para esta cafetería
+        }
+
+        $id_carrito = $carrito['id_carrito'];
+
+        // Obtener id_propietario desde la cafetería
+        $stmt_propietario = Conexion::conectar()->prepare("SELECT id_usuario AS id_propietario FROM cafeterias WHERE id = :id_cafeteria");
+        $stmt_propietario->bindParam(':id_cafeteria', $id_cafeteria, PDO::PARAM_INT);
+        $stmt_propietario->execute();
+        $cafeteria_data = $stmt_propietario->fetch();
+        
+        if (!$cafeteria_data) {
+            return null;
+        }
+        
+        $id_propietario = $cafeteria_data['id_propietario'];
+
+        // Obtener items del carrito para calcular correctamente
+        $items = self::obtenerItemsParaVentaModel($id_carrito, $id_cafeteria);
+        
+        if (empty($items)) {
+            return null;
+        }
+        
+        // Calcular total de productos (sumando las cantidades de cada item)
+        $total_productos = 0;
+        $total_general = 0;
+        
+        foreach ($items as $item) {
+            // Sumar la cantidad de este item al total de productos
+            $total_productos += (int)$item['cantidad'];
+            
+            // Calcular precio del item (precio unitario * cantidad)
+            $precio_item = (float)$item['precio_unitario'] * (int)$item['cantidad'];
+            
+            // Obtener ingredientes del item
+            $ingredientes = self::obtenerIngredientesParaVentaModel(
+                $item['id_item'], 
+                $item['id_producto'], 
+                $id_cafeteria
+            );
+            
+            // Calcular total de ingredientes para este item
+            // Usar la misma lógica que obtenerResumenPagoController
+            $total_ingredientes = 0;
+            foreach ($ingredientes as $ing) {
+                $total_ingredientes += floatval($ing['monto_total'] ?? 0);
+            }
+            
+            // Calcular subtotal del item (precio unitario + ingredientes) * cantidad
+            $precio_unitario_total = floatval($item['precio_unitario']) + $total_ingredientes;
+            $subtotal_item = $precio_unitario_total * (int)$item['cantidad'];
+            
+            // Sumar al total general
+            $total_general += $subtotal_item;
+        }
+
+        return [
+            'id_carrito' => $id_carrito,
+            'total_productos' => $total_productos,
+            'total' => (float)$total_general
+        ];
+    }
+
     // Obtener items con precio calculado para la venta
     static public function obtenerItemsParaVentaModel($id_carrito, $id_cafeteria)
     {
@@ -520,7 +602,7 @@ class CarritoModel extends Conexion {
         FROM ventas
         WHERE id_cliente = :id_usuario
         AND estado = 0
-        AND estado_pedido IN (1, 2)");
+        AND estado_pedido IN (1, 2, 6)");
 
         $stmt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_INT);
         $stmt->execute();

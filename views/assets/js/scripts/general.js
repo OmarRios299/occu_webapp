@@ -9,6 +9,8 @@ $(document).ready(function(){
 	/* VARIABLE GLOBAL MODULO ACTUAL */
 	
 	moduloActual = $(".moduloActual").val();
+
+    nivelUsuario = $(".nivel_usuario").val();
 	
 	/* End of VARIABLE GLOBAL MODULO ACTUAL */
 
@@ -41,7 +43,19 @@ $(document).ready(function(){
 
 	/* SELECT 2 */
 	
+	// Inicializar Select2 normalmente
 	$('.select2').select2();
+	
+	// Re-inicializar Select2 para selects dentro de offcanvas con dropdownParent
+	// Esto asegura que el dropdown se muestre correctamente por encima del offcanvas
+	$('.offcanvas-unified .select2').each(function() {
+		if ($(this).data('select2')) {
+			$(this).select2('destroy');
+		}
+		$(this).select2({
+			dropdownParent: $(this).closest('.offcanvas-unified')
+		});
+	});
 	
 	/* End of SELECT 2 */
 
@@ -900,3 +914,22 @@ function select_subcategoria() {
         }
     });
 }
+
+// ============================================
+// RESETEAR SCROLL AL ABRIR OFFCANVAS
+// ============================================
+// Resetear el scroll al inicio cada vez que se abre un offcanvas
+$(document).on('shown.bs.offcanvas', '.offcanvas', function () {
+  // Buscar el contenedor scrollable dentro del offcanvas
+  const $scrollable = $(this).find('.offcanvas-unified-scrollable');
+  if ($scrollable.length) {
+    // Resetear el scroll al inicio
+    $scrollable.scrollTop(0);
+  } else {
+    // Si no tiene la clase unificada, buscar el body del offcanvas
+    const $body = $(this).find('.offcanvas-body');
+    if ($body.length) {
+      $body.scrollTop(0);
+    }
+  }
+});

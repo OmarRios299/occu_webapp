@@ -54,6 +54,7 @@ class CafeteriaPedidosController
             'contadores' => [
                 'pendientes' => intval($contadores['pendientes'] ?? 0),
                 'preparando' => intval($contadores['preparando'] ?? 0),
+                'terminados' => intval($contadores['terminados'] ?? 0),
                 'entregados_hoy' => intval($contadores['entregados_hoy'] ?? 0),
                 'rechazados_hoy' => intval($contadores['rechazados_hoy'] ?? 0)
             ]
@@ -184,6 +185,57 @@ class CafeteriaPedidosController
     // Entregar pedido
     static public function entregarPedidoController($datos)
     {
+        // Validar que se proporcione el código
+        if (empty($datos['codigo'])) {
+            return json_encode([
+                'error' => true,
+                'message' => 'Debe proporcionar el código de verificación'
+            ]);
+        }
+
+        // Obtener la zona horaria de la ciudad de la cafetería del pedido
+        $zona_horaria = CafeteriaPedidosModel::obtenerZonaHorariaPedidoModel($datos['id_pedido']);
+        
+        // Si no se encuentra zona horaria, usar la por defecto
+        if (!$zona_horaria) {
+            $zona_horaria = "America/Tijuana";
+        }
+
+        // Establecer la zona horaria antes de obtener la fecha
+        date_default_timezone_set($zona_horaria);
+
+        $datos_pedido = [
+            'id_pedido' => $datos['id_pedido'],
+            'id_usuario' => $_SESSION['id'],
+            'fecha' => date("Y-m-d H:i:s"),
+            'codigo' => $datos['codigo']
+        ];
+
+        $resultado = CafeteriaPedidosModel::entregarPedidoModel($datos_pedido);
+
+        if ($resultado == 'success') {
+            return json_encode([
+                'success' => true,
+                'message' => '¡Pedido entregado!'
+            ]);
+        }
+
+        if ($resultado == 'codigo_invalido') {
+            return json_encode([
+                'error' => true,
+                'message' => 'El código de verificación es incorrecto'
+            ]);
+        }
+
+        return json_encode([
+            'error' => true,
+            'message' => 'No se pudo marcar como entregado'
+        ]);
+    }
+
+    // Terminar pedido
+    static public function terminarPedidoController($datos)
+    {
         // Obtener la zona horaria de la ciudad de la cafetería del pedido
         $zona_horaria = CafeteriaPedidosModel::obtenerZonaHorariaPedidoModel($datos['id_pedido']);
         
@@ -201,18 +253,18 @@ class CafeteriaPedidosController
             'fecha' => date("Y-m-d H:i:s")
         ];
 
-        $resultado = CafeteriaPedidosModel::entregarPedidoModel($datos_pedido);
+        $resultado = CafeteriaPedidosModel::terminarPedidoModel($datos_pedido);
 
         if ($resultado == 'success') {
             return json_encode([
                 'success' => true,
-                'message' => '¡Pedido entregado!'
+                'message' => 'Pedido marcado como terminado'
             ]);
         }
 
         return json_encode([
             'error' => true,
-            'message' => 'No se pudo marcar como entregado'
+            'message' => 'No se pudo marcar como terminado'
         ]);
     }
 
