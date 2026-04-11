@@ -504,11 +504,29 @@ class GeneralController
 	static public function buscarModuloSistema($ruta_modulo){
 		return GeneralModel::buscarModuloSistemaModel($ruta_modulo,$_SESSION['nivel']);
 	}
+
+	/* OBTENER ID DE MODULO POR RUTA */
+	
+	static public function obtenerIdModuloPorRuta($ruta_modulo){
+		return GeneralModel::obtenerIdModuloPorRutaModel($ruta_modulo);
+	}
+	
+	/* OBTENER ID DE MODULO POR RUTA */
 	
 	/* BUSCAR MODULO SISTEMA */
 
 	
 	/* OBTENER MODULOS PERMITIDOS POR NIVEL */
+	
+	/* OBTENER TODOS LOS MODULOS DISPONIBLES (PARA ADMINISTRACIÓN) */
+	
+	static public function obtenerTodosModulosController(){
+		
+		return GeneralModel::obtenerTodosModulosModel();
+		
+	}
+	
+	/* OBTENER TODOS LOS MODULOS DISPONIBLES (PARA ADMINISTRACIÓN) */
 	
 	static public function obtenerModulosNivelController(){
 		$areas = [];

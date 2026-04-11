@@ -237,9 +237,9 @@ class CafeteriasController{
                 <label class="image-checkbox">
                     <input type="checkbox" class="chbx_servicios" idServicio="'.$servicio['id'].'" '.$checked.'/>
                     <div class="custom-carousel-item">
-                        <div class="card card-cover overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('.$url.$servicio['imagen'].');">
-                            <div class="d-flex flex-column p-3 pb-1 text-white titulo-oscuro text-center tanamo">
-                                <h5 class="mt-4 display-8 lh-1 fw-bold">'.$servicio['nombre'].'</h5>
+                        <div class="card card-cover overflow-hidden rounded-4 shadow-lg" style="background-image: url('.$url.$servicio['imagen'].');">
+                            <div class="d-flex flex-column p-2 text-white text-center tanamo-card-servicio">
+                              <!--  <h5 class="mt-4 display-8 lh-1 fw-bold">'.$servicio['nombre'].'</h5> -->
                             </div>
                         </div>
                     </div>

@@ -17,6 +17,7 @@ require_once "controllers/controller_cafeterias_menu.php";
 require_once "controllers/controller_admin_usuarios.php";
 require_once "controllers/controller_admin_paises.php";
 require_once "controllers/controller_admin_pagina_inicial.php";
+require_once "controllers/controller_admin_alertas.php";
 
 //Cafeterías
 require_once "controllers/controller_cafeterias.php";
@@ -37,6 +38,9 @@ require_once "controllers/controller_mis_pedidos.php";
 
 //Dashboard
 require_once "controllers/controller_dashboard.php";
+
+//Alertas
+require_once "controllers/controller_alertas.php";
 
 //Models
 require_once "models/model_login.php";
@@ -69,6 +73,9 @@ require_once "models/model_mis_pedidos.php";
 
 //Dashboard
 require_once "models/model_dashboard.php";
+
+//Alertas
+require_once "models/model_alertas.php";
 
 $template = new TemplateController();
 $template -> template();

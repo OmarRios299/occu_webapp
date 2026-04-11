@@ -15,7 +15,10 @@
     </a>
   </div>
   <div class="user-group text-white">
-    <a class="btn btn-iniciar-sesion" href="<?= $url ?>login">Iniciar sesión</a>
+    <a class="btn btn-login" href="<?= $url ?>login">
+      <i class="fas fa-sign-in-alt me-2"></i>
+      <span>Ingresar</span>
+    </a>
   </div>
 </div>
 
@@ -30,15 +33,16 @@
 
 
 <nav class="mobile-bottom-nav d-lg-none bg-plantilla text-white">
-    <div class="bottom-nav-inner d-flex">
-        <a href="<?= $url ?>inicio" class="nav-item text-center">
-            <i class="fas fa-home d-block"></i>
-            <small>Inicio</small>
-        </a>
-        <a href="<?= $url ?>cafeterias_lista" class="nav-item text-center">
+    <div class="bottom-nav-inner d-flex">        
+      <a href="<?= $url ?>cafeterias_lista" class="nav-item text-center">
             <i class="fas fa-coffee d-block"></i>
             <small>Cafeterías</small>
         </a>
+        <a href="<?= $url ?>cafeterias_mapa" class="nav-item text-center">
+            <i class="fas fa-map-marker-alt d-block"></i>
+            <small>Ubicaciones</small>
+        </a>
+
         <a href="<?= $url ?>login" class="nav-item text-center">
             <i class="fas fa-user d-block"></i>
             <small>Ingresar</small>

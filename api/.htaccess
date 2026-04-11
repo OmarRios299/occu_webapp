@@ -1,0 +1,11 @@
+RewriteEngine On
+RewriteBase /api/
+
+# Si existe el archivo o directorio, servirlo directo
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Enviar todo lo demás a Slim
+RewriteRule ^ index.php [QSA,L]
+

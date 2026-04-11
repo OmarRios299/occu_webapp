@@ -2,6 +2,11 @@ $(document).ready(function(){
     if ($("#div_categorias").length) {
         cargarCategorias();
     }
+    if (moduloActual == "propietarios_menu_productos") {
+        $(".btn_editar_ingre").hide();
+        $(".btn_editar_tamanos").hide();
+        $(".btn_editar_precio_alimento").hide();
+    }
 });
 
 function cargarCategorias() {

@@ -1,61 +1,85 @@
-<!-- Modulo / Login -->
-<div class="login d-flex align-items-center">
-    <div class="container-fluid">
-        <div class="row imagen">
-            <div class="col-md-6 mx-auto">
-                <div class="formulario caja">
-                    <img src="<?php echo $url; ?>views/assets/css/img/logo/logo.png" class="logo" alt="">
-                    <!-- Form -->
-                    <form id="formularioIngreso" onsubmit="return false;">
-
-                        <div class="form-group">
-                            <input class="form-control" id="usuarioIngreso" name="" placeholder="Usuario" type="text" required>
-                        </div>
-
-                        <div class="form-group">
-                            <input class="form-control" id="contrasenaIngreso" name="" placeholder="Contraseña" type="password" required>
-                        </div>
-                        <div class="btn-group d-flex justify-content-center" role="group">
-                            <input class="btn active" type="submit" value="Ingresar">
-                        </div>
-                        
-                        <?php 
-                        require_once __DIR__ . '/../../controllers/controller_template.php';
-                        $clientId = TemplateController::obtenerGoogleClientId();
-                        if ($clientId && !empty(trim($clientId))): 
-                        ?>
-                        <div class="divider d-flex align-items-center my-2">
-                            <hr class="flex-grow-1">
-                            <span class="mx-2 text-muted fw-bold">O</span>
-                            <hr class="flex-grow-1">
-                        </div>
-                        
-                        <div class="d-flex justify-content-center mb-2 google-signin-container">
-                            <div id="g_id_onload"
-                                data-client_id="<?php echo htmlspecialchars($clientId); ?>"
-                                data-callback="handleGoogleSignIn"
-                                data-auto_prompt="false">
-                            </div>
-                            <div class="g_id_signin" 
-                                data-type="standard"
-                                data-size="large"
-                                data-theme="outline"
-                                data-text="sign_in_with"
-                                data-shape="rectangular"
-                                data-logo_alignment="left">
-                            </div>
-                        </div>
-                        <?php endif; ?>
-                        
-                        <div class="d-flex justify-content-center mt-3">
-                            <a type="button" class="btn btn-primary btn-sm px-2 py-1" id="btn_registrarme" href="<?=$url.'registrarme'?>" style="font-size: 0.85rem; width: 38%; min-width:170px;">
-                                <i class="fas fa-user-plus me-1" style="font-size: 1em;"></i>
-                                Registrarme
-                            </a>
-                        </div>
-                    </form>
-                </div>
+<!-- Modulo / Login - Diseño Profesional SaaS -->
+<div class="login-container">
+    <div class="login-wrapper">
+        <div class="login-card">
+            <!-- Logo -->
+            <div class="login-header">
+                <img src="<?php echo $url; ?>views/assets/img/logo_1.png" class="login-logo" alt="OCU">
             </div>
+
+            <!-- Título -->
+            <div class="login-title-section">
+                <h1 class="login-title">Bienvenido a OCCU</h1>
+                <p class="login-subtitle">Accede a tu cuenta</p>
+            </div>
+
+            <!-- Formulario -->
+            <form id="formularioIngreso" onsubmit="return false;" class="login-form">
+                <div class="form-group-login">
+                    <label for="usuarioIngreso" class="form-label-login">Usuario</label>
+                    <input 
+                        class="form-control-login" 
+                        id="usuarioIngreso" 
+                        name="usuarioIngreso" 
+                        placeholder="Ingresa tu usuario" 
+                        type="text" 
+                        required
+                        autocomplete="username"
+                    >
+                </div>
+
+                <div class="form-group-login">
+                    <label for="contrasenaIngreso" class="form-label-login">Contraseña</label>
+                    <input 
+                        class="form-control-login" 
+                        id="contrasenaIngreso" 
+                        name="contrasenaIngreso" 
+                        placeholder="Ingresa tu contraseña" 
+                        type="password" 
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+
+                <button type="submit" class="btn-login-primary">
+                    Ingresar
+                </button>
+                
+                <?php 
+                require_once __DIR__ . '/../../controllers/controller_template.php';
+                $clientId = TemplateController::obtenerGoogleClientId();
+                if ($clientId && !empty(trim($clientId))): 
+                ?>
+                <div class="login-divider">
+                    <span class="divider-text">O</span>
+                </div>
+                
+                <div class="google-signin-wrapper">
+                    <div id="g_id_onload"
+                        data-client_id="<?php echo htmlspecialchars($clientId); ?>"
+                        data-callback="handleGoogleSignIn"
+                        data-auto_prompt="false">
+                    </div>
+                    <div class="g_id_signin" 
+                        data-type="standard"
+                        data-size="large"
+                        data-theme="outline"
+                        data-text="sign_in_with"
+                        data-shape="rectangular"
+                        data-logo_alignment="left">
+                    </div>
+                </div>
+                <?php endif; ?>
+                
+                <div class="login-footer">
+                    <p class="login-register-text mt-3">
+                        ¿No tienes una cuenta? 
+                        <a href="<?=$url.'registrarme'?>" class="login-register-link">
+                            Regístrate aquí
+                        </a>
+                    </p>
+                </div>
+            </form>
         </div>
     </div>
 </div>

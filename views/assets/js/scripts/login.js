@@ -1,3 +1,10 @@
+// Función para guardar alertas en localStorage (debe estar disponible globalmente)
+function guardarAlertasParaMostrar(alertas) {
+    if (alertas && alertas.length > 0) {
+        localStorage.setItem('alertasPendientes', JSON.stringify(alertas));
+    }
+}
+
 $(document).on("submit", "#formularioIngreso", function (e) {
   e.preventDefault();
   let usuario = $("#usuarioIngreso").val();
@@ -20,6 +27,10 @@ $(document).on("submit", "#formularioIngreso", function (e) {
 
       let respuesta = JSON.parse(res);
       if (respuesta.success) {
+        // [NUEVO] Guardar alertas si vienen en la respuesta
+        if (respuesta.alertas && respuesta.alertas.length > 0) {
+          guardarAlertasParaMostrar(respuesta.alertas);
+        }
         // redirige
         window.location = url + respuesta.redirect;
         return;
@@ -85,6 +96,10 @@ window.handleGoogleSignIn = function(response) {
       try {
         let respuesta = JSON.parse(res);
         if (respuesta.success) {
+          // [NUEVO] Guardar alertas si vienen en la respuesta
+          if (respuesta.alertas && respuesta.alertas.length > 0) {
+            guardarAlertasParaMostrar(respuesta.alertas);
+          }
           // redirige
           window.location = url + respuesta.redirect;
           return;
@@ -247,6 +262,10 @@ $(document).on("click", "#btnGuardarInfo", function() {
       try {
         let respuesta = JSON.parse(res);
         if (respuesta.success) {
+          // [NUEVO] Guardar alertas si vienen en la respuesta
+          if (respuesta.alertas && respuesta.alertas.length > 0) {
+            guardarAlertasParaMostrar(respuesta.alertas);
+          }
           // Cerrar modal y redirigir
           bootstrap.Modal.getInstance(document.getElementById('modalCompletarInfo')).hide();
           window.location = url + respuesta.redirect;

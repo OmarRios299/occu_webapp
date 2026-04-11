@@ -322,6 +322,24 @@ class GeneralModel extends Conexion{
 	
 	/* BUSCAR MODULO SISTEMA */
 
+	/* OBTENER ID DE MODULO POR RUTA */
+	
+	static public function obtenerIdModuloPorRutaModel($ruta_modulo){
+		$stmt = Conexion::conectar()->prepare("SELECT id FROM permisos_modulos WHERE ruta = :ruta AND estado = 0 LIMIT 1");
+	
+		$stmt->bindParam(':ruta', $ruta_modulo, PDO::PARAM_STR);
+	
+		$stmt->execute();
+	
+		$resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+	
+		$stmt = null;
+	
+		return $resultado ? (int)$resultado['id'] : null;
+	}
+	
+	/* OBTENER ID DE MODULO POR RUTA */
+
 	
 	/* OBTENER MODULOS DE SISTEMA */
 	
@@ -352,6 +370,32 @@ class GeneralModel extends Conexion{
 	}
 	
 	/* OBTENER MODULOS DE SISTEMA */
+
+	/* OBTENER TODOS LOS MODULOS DISPONIBLES (PARA ADMINISTRACIÓN) */
+	
+	static public function obtenerTodosModulosModel(){
+		
+		$stmt = Conexion::conectar()->prepare("SELECT
+			permisos_modulos.id,
+			permisos_modulos.nombre,
+			permisos_modulos.ruta,
+			permisos_modulos.icono,
+			permisos_areas.nombre AS area
+		FROM
+			permisos_modulos
+		INNER JOIN permisos_areas ON permisos_modulos.id_area = permisos_areas.id
+		WHERE permisos_modulos.estado = 0
+		ORDER BY permisos_areas.nombre, permisos_modulos.nombre");
+		
+		$stmt->execute();
+		
+		return $stmt->fetchAll();
+		
+		$stmt = null;
+		
+	}
+	
+	/* OBTENER TODOS LOS MODULOS DISPONIBLES (PARA ADMINISTRACIÓN) */
 
 	/* BUSCAR SUBCATEGORIAS */
 

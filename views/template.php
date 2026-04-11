@@ -23,7 +23,7 @@ if (!isset($_SESSION['iniciarSesion']) && isset($_COOKIE['token_session'])) {
 
 $template = new TemplateController();
 $url = $template->obtenerUrlController();
-$v = "1.5.0";
+$v = "1.8.0";
 
 ?>
 <!DOCTYPE html>
@@ -34,37 +34,37 @@ $v = "1.5.0";
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>OCCU</title>
-    
+
     <!-- Theme Color -->
     <meta name="theme-color" content="#000000">
     <meta name="msapplication-navbutton-color" content="#000000">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+
     <!-- Favicon estándar (genérico) - Funciona en todos los navegadores -->
     <link rel="icon" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>" type="image/png">
     <link rel="shortcut icon" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>" type="image/png">
-    
+
     <!-- Favicons con tamaños específicos (Windows/Desktop) -->
     <link rel="icon" type="image/png" sizes="16x16" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
     <link rel="icon" type="image/png" sizes="32x32" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
     <link rel="icon" type="image/png" sizes="96x96" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
-    
+
     <!-- Apple Touch Icon (iOS) - Solo el tamaño estándar requerido -->
     <link rel="apple-touch-icon" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
-    
+
     <!-- Android/Chrome Icons (PWA) -->
     <link rel="icon" type="image/png" sizes="192x192" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
     <link rel="icon" type="image/png" sizes="512x512" href="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
-    
+
     <!-- Windows Tiles (Windows 10/11) -->
     <meta name="msapplication-TileColor" content="#000000">
     <meta name="msapplication-TileImage" content="<?php echo $url; ?>views/assets/img/logo_1.png?v=<?php echo $v; ?>">
-    
+
     <!-- Apple Mobile Web App -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="OCCU">
-    
+
     <!-- Web App Manifest -->
     <link rel="manifest" href="<?php echo $url; ?>manifest.json?v=<?php echo $v; ?>">
 
@@ -95,12 +95,15 @@ $v = "1.5.0";
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@latest/dist/css/splide.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/glightbox/dist/css/glightbox.min.css">
 
-    <?php if($moduloActual == "admin_paises" || $moduloActual == "cafeterias" || $moduloActual == "cafeterias_mapa"): ?>
-    <!-- Leaflet CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <?php if($moduloActual == "admin_paises"): ?>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
-    <?php endif; ?>
+    <!-- Sistema de Tours Guiados (sin dependencias externas) -->
+    <link rel="stylesheet" href="<?php echo $url; ?>views/assets/css/libs/driver.css?v=<?php echo $v; ?>">
+
+    <?php if ($moduloActual == "admin_paises" || $moduloActual == "cafeterias" || $moduloActual == "cafeterias_mapa"): ?>
+        <!-- Leaflet CSS -->
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+        <?php if ($moduloActual == "admin_paises"): ?>
+            <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+        <?php endif; ?>
     <?php endif; ?>
 
 </head>
@@ -113,14 +116,13 @@ $v = "1.5.0";
 
     <?php
     if (isset($_SESSION['iniciarSesion']) && $_SESSION['iniciarSesion'] == 'ok') {
-        echo '<input type="hidden" class="nivel_usuario" value="'.$_SESSION['nivel'].'">';
+        echo '<input type="hidden" class="nivel_usuario" value="' . $_SESSION['nivel'] . '">';
         // Determina si la página actual es "cafeterias_mapa" y estructura el layout en consecuencia
         if ($_SESSION['nivel'] == 'Barista'  || $_SESSION['nivel'] == 'Cliente') {
             include "modules/carrito.php";
-            if ($moduloActual == "cafeterias_mapa") { 
+            if ($moduloActual == "cafeterias_mapa") {
                 include "modules/sections/navbar_movil.php";
                 echo '<div style="width: 100%; margin: 0; height:100vh;"><div>';
-               
             } else {
                 include "modules/sections/navbar_movil.php";
                 echo '<div id="sistema">';
@@ -176,11 +178,35 @@ $v = "1.5.0";
             echo '</div>';
         }
 
+        // [NUEVO] Obtener alertas del módulo actual si el usuario está logueado
+        $alertasModulo = [];
+        if (isset($action[0])) {
+            // Si se encontró un módulo en la BD, obtener sus alertas
+            if ($moduloActual !== null) {
+                $alertasModulo = AlertaController::obtenerAlertasUsuarioController($moduloActual);
+            }
+        }
+
         echo '</div></div></div><div class="overlay"></div>';
+
+        // [NUEVO] Pasar alertas del módulo al frontend
+        if (!empty($alertasModulo)) {
+            echo '<script>';
+            echo 'var alertasModuloActual = ' . json_encode($alertasModulo) . ';';
+            echo '</script>';
+        } else {
+            echo '<script>';
+            echo 'var alertasModuloActual = [];';
+            echo '</script>';
+        }
     } else if (isset($action[0])) {
         // Layout para las páginas públicas o sin sesión iniciada
         if ($moduloActual == "cafeterias_mapa") {
             include "modules/sections/navbar_inicio.php";
+            echo '<div style="width: 100%; margin: 0; height:100vh;"><div>';
+        } else if ($moduloActual == "login") {
+           // include "modules/sections/navbar_inicio.php";
+            echo '<div style="width: 100%; margin: 0; height:100vh;"><div>';
         } else if ($moduloActual == "inicio") {
             echo '<div id="pagina-inicial">';
             echo '<div class="contenido">';
@@ -201,7 +227,8 @@ $v = "1.5.0";
             "cafeterias_mapa",
             "registrarme",
             "cafeterias_menu",
-            "inicio"
+            "inicio",
+            "login"
         ];
 
         if (in_array($action[0], $modulosPublicos)) {
@@ -214,7 +241,11 @@ $v = "1.5.0";
             echo '</div>';
         }
 
-        echo '</div></div></div><div class="overlay"></div>';
+        if ($moduloActual == "login" || $moduloActual == "cafeterias_mapa") {
+            echo '</div></div><div class="overlay"></div>';
+        } else {
+            echo '</div></div></div><div class="overlay"></div>';
+        }
     } else {
         // echo '<div class="contenido">';
         // include "modules/sections/navbar_inicio.php";
@@ -237,8 +268,8 @@ $v = "1.5.0";
     <!-- jQuery     <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry,drawing&callback=initMap"></script>
 -->
     <!-- Google Identity Services -->
-    <?php if($moduloActual == "login"): ?>
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <?php if ($moduloActual == "login"): ?>
+        <script src="https://accounts.google.com/gsi/client" async defer></script>
     <?php endif; ?>
     <script src="<?php echo $url; ?>views/assets/js/jquery-3.7.1.min.js"></script>
 
@@ -267,35 +298,40 @@ $v = "1.5.0";
     <script src="<?php echo $url; ?>views/assets/plugins/jqueryLoading/loading.js"></script>
     <script type="text/javascript" src="<?php echo $url; ?>views/assets/plugins/DataTables/datatables.min.js"></script>
     <!-- Custom scripts -->
+    <!-- Sistema de Tours Guiados (sin dependencias externas) - Debe cargarse ANTES de alertas.js -->
+    <script src="<?php echo $url; ?>views/assets/js/libs/tour-guide.js?v=<?php echo $v; ?>"></script>
+
     <script src="<?php echo $url; ?>views/assets/js/scripts/general.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/login.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/registrarme.js?v='<?php echo $v; ?>'"></script>
-    <?php if($moduloActual == "login"): ?>
-    <script>
-    // Asegurar que Google Identity Services se inicialice correctamente
-    window.addEventListener('load', function() {
-        if (typeof google !== 'undefined' && google.accounts) {
-            google.accounts.id.initialize({
-                client_id: document.getElementById('g_id_onload')?.getAttribute('data-client_id') || '',
-                callback: window.handleGoogleSignIn
+    <script src="<?php echo $url; ?>views/assets/js/scripts/alertas.js?v='<?php echo $v; ?>'"></script>
+    <?php if ($moduloActual == "login"): ?>
+        <script>
+            // Asegurar que Google Identity Services se inicialice correctamente
+            window.addEventListener('load', function() {
+                if (typeof google !== 'undefined' && google.accounts) {
+                    google.accounts.id.initialize({
+                        client_id: document.getElementById('g_id_onload')?.getAttribute('data-client_id') || '',
+                        callback: window.handleGoogleSignIn
+                    });
+                }
             });
-        }
-    });
-    </script>
+        </script>
     <?php endif; ?>
-    
-    <?php if($moduloActual == "admin_paises" || $moduloActual == "cafeterias" || $moduloActual == "cafeterias_mapa"): ?>
-    <!-- Leaflet JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    <?php if($moduloActual == "admin_paises"): ?>
-    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+
+    <?php if ($moduloActual == "admin_paises" || $moduloActual == "cafeterias" || $moduloActual == "cafeterias_mapa"): ?>
+        <!-- Leaflet JS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+        <?php if ($moduloActual == "admin_paises"): ?>
+            <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+        <?php endif; ?>
     <?php endif; ?>
-    <?php endif; ?>
-    
+
     <!-- Administración -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/admin_usuarios.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/admin_paises.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/admin_pagina_inicial.js?v='<?php echo $v; ?>'"></script>
+    <script src="<?php echo $url; ?>views/assets/js/scripts/admin_alertas.js?v='<?php echo $v; ?>'"></script>
     <!-- Cafeterías -->
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias.js?v='<?php echo $v; ?>'"></script>
     <script src="<?php echo $url; ?>views/assets/js/scripts/cafeterias_mapa.js?v='<?php echo $v; ?>'"></script>

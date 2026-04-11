@@ -1,130 +1,284 @@
 /* ---------------------------------------
-@@@@ modulos ---> login  
+@@@@ modulos ---> login - Diseño Profesional SaaS
 --------------------------------------- */
-.login {
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-  background-image: url("../img/fondo_inicio.jpg");
+
+/* Contenedor principal del login */
+.login-container {
   width: 100%;
-  height: 100vh !important; /* O ocupa el 100% de la altura de la pantalla */
-}
-.login .caja {
-  /* Estilos específicos para caja de login si se necesitan */
-  display: block;
-}
-.login .formulario {
-  display: block;
-  max-width: 550px;
-  margin: 0 auto;
-  background-color: rgba(245, 245, 245, 0.8);
-}
-
-.login .formulario .logo {
-  display: block;
-  width: 200px;
-  margin: 0 auto 35px;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  margin: 0;
+  background: linear-gradient(135deg, #f16c5b 0%, #f05540 50%, #3a2e2a 100%);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
-.login .form-group {
-  margin: 10px 0;
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+  pointer-events: none;
 }
 
-.login .input-group-prepend {
-  margin-right: -2px;
+.login-wrapper {
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  z-index: 1;
 }
 
-.login .form-control {
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-align: left;
-  color: var(--color-gris);
-  height: calc(2.5rem + 0.75rem + 2px);
-  border-left: 0;
-  border-top: 2px solid var(--color-gris-claro);
-  border-bottom: 2px solid var(--color-gris-claro);
-  border-right: 2px solid var(--color-gris-claro);
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
+/* Card del login */
+.login-card {
+  background: var(--color-blanco);
+  border-radius: 16px;
+  padding: 8px 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 1px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
-.login .input-group-text {
-  background-color: var(--color-blanco);
-  border-right: 0;
-  border-top: 2px solid var(--color-gris-claro);
-  border-bottom: 2px solid var(--color-gris-claro);
-  border-left: 2px solid var(--color-gris-claro);
-  border-right: 2px solid var(--color-gris-claro);
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
+/* Personalizar scrollbar del card */
+.login-card::-webkit-scrollbar {
+  width: 8px;
 }
 
-.login .btn {
-  display: block;
-  font-weight: bold;
-  color: var(--color-blanco);
+.login-card::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.login-card::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 10px;
+}
+
+.login-card::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Header del login */
+.login-header {
   text-align: center;
-  background-color: var(--color-azul);
-  border-color: var(--color-azul);
-  padding: 1rem 2.75rem;
+  margin-bottom: 20px;
 }
 
-.login .input-group img {
-  width: 1rem;
+.login-logo {
+  width: 100px;
+  height: auto;
+  max-width: 100%;
 }
 
-.login .form-control::-webkit-input-placeholder {
-  font-size: 1.1rem;
+/* Sección de título */
+.login-title-section {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.login-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-texto);
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.login-subtitle {
+  font-size: 15px;
+  font-weight: 400;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Formulario */
+.login-form {
+  width: 100%;
+}
+
+.form-group-login {
+  margin-bottom: 24px;
+}
+
+.form-label-login {
+  display: block;
+  font-size: 14px;
   font-weight: 600;
-  text-align: left;
-  color: var(--color-gris);
-  opacity: 1 !important;
-  text-transform: capitalize;
+  color: var(--color-texto);
+  margin-bottom: 8px;
+  letter-spacing: 0.01em;
 }
 
-.login .form-control:-moz-placeholder {
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-align: left;
-  color: var(--color-gris);
-  opacity: 1 !important;
-  text-transform: capitalize;
+.form-control-login {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--color-texto);
+  background-color: var(--color-blanco);
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+  outline: none;
 }
 
-.login .form-control::-moz-placeholder {
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-align: left;
-  color: var(--color-gris);
-  opacity: 1 !important;
-  text-transform: capitalize;
+.form-control-login::placeholder {
+  color: #9ca3af;
+  font-weight: 400;
 }
 
-.login .form-control:-ms-input-placeholder {
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-align: left;
-  color: var(--color-gris);
-  opacity: 1 !important;
-  text-transform: capitalize;
+.form-control-login:hover {
+  border-color: #d1d5db;
 }
 
-.login .form-control::-ms-input-placeholder {
-  font-size: 1.1rem;
-  font-weight: 600;
-  text-align: left;
-  color: var(--color-gris);
-  opacity: 1 !important;
-  text-transform: capitalize;
+.form-control-login:focus {
+  border-color: var(--principal);
+  box-shadow: 0 0 0 3px rgba(241, 108, 91, 0.1);
+  outline: none;
 }
 
-.login .form-control::placeholder {
-  font-size: 1.1rem;
+.form-control-login:focus::placeholder {
+  color: #d1d5db;
+}
+
+/* Botón principal */
+.btn-login-primary {
+  width: 100%;
+  padding: 14px 24px;
+  font-size: 16px;
   font-weight: 600;
-  text-align: left;
-  color: var(--color-gris);
-  opacity: 1 !important;
-  text-transform: capitalize;
+  color: var(--color-blanco);
+  background-color: var(--principal);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 8px;
+  box-shadow: 0 2px 4px rgba(241, 108, 91, 0.2);
+  letter-spacing: 0.01em;
+}
+
+.btn-login-primary:hover {
+  background-color: #e05a4a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(241, 108, 91, 0.3);
+}
+
+.btn-login-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 1px 2px rgba(241, 108, 91, 0.2);
+}
+
+.btn-login-primary:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(241, 108, 91, 0.2);
+}
+
+/* Divider */
+.login-divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 18px 0;
+  position: relative;
+}
+
+.login-divider::before,
+.login-divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.divider-text {
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #6b7280;
+  background: var(--color-blanco);
+}
+
+/* Google Sign In */
+.google-signin-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+
+.login-register-text {
+  font-size: 14px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.login-register-link {
+  color: var(--principal);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.login-register-link:hover {
+  color: #e05a4a;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .login-container {
+    height: 100vh;
+    padding: 20px;
+    align-items: center;
+  }
+}
+
+@media (max-width: 576px) {
+  .login-card {
+    padding: 36px 28px;
+    border-radius: 12px;
+    max-height: 85vh;
+  }
+
+  .login-title {
+    font-size: 24px;
+  }
+
+  .login-subtitle {
+    font-size: 14px;
+  }
+
+  .form-control-login {
+    padding: 11px 14px;
+    font-size: 16px; /* Evita zoom en iOS */
+  }
+
+  .login-container {
+    padding: 16px;
+    height: 100vh;
+    align-items: center;
+  }
+}
+
+@media (max-width: 400px) {
+  .login-card {
+    padding: 32px 24px;
+  }
+
+  .login-logo {
+    width: 120px;
+  }
 }
 
 /* ---------------------------------------
@@ -348,7 +502,7 @@
   + .custom-carousel-item {
   border: 2px solid #007bff;
   /* Cambia el borde para indicar que está seleccionado */
-  opacity: 0.8;
+  /* opacity: 0.8; */
   /* Añade un efecto de opacidad */
 }
 
@@ -358,9 +512,31 @@
   /* Cambia el borde cuando se pasa el cursor */
 }
 
-#modal_agregar_servicios .tanamo {
-  width: 150px !important;
-  height: 150px !important;
+.tanamo-card-servicio {
+  width: 100px !important;
+  height: 100px !important;
+}
+
+/* Estilos para hacer los servicios más pequeños en el modal */
+#modal_agregar_servicios .image-checkbox {
+  max-width: 120px;
+  margin: 0.5rem;
+}
+
+#modal_agregar_servicios .custom-carousel-item {
+  width: 100%;
+}
+
+#modal_agregar_servicios .card-cover {
+  min-height: 100px;
+  height: 100px;
+}
+
+#modal_agregar_servicios #servicios {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 /* ---------------------------------------

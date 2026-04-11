@@ -600,7 +600,7 @@ $(document).on("submit", "#form_agregar_cafeteria", function (e) {
                 url +
                 "cafeterias/agregar/" +
                 respuesta.id_cafeteria +
-                "/imagenes/";
+                "/imagenes/nueva=true";
             });
           }
         } else {
@@ -856,6 +856,11 @@ $(document).on("submit", "#form_filtro_cafeterias", function () {
   cargarTablaCafeterias();
 });
 
+// Variables globales para paginación
+let todasLasImagenes = [];
+let paginaActual = 1;
+const imagenesPorPagina = 8;
+
 function cargarImagenesExistentes() {
   const idCafeteria = $("#id_cafeteria").val();
   if (!idCafeteria) return;
@@ -871,44 +876,125 @@ function cargarImagenesExistentes() {
         $("#contador_items").val(data.i || 0);
 
         if (data.data && data.data.length > 0) {
-          let html = "";
-          data.data.forEach(function (imagen, index) {
-            html += `
-                            <div class="image-card">
-                                ${imagen[3]}
-                                <div class="image-card-body">
-                                    <div class="image-card-actions d-flex align-items-center">
-                                        
-                                        <div class=""> 
-                                            <label class="form-check-label">
-                                                Activar/desactivar
-                                            </label>    
-                                        
-                                            ${imagen[2]}
-                                        </div>
-                                       
-                                        <div>
-                                            ${imagen[1]}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-          });
-          $("#imagesGrid").html(html);
+          todasLasImagenes = data.data;
+          paginaActual = 1;
+          renderizarImagenesPagina();
+          renderizarPaginacion();
         } else {
+          todasLasImagenes = [];
           $("#imagesGrid").html(`
                         <div class="col-12 text-center py-5">
                             <i class="bi bi-images" style="font-size: 4rem; color: #ccc;"></i>
                             <p class="mt-3 text-muted">No hay imágenes aún. Agrega algunas arriba.</p>
                         </div>
                     `);
+          $("#imagesPagination").hide();
         }
       } catch (e) {
         console.error("Error al cargar imágenes:", e);
       }
     },
   });
+}
+
+function renderizarImagenesPagina() {
+  const inicio = (paginaActual - 1) * imagenesPorPagina;
+  const fin = inicio + imagenesPorPagina;
+  const imagenesPagina = todasLasImagenes.slice(inicio, fin);
+
+  let html = "";
+  imagenesPagina.forEach(function (imagen, index) {
+    html += `
+      <div class="image-card">
+        ${imagen[3]}
+        <div class="image-card-body">
+          <div class="image-card-actions d-flex align-items-center">
+            <div class=""> 
+              <label class="form-check-label">
+                Activar/desactivar
+              </label>
+              ${imagen[2]}
+            </div>
+            <div>
+              ${imagen[1]}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  $("#imagesGrid").html(html);
+}
+
+function renderizarPaginacion() {
+  const totalPaginas = Math.ceil(todasLasImagenes.length / imagenesPorPagina);
+  
+  if (totalPaginas <= 1) {
+    $("#imagesPagination").hide();
+    return;
+  }
+
+  $("#imagesPagination").show();
+  
+  let html = "";
+  const inicio = (paginaActual - 1) * imagenesPorPagina + 1;
+  const fin = Math.min(paginaActual * imagenesPorPagina, todasLasImagenes.length);
+  
+  // Información de la página actual
+  html += `<span class="images-pagination-info">Mostrando ${inicio}-${fin} de ${todasLasImagenes.length} imágenes</span>`;
+  
+  // Botón anterior
+  html += `<button class="images-pagination-btn" onclick="cambiarPagina(${paginaActual - 1})" ${paginaActual === 1 ? 'disabled' : ''}>
+    <i class="bi bi-chevron-left"></i> Anterior
+  </button>`;
+  
+  // Números de página
+  const maxPaginasVisibles = 5;
+  let inicioPaginas = Math.max(1, paginaActual - Math.floor(maxPaginasVisibles / 2));
+  let finPaginas = Math.min(totalPaginas, inicioPaginas + maxPaginasVisibles - 1);
+  
+  if (finPaginas - inicioPaginas < maxPaginasVisibles - 1) {
+    inicioPaginas = Math.max(1, finPaginas - maxPaginasVisibles + 1);
+  }
+  
+  if (inicioPaginas > 1) {
+    html += `<button class="images-pagination-btn" onclick="cambiarPagina(1)">1</button>`;
+    if (inicioPaginas > 2) {
+      html += `<span class="images-pagination-info">...</span>`;
+    }
+  }
+  
+  for (let i = inicioPaginas; i <= finPaginas; i++) {
+    html += `<button class="images-pagination-btn ${i === paginaActual ? 'active' : ''}" onclick="cambiarPagina(${i})">${i}</button>`;
+  }
+  
+  if (finPaginas < totalPaginas) {
+    if (finPaginas < totalPaginas - 1) {
+      html += `<span class="images-pagination-info">...</span>`;
+    }
+    html += `<button class="images-pagination-btn" onclick="cambiarPagina(${totalPaginas})">${totalPaginas}</button>`;
+  }
+  
+  // Botón siguiente
+  html += `<button class="images-pagination-btn" onclick="cambiarPagina(${paginaActual + 1})" ${paginaActual === totalPaginas ? 'disabled' : ''}>
+    Siguiente <i class="bi bi-chevron-right"></i>
+  </button>`;
+  
+  $("#imagesPagination").html(html);
+}
+
+function cambiarPagina(pagina) {
+  const totalPaginas = Math.ceil(todasLasImagenes.length / imagenesPorPagina);
+  if (pagina < 1 || pagina > totalPaginas) return;
+  
+  paginaActual = pagina;
+  renderizarImagenesPagina();
+  renderizarPaginacion();
+  
+  // Scroll suave hacia arriba del grid
+  $('html, body').animate({
+    scrollTop: $("#imagesGrid").offset().top - 100
+  }, 300);
 }
 
 $(document).ready(function () {

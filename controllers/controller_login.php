@@ -1,5 +1,8 @@
 <?php
 
+require_once __DIR__ . '/../models/model_alertas.php';
+require_once __DIR__ . '/../controllers/controller_alertas.php';
+
 class LoginController
 {
 
@@ -59,6 +62,12 @@ class LoginController
 		setcookie('token_session', $token_sesion, time() + 8 * 3600, '/');
 		LoginModel::actualizarTokenSession($respuesta['id'], $token_sesion);
 
+		// [NUEVO] Registrar sesión en usuarios_sesiones
+		LoginModel::registrarSesionModel($respuesta['id'], $token_sesion, 'normal');
+
+		// [NUEVO] Obtener alertas aplicables para el usuario
+		$alertas = AlertaController::obtenerAlertasUsuarioController($respuesta['id'], $respuesta['nivel'], null);
+
 		// Preparar ruta de redirección
 		if ($respuesta['nivel'] == "Cliente") {
 			$ruta = "cafeterias_lista";
@@ -70,7 +79,8 @@ class LoginController
 
 		return json_encode([
 			'success'  => true,
-			'redirect' => $ruta
+			'redirect' => $ruta,
+			'alertas'  => $alertas
 		]);
 	}
 
@@ -231,6 +241,12 @@ class LoginController
 		setcookie('token_session', $token_sesion, time() + 8 * 3600, '/');
 		LoginModel::actualizarTokenSession($respuesta['id'], $token_sesion);
 
+		// [NUEVO] Registrar sesión en usuarios_sesiones
+		LoginModel::registrarSesionModel($respuesta['id'], $token_sesion, 'google');
+
+		// [NUEVO] Obtener alertas aplicables para el usuario
+		$alertas = AlertaController::obtenerAlertasUsuarioController($respuesta['id'], $respuesta['nivel'], null);
+
 		// Preparar ruta de redirección
 		if ($respuesta['nivel'] == "Cliente") {
 			$ruta = "cafeterias_lista";
@@ -242,7 +258,8 @@ class LoginController
 
 		return json_encode([
 			'success'  => true,
-			'redirect' => $ruta
+			'redirect' => $ruta,
+			'alertas'  => $alertas
 		]);
 	}
 
@@ -291,6 +308,12 @@ class LoginController
 				setcookie('token_session', $token_sesion, time() + 8 * 3600, '/');
 				LoginModel::actualizarTokenSession($respuesta['id'], $token_sesion);
 
+				// [NUEVO] Registrar sesión en usuarios_sesiones
+				LoginModel::registrarSesionModel($respuesta['id'], $token_sesion, 'google');
+
+				// [NUEVO] Obtener alertas aplicables para el usuario
+				$alertas = AlertaController::obtenerAlertasUsuarioController($respuesta['id'], $respuesta['nivel'], null);
+
 				// Preparar ruta de redirección
 				if ($respuesta['nivel'] == "Cliente") {
 					$ruta = "cafeterias_lista";
@@ -302,7 +325,8 @@ class LoginController
 
 				return json_encode([
 					'success'  => true,
-					'redirect' => $ruta
+					'redirect' => $ruta,
+					'alertas'  => $alertas
 				]);
 			}
 		}

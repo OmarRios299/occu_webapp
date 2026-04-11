@@ -242,4 +242,32 @@ class LoginModel extends Conexion{
 	
 	/* End of COMPLETAR INFORMACION USUARIO GOOGLE */
 
+	/* REGISTRAR SESIÓN DE USUARIO */
+	
+	static public function registrarSesionModel($id_usuario, $token_sesion, $tipo_login = 'normal'){
+		
+		$stmt = Conexion::conectar()->prepare("INSERT INTO usuarios_sesiones 
+			(id_usuario, fecha_login, token_sesion, ip_address, user_agent, tipo_login) 
+			VALUES (:id_usuario, NOW(), :token_sesion, :ip_address, :user_agent, :tipo_login)");
+		
+		$ip_address = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+		$user_agent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : null;
+		
+		$stmt->bindParam(":id_usuario", $id_usuario, PDO::PARAM_INT);
+		$stmt->bindParam(":token_sesion", $token_sesion, PDO::PARAM_STR);
+		$stmt->bindParam(":ip_address", $ip_address, PDO::PARAM_STR);
+		$stmt->bindParam(":user_agent", $user_agent, PDO::PARAM_STR);
+		$stmt->bindParam(":tipo_login", $tipo_login, PDO::PARAM_STR);
+		
+		if($stmt->execute()){
+			return 'success';
+		}else{
+			return 'error';
+		}
+		
+		$stmt = null;
+	}
+	
+	/* End of REGISTRAR SESIÓN DE USUARIO */
+
 }

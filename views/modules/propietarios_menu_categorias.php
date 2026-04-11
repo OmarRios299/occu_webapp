@@ -16,13 +16,16 @@
     <div class="row p-3" id="div_categorias">
 
     </div>
-    <div class="row">
-        <div class="col-md-12 text-center">
-            <a href="<?= $url ?>propietarios_menu_productos" class="btn btn-outline-primary">Seleccionar productos > ></a>
+    <div class="col-12 d-flex justify-content-center">
+        <div class="col-md-4">
+            <?php if (isset($action[1]) && $action[1] == "nueva") { ?>
+                <a href="<?= $url ?>propietarios_menu_productos/nueva" class="products-button-preview">Siguiente paso <i class="fas fa-arrow-right"></i> </a>
+            <?php } else { ?>
+                <a href="<?= $url ?>propietarios_menu_productos" class="products-button-preview">Siguiente paso <i class="fas fa-arrow-right"></i> </a>
+            <?php } ?>
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="modal_agregar_subcategorias_extra" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">

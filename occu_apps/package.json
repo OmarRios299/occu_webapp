@@ -1,0 +1,15 @@
+{
+  "name": "occu-vnext",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:cliente": "npm --workspace apps/web-cliente run dev",
+    "dev:panel": "npm --workspace apps/web-panel run dev -- --port 5174",
+    "build:cliente": "npm --workspace apps/web-cliente run build",
+    "build:panel": "npm --workspace apps/web-panel run build"
+  }
+}
+

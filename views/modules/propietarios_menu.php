@@ -1,6 +1,6 @@
 <?php
 include "propietarios_menu/modal_tamano_bebidas.php";
-if ($action[0] == 'propietarios_menu' && !isset($action[1])) {
+if ($action[0] == 'propietarios_menu' && !isset($action[1]) || $action[0] == 'propietarios_menu' && isset($action[1]) && $action[1] == "nueva") {
   $menu = PropietariosMenuController::obtenerMenuPropietarioController(false, false,false);
   $hidden = (PropietariosMenuController::cafeteriasPropietarioController() > 1) ? '' : 'display:none';
 
@@ -176,3 +176,11 @@ if ($action[0] == 'propietarios_menu' && !isset($action[1])) {
     </div>
   </div>
 </div>
+
+<div class="col-12 d-flex justify-content-center mt-2">
+        <div class="col-md-4">
+            <?php if (isset($action[1]) && $action[1] == "nueva") { ?>
+                <a href="<?= $url ?>/cafeterias" class="products-button-preview">Siguiente paso <i class="fas fa-arrow-right"></i> </a>
+                <?php } ?>
+        </div>
+    </div>
