@@ -1,6 +1,16 @@
 .env
+.env.*
+!.env.example
+
+# Dumps de BD (no versionar)
+bd/occu*.sql
+
 vendor/
 vendor/composer/
+node_modules/
+**/node_modules/
+**/dist/
+
 views/assets/img/cafeterias/
 views/assets/img/cafeterias_qr/
 views/assets/img/cafeterias_imagenes/
